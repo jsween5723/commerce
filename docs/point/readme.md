@@ -27,7 +27,9 @@ sequenceDiagram
     end
     deactivate UserPoint
     PointService ->>+ PointRepository: UserPoint 저장
-    PointRepository ->>+ Database: UserPoint 저장
+    PointRepository ->> Database: UserPointEntity 저장
+    PointService ->>+ PointRepository: UserPointHistory 저장
+    PointRepository ->> Database: UserPointHistoryEntity 저장
     deactivate PointRepository
     PointService -->>- PointController: UserPoint
     PointController -->>- User: 200 OK UserPointChargeResponse
