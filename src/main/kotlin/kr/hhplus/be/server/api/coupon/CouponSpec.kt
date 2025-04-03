@@ -34,7 +34,7 @@ interface CouponSpec {
         )]
     )
     fun register(
-        authentication: Authentication
+        authentication: Authentication, id: Long
     ): Response<RegisterCouponResponse>
 
     @Operation(
