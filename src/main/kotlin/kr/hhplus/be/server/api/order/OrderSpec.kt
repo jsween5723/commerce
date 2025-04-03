@@ -54,7 +54,7 @@ interface OrderSpec {
         )]
     )
     fun pay(
-        authentication: Authentication
+        authentication: Authentication, id: Long
     ): Response<PayOrderResponse>
 }
 
@@ -64,6 +64,6 @@ data class CreateOrderRequest(
     data class CreateOrderItem(val productId: Long, @Schema(description = "수량") val amount: Int)
 }
 
-data class CreateOrderResponse(@Schema(description = "생성된 주문 id") val id: Long)
+data class CreateOrderResponse(@Schema(description = "생성된 주문 id") val id: Long = 0)
 
-data class PayOrderResponse(@Schema(description = "완료된 결제 id") val id: Long)
+data class PayOrderResponse(@Schema(description = "완료된 결제 id") val id: Long = 0)
