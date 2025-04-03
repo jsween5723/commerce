@@ -1,4 +1,7 @@
 ## 잔액 충전 API
+POST /api/v1/points/charge
+Authorization: {userId}
+잔액을 충전합니다.
 
 ```mermaid
 sequenceDiagram
@@ -36,6 +39,10 @@ sequenceDiagram
 ```
 
 ## 잔액 조회 API
+GET /api/v1/points/me
+Authorization: {userId}
+
+내 잔액을 조회합니다.
 
 ```mermaid
 sequenceDiagram

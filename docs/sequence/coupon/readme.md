@@ -6,6 +6,9 @@
 조회 후 애플리케이션에서 추산해 재고를 파악하는 데 쓰입니다.
 이후 Coupon 도메인 엔티티 생성에 해당 결과값을 사용합니다.
 
+POST /api/v1/coupons/{id}/register
+Authorization: {userId}
+해당 쿠폰을 사용자에게 귀속합니다.
 ```mermaid
 sequenceDiagram
     autonumber
@@ -15,7 +18,7 @@ sequenceDiagram
     participant Coupon
     participant CouponRepository
     participant Database
-    User ->>+ CouponController: POST /api/v1/coupons/{id}/me
+    User ->>+ CouponController: POST /api/v1/coupons/{id}/register
     CouponController ->>+ CouponService: registerCoupon
     CouponService ->>+ CouponRepository: Coupon 조회
     CouponRepository ->>+ Database: Coupon 조회
@@ -45,7 +48,8 @@ sequenceDiagram
 ```
 
 ## 보유 쿠폰 조회 API
-
+GET /api/v1/coupons/me
+Authorization: {userId}
 ```mermaid
 sequenceDiagram
     autonumber
@@ -65,6 +69,7 @@ sequenceDiagram
 ```
 
 ## 쿠폰 재고 스케쥴링
+쿠폰 재고의 스냅샷을 생성하고 이전시점 데이터를 정리합니다.
 
 ```mermaid
 sequenceDiagram

@@ -26,7 +26,14 @@
        15. 주문결과를 반환합니다.
    16. 주문 결과를 기반으로 외부 데이터 플랫폼에 전달합니다.
    17. 결제 결과를 반환합니다.
-   
+
+
+
+주문 생성: POST /api/v1/orders
+Authorization: {userId}
+
+주문 결제: POST /api/v1/orders/{id}
+Authorization: {userId}
 ```mermaid
 sequenceDiagram
     autonumber
