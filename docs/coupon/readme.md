@@ -26,9 +26,10 @@ sequenceDiagram
     end
     Coupon -->>- CouponService: RegisteredCoupon
     CouponService ->> CouponRepository: Coupon 업데이트
-    CouponRepository ->> Database: Coupon 업데이트
+    CouponRepository ->> Database: update Coupon
     CouponService ->>+ CouponRepository: registerCoupon
-    CouponRepository ->> Database: insert RegisteredCoupon
+    CouponRepository ->>+ Database: insert RegisteredCoupon
+    Database -->>- CouponRepository: RegisteredCoupon 목록
     CouponRepository -->>- CouponService: RegisteredCoupon
     CouponService -->>- CouponController: RegisteredCoupon
     CouponController -->>- User: RegisteredCoupon
@@ -51,6 +52,7 @@ sequenceDiagram
     CouponController ->>+ CouponService: RegisteredCoupon 목록 조회
     CouponService ->>+ CouponRepository: RegisteredCoupon 목록 조회
     CouponRepository ->>+ Database: RegisteredCoupon 목록 조회
+    Database -->>- CouponRepository: RegisteredCoupon 목록
     CouponRepository -->>- CouponService: RegisteredCoupon 목록
     CouponService -->>- CouponController: RegisteredCoupon 목록
     CouponController -->>- User: RegisteredCoupon 목록
