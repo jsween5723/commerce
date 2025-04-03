@@ -6,6 +6,14 @@
 조회 후 애플리케이션에서 추산해 재고를 파악하는 데 쓰입니다.
 이후 Product 도메인 엔티티 생성에 해당 결과값을 사용합니다.
 
+주문 생성 시 ProductInventoryEntity에 PENDING 플래그로 -amount 만큼 insert되고
+주문 이외에 재고 추가시 STOCK 플래그로 insert 됩니다.
+
+주문 생성 후 일정시간 뒤 재고 반환의 경우 ProductInventiryEntity에 CANCELED 플래그로 +amount insert됩니다.
+결제가 진행될 경우 STOCK 플래그로 +amount insert 후 RELEASE 플래그로 -amount insert 됩니다.
+1일간 주문이 결제되지 않으면 배치로 스냅샷을 할 때 PENDING 플래그는 제외하고 처리합니다. 
+
+
 ```mermaid
 sequenceDiagram
     actor User
