@@ -10,6 +10,7 @@ import kr.hhplus.be.server.api.Authentication
 import kr.hhplus.be.server.api.ErrorResponse
 import kr.hhplus.be.server.api.Response
 import org.springframework.http.MediaType
+import org.springframework.web.bind.annotation.RequestBody
 
 @Tag(name = "point", description = "포인트 관련 API")
 interface PointSpec {
@@ -28,7 +29,7 @@ interface PointSpec {
         )]
     )
     fun charge(
-        authentication: Authentication, request: ChargePointRequest
+        authentication: Authentication, @RequestBody request: ChargePointRequest
     ): Response<ChargePointResponse>
 
     @Operation(
@@ -40,7 +41,8 @@ interface PointSpec {
     ): Response<MyPointResponse>
 }
 
-data class ChargePointRequest(@Schema(description = "충전할 양", required = true) val amount: Int)
+data class ChargePointRequest(@Schema(description = "충전할 양", required = true) val amount: Int = 0)
+
 data class ChargePointResponse(
     @Schema(description = "충전된 user id") val userId: Long,
     @Schema(description = "충전된 후의 포인트") val point: Int
