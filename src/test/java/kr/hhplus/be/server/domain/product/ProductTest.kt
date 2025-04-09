@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
+import java.math.BigDecimal
 
 class ProductTest {
     @Nested
@@ -19,7 +20,7 @@ class ProductTest {
         @Test
         fun `가격이 음수면 ProductException이 발생한다`() {
             assertThrows<ProductException> {
-                ProductFixture(price = -1)
+                ProductFixture(price = BigDecimal.valueOf(-1))
             }
         }
 

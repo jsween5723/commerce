@@ -3,6 +3,7 @@ package kr.hhplus.be.server.interfaces.product
 import kr.hhplus.be.server.application.product.ProductResult
 import kr.hhplus.be.server.domain.product.Product
 import kr.hhplus.be.server.domain.product.RankedProduct
+import java.math.BigDecimal
 import java.time.LocalDate
 
 class ProductResponse {
@@ -12,7 +13,12 @@ class ProductResponse {
                 GetProductList(result.products.map { ProductDTO.from(it) })
         }
 
-        data class ProductDTO(val id: Long, val name: String, val price: Long, val stock: Long) {
+        data class ProductDTO(
+            val id: Long,
+            val name: String,
+            val price: BigDecimal,
+            val stock: Long
+        ) {
             companion object {
                 fun from(product: Product) = ProductDTO(
                     id = product.id,
@@ -33,10 +39,10 @@ class ProductResponse {
         data class RankedProductDTO(
             val productId: Long,
             val name: String,
-            val price: Long = 0,
-            val stockNumber: Long = 0,
+            val price: BigDecimal,
+            val stockNumber: Long,
             val totalSellingCount: Long,
-            val totalIncome: Long,
+            val totalIncome: BigDecimal,
             val rank: Int,
             val createdDate: LocalDate
         ) {

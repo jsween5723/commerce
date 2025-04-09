@@ -3,6 +3,7 @@ package kr.hhplus.be.server.domain.point
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.math.BigDecimal
 
 class PointCommandTest {
     @Nested
@@ -10,7 +11,7 @@ class PointCommandTest {
         @Test
         fun `amount가 음수면 PointException이 발생한다`() {
             assertThrows<PointException> {
-                ChargeFixture(amount = -1L)
+                ChargeFixture(amount = BigDecimal.valueOf(-1L))
             }
         }
     }
@@ -20,7 +21,7 @@ class PointCommandTest {
         @Test
         fun `amount가 음수면 PointException이 발생한다`() {
             assertThrows<PointException> {
-                UseFixture(amount = -1L)
+                UseFixture(amount = BigDecimal.valueOf(-1L))
             }
         }
     }

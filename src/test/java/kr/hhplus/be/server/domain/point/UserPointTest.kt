@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.math.BigDecimal
 
 class UserPointTest {
     @Nested
@@ -14,7 +15,7 @@ class UserPointTest {
         @Test
         fun `생성 시 point가 음수일 때 PointException이 발생한다`() {
             assertThrows<PointException> {
-                UserPointFixture(point = -1)
+                UserPointFixture(point = BigDecimal.valueOf(-1))
             }
         }
     }
@@ -36,7 +37,7 @@ class UserPointTest {
         fun `포인트 충전시 amount가 음수면 PointException이 발생한다`() {
             val userPoint = UserPointFixture()
             assertThrows<PointException> {
-                userPoint.charge(-1)
+                userPoint.charge(BigDecimal.valueOf(-1))
             }
         }
 
@@ -45,7 +46,7 @@ class UserPointTest {
             //given
             val userPoint = UserPointFixture()
             val before = userPoint.point
-            val amount = 100L
+            val amount = BigDecimal.valueOf(100L)
             //when
             userPoint.charge(amount)
             Assertions.assertEquals(
@@ -61,7 +62,7 @@ class UserPointTest {
             //given
             val userPoint = UserPointFixture()
             val before = userPoint.point
-            val usedPoint = 100L
+            val usedPoint = BigDecimal.valueOf(100L)
             //when
             userPoint.use(usedPoint)
             Assertions.assertEquals(
@@ -74,7 +75,7 @@ class UserPointTest {
             val userPoint = UserPointFixture()
             val before = userPoint.point
             assertThrows<PointException> {
-                userPoint.use(before + 1)
+                userPoint.use(before + BigDecimal.ONE)
             }
         }
 
@@ -82,7 +83,7 @@ class UserPointTest {
         fun `포인트 사용 시 amount가 음수면 PointException이 발생한다`() {
             val userPoint = UserPointFixture()
             assertThrows<PointException> {
-                userPoint.use(-2L)
+                userPoint.use(BigDecimal.valueOf(-2L))
             }
         }
     }

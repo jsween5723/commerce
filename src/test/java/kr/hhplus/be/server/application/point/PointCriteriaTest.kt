@@ -4,6 +4,7 @@ import kr.hhplus.be.server.domain.point.PointException
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.math.BigDecimal
 
 
 class PointCriteriaTest {
@@ -12,7 +13,7 @@ class PointCriteriaTest {
         @Test
         fun `amount가 음수면 PointException이 발생한다`() {
             assertThrows<PointException> {
-                ChargeFixture(amount = -1L)
+                ChargeFixture(amount = BigDecimal.valueOf(-1L))
             }
         }
     }

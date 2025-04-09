@@ -4,6 +4,7 @@ import kr.hhplus.be.server.interfaces.Response
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.math.BigDecimal
 import java.time.LocalDate
 
 @RestController
@@ -15,7 +16,10 @@ class ProductController : ProductSpec {
             ProductResponse.GetProductList(
                 products = listOf(
                     ProductResponse.GetProductList.ProductDTO(
-                        id = 1862, name = "Josefina Blevins", price = 5898, stock = 6349
+                        id = 1862,
+                        name = "Josefina Blevins",
+                        price = BigDecimal.valueOf(3000),
+                        stock = 6349
                     )
                 )
             )
@@ -30,10 +34,10 @@ class ProductController : ProductSpec {
                     ProductResponse.GetRankedProductList.RankedProductDTO(
                         productId = 3680,
                         name = "Garth Vargas",
-                        price = 1354,
+                        price = BigDecimal.valueOf(1354),
                         stockNumber = 4191,
                         totalSellingCount = 3535,
-                        totalIncome = 4861,
+                        totalIncome = BigDecimal.valueOf(4861),
                         rank = 8604,
                         createdDate = LocalDate.now()
                     )

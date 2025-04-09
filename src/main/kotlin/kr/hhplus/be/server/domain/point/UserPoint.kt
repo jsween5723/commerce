@@ -1,18 +1,21 @@
 package kr.hhplus.be.server.domain.point
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
+import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @Entity
 class UserPoint(
-    @Id val userId: Long = 0L,
+    val userId: Long = 0L,
     @Column(nullable = false)
-    var point: Long,
+    var point: BigDecimal = BigDecimal.ZERO,
 ) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    val id: Long = 0L
+
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     lateinit var createdAt: LocalDateTime
@@ -26,22 +29,22 @@ class UserPoint(
     }
 
     private fun validate() {
-        if (point < 0) throw PointException.UnderZeroPoint()
+        if (point < BigDecimal.ZERO) throw PointException.UnderZeroPoint()
     }
 
-    fun charge(amount: Long) {
-        if (amount < 0) throw PointException.MinusAmountCantApply()
+    fun charge(amount: BigDecimal) {
+        if (amount < BigDecimal.ZERO) throw PointException.MinusAmountCantApply()
         if (point + amount > MAX) throw PointException.OverMaxPoint()
         point = point.plus(amount)
     }
 
-    fun use(amount: Long) {
-        if (amount < 0) throw PointException.MinusAmountCantApply()
-        if (point - amount < 0) throw PointException.AmountOverPoint()
+    fun use(amount: BigDecimal) {
+        if (amount < BigDecimal.ZERO) throw PointException.MinusAmountCantApply()
+        if (point < amount) throw PointException.AmountOverPoint()
         point = point.minus(amount)
     }
 
     companion object {
-        const val MAX = 100_000L
+        val MAX = BigDecimal(100_000L)
     }
 }

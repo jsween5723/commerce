@@ -3,6 +3,7 @@ package kr.hhplus.be.server.domain.product
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
+import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -12,7 +13,7 @@ class RankedProduct(
         name = "product_id", nullable = false
     ) val product: Product,
     @Column(nullable = false) val totalSellingCount: Long,
-    @Column(nullable = false) val totalIncome: Long,
+    @Column(nullable = false) val totalIncome: BigDecimal,
     @Column(nullable = false) val rank: Int,
     @Column(nullable = false) val createdDate: LocalDate
 ) {

@@ -11,6 +11,7 @@ plugins {
 
 allOpen {
     annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.Embeddable")
 }
 fun getGitHash(): String {
     return providers.exec {
