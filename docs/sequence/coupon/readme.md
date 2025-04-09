@@ -9,6 +9,7 @@
 POST /api/v1/coupons/{id}/register
 Authorization: {userId}
 해당 쿠폰을 사용자에게 귀속합니다.
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -48,8 +49,10 @@ sequenceDiagram
 ```
 
 ## 보유 쿠폰 조회 API
+
 GET /api/v1/coupons/me
 Authorization: {userId}
+
 ```mermaid
 sequenceDiagram
     autonumber
@@ -66,27 +69,4 @@ sequenceDiagram
     CouponRepository -->>- CouponService: RegisteredCoupon 목록
     CouponService -->>- CouponController: RegisteredCoupon 목록
     CouponController -->>- User: MyRegisteredCouponResponse
-```
-
-## 쿠폰 재고 스케쥴링
-쿠폰 재고의 스냅샷을 생성하고 이전시점 데이터를 정리합니다.
-
-```mermaid
-sequenceDiagram
-    participant CouponInventoryScheduler
-    participant PeriodCouponInventoryList
-    participant CouponRepository
-    participant Database
-    CouponInventoryScheduler ->>+ CouponRepository: 일정기간 생성된 CouponInventory 조회
-    CouponRepository ->>+ Database: CouponInventoryEntity 목록 조회
-    Database -->>- CouponRepository: CouponInventoryEntity 목록
-    CouponRepository -->>- CouponInventoryScheduler: PeriodCouponInventoryList
-    CouponInventoryScheduler ->>+ PeriodCouponInventoryList: reduceToCumulative
-    PeriodCouponInventoryList ->> PeriodCouponInventoryList: Map<Long, List<CouponInventory>>
-    PeriodCouponInventoryList ->> PeriodCouponInventoryList: 누계를 계산 후 List<CouponInventory>
-    PeriodCouponInventoryList -->>- CouponInventoryScheduler: List<CouponInventory>
-    CouponInventoryScheduler ->>+ CouponRepository: List<CouponInventory> bulk insert
-    CouponRepository ->>- Database: List<CouponInventory> bulk insert
-    CouponInventoryScheduler ->>+ CouponRepository: PeriodCouponInventoryList 의 id 목록 bulk delete
-    CouponRepository ->>- Database: CouponInventoryEntity bulk delete
 ```
