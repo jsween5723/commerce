@@ -1,9 +1,6 @@
 package kr.hhplus.be.server.application.order
 
-import kr.hhplus.be.server.domain.order.Order
-import kr.hhplus.be.server.domain.order.OrderCommand
-import kr.hhplus.be.server.domain.order.OrderQuery
-import kr.hhplus.be.server.domain.order.OrderService
+import kr.hhplus.be.server.domain.order.*
 import kr.hhplus.be.server.domain.point.PointCommand
 import kr.hhplus.be.server.domain.point.PointService
 import kr.hhplus.be.server.domain.product.ProductCommand
@@ -15,7 +12,8 @@ import org.springframework.transaction.annotation.Transactional
 class OrderFacade(
     private val orderService: OrderService,
     private val productService: ProductService,
-    private val pointService: PointService
+    private val pointService: PointService,
+    private val dataPlatformSender: DataPlatformSender
 ) {
     @Transactional
     fun create(criteria: OrderCriteria.Create): OrderResult.Create {
@@ -39,7 +37,7 @@ class OrderFacade(
         val info = order.pay(criteria.authentication)
         //        포인트 차감
         pointService.use(PointCommand.Use(order.totalPrice, criteria.authentication.userId, criteria.authentication))
-//        TODO: 데이터 플랫폼 전송
+        dataPlatformSender.send(order)
         return OrderResult.Pay(orderId = order.id, paymentId = order.payment.id)
     }
 
