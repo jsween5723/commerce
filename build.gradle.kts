@@ -6,8 +6,12 @@ plugins {
     kotlin("plugin.jpa") version "2.1.0"
     id("org.springframework.boot") version "3.4.1"
     id("io.spring.dependency-management") version "1.1.7"
+    id("org.jetbrains.kotlin.plugin.allopen") version "2.1.20"
 }
 
+allOpen {
+    annotation("jakarta.persistence.Entity")
+}
 fun getGitHash(): String {
     return providers.exec {
         commandLine("git", "rev-parse", "--short", "HEAD")
