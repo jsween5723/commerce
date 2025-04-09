@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.domain.order.payment
 
 import jakarta.persistence.*
-import kr.hhplus.be.server.domain.auth.AuthException
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.auth.UserId
 import kr.hhplus.be.server.domain.order.Order
@@ -29,7 +28,7 @@ class Payment protected constructor(
     lateinit var updatedAt: LocalDateTime
 
     fun cancel(authentication: Authentication): PaymentInfo.Cancel {
-        authorize(authentication)
+        authentication.authorize(userId)
         if (status == Status.CANCELLED) throw PaymentException.AlreadyCancelled()
         val amount = if (status == Status.PENDING) BigDecimal.ZERO else amount
         status = Status.CANCELLED
@@ -37,17 +36,10 @@ class Payment protected constructor(
     }
 
     fun pay(authentication: Authentication): PaymentInfo.Pay {
-        authorize(authentication)
+        authentication.authorize(userId)
         if (status != Status.PENDING) throw PaymentException.PayOnlyPendingStatus()
         status = Status.PAID
         return PaymentInfo.Pay(amount)
-    }
-
-    /**
-     * 현재 요구사항에선 조건이 false인 상황이 발생하지 않지만 유지보수상의 방어코드입니다.
-     */
-    private fun authorize(authentication: Authentication) {
-        if (authentication.id.userId != userId.userId) throw AuthException.ForbiddenException()
     }
 
     companion object {

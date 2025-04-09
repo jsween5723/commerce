@@ -15,7 +15,11 @@ class Authentication(userId: Long, @Transient val isSuper: Boolean = false) {
     private fun validate() {
         if (id.userId <= 0L) throw AuthException.InvalidAuthenticationException()
     }
+
+    fun authorize(userId: UserId) {
+        if (!isSuper && id.userId != userId.userId) throw AuthException.ForbiddenException()
+    }
 }
 
 @Embeddable
-class UserId(@Column(nullable = false) val userId: Long)
+data class UserId(@Column(nullable = false) val userId: Long)

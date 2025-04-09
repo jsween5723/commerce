@@ -2,6 +2,7 @@ package kr.hhplus.be.server.domain.order
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 @Service
 class OrderService(private val orderRepository: OrderRepository) {
@@ -14,8 +15,8 @@ class OrderService(private val orderRepository: OrderRepository) {
 
     @Transactional
     fun create(command: OrderCommand.Create): Order {
-        val (releaseItems, authentication) = command
-        val createOrder = CreateOrder.from(releaseItems, authentication)
+        val (releaseItems, publishedCoupons, authentication) = command
+        val createOrder = CreateOrder.from(releaseItems, authentication, LocalDateTime.now(), publishedCoupons)
         return orderRepository.create(createOrder)
     }
 }
