@@ -30,16 +30,16 @@ class Product(
     @UpdateTimestamp
     lateinit var updatedAt: LocalDateTime
 
-    fun release(amount: Long): ReleaseVO {
+    fun release(amount: Long): ReleaseInfo {
         if (amount < 1) throw ProductException.AmountMustGreaterThanZero()
         if (stockNumber < amount) throw ProductException.AmountOverStockNumber()
         stockNumber = stockNumber.minus(amount)
-        return ReleaseVO(
+        return ReleaseInfo(
             quantity = amount
         )
     }
 
-    inner class ReleaseVO(
+    inner class ReleaseInfo(
         val quantity: Long
     ) {
         val product: Product = this@Product
@@ -47,7 +47,7 @@ class Product(
         val totalPrice: BigDecimal get() = product.price.multiply(BigDecimal(quantity))
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
-            if (other !is ReleaseVO) return false
+            if (other !is ReleaseInfo) return false
 
             if (quantity != other.quantity) return false
             if (product != other.product) return false

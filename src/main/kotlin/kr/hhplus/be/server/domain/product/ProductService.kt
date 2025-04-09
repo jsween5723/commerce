@@ -9,7 +9,7 @@ class ProductService(private val productRepository: ProductRepository) {
     fun findAllRanked() = productRepository.findAllRanked()
 
     @Transactional
-    fun release(command: ProductCommand.Release): List<Product.ReleaseVO> {
+    fun release(command: ProductCommand.Release): List<Product.ReleaseInfo> {
         val (targets) = command
         val targetProductIds = targets.map { it.productId }
 //    내부에서 해당 요소가 모두 존재하는지 검증하여 ProductException을 발생시킵니다.

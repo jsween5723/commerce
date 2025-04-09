@@ -51,7 +51,7 @@ class ProductTest {
             val before = 100L
             val amount = 50L
             val product = ProductFixture(stockNumber = before)
-            val expected = product.ReleaseVO(amount)
+            val expected = product.ReleaseInfo(amount)
             //when
             val releaseVO = product.release(amount)
 
