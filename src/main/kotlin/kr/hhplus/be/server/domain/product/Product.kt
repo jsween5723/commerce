@@ -39,6 +39,11 @@ class Product(
         )
     }
 
+    fun restock(amount: Long) {
+        if (amount < 1) throw ProductException.AmountMustGreaterThanZero()
+        stockNumber = stockNumber.plus(amount)
+    }
+
     inner class ReleaseInfo(
         val quantity: Long
     ) {

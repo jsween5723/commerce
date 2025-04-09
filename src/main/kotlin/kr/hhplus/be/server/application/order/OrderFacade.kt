@@ -6,6 +6,7 @@ import kr.hhplus.be.server.domain.order.OrderQuery
 import kr.hhplus.be.server.domain.order.OrderService
 import kr.hhplus.be.server.domain.point.PointCommand
 import kr.hhplus.be.server.domain.point.PointService
+import kr.hhplus.be.server.domain.product.ProductCommand
 import kr.hhplus.be.server.domain.product.ProductService
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -56,6 +57,12 @@ class OrderFacade(
                 )
             )
         }
+        val idAndQuantities = order.receipt.items.map { orderItem ->
+            ProductCommand.ProductIdAndQuantity(
+                orderItem.productId, orderItem.quantity
+            )
+        }
+        productService.restock(ProductCommand.Restock(idAndQuantities))
         return OrderResult.Cancel(orderId = order.id, paymentId = order.payment.id)
     }
 
@@ -70,6 +77,12 @@ class OrderFacade(
                     amount = it.totalPrice, it.payment.userId, authentication = criteria.authentication
                 )
             )
+            val idAndQuantities = it.receipt.items.map { orderItem ->
+                ProductCommand.ProductIdAndQuantity(
+                    orderItem.productId, orderItem.quantity
+                )
+            }
+            productService.restock(ProductCommand.Restock(idAndQuantities))
         }
     }
 }

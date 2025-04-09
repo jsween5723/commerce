@@ -52,4 +52,51 @@ class ProductCommandTest {
             }
         }
     }
+
+    @Nested
+    inner class `Restock를 생성할 수 있다` {
+        @Test
+        fun `productId가 1보다 작은 게 있다면 ProductException을 발생시킨다`() {
+            assertThrows<ProductException> {
+                ProductCommand.Restock(
+                    targets = listOf(
+                        ProductCommandFixture.ProductIdAndQuantity.create(
+                            productId = 0
+                        )
+                    )
+                )
+            }
+        }
+
+        @Test
+        fun `quantity가 1보다 작은 게 있다면 ProductException을 발생시킨다`() {
+            assertThrows<ProductException> {
+                ProductCommand.Restock(
+                    targets = listOf(
+                        ProductCommandFixture.ProductIdAndQuantity.create(
+                            quantity = 0
+                        )
+                    )
+                )
+            }
+        }
+
+        @Test
+        fun `대상이 없으면 ProductException을 발생시킨다`() {
+            assertThrows<ProductException> {
+                ProductCommand.Restock(listOf())
+            }
+        }
+
+        @Test
+        fun `생성할 수 있다`() {
+            assertDoesNotThrow {
+                ProductCommand.Restock(
+                    listOf(
+                        ProductCommandFixture.ProductIdAndQuantity.create()
+                    )
+                )
+            }
+        }
+    }
 }

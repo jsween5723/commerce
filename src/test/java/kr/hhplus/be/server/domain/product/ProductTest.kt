@@ -83,4 +83,32 @@ class ProductTest {
             }
         }
     }
+
+    @Nested
+    inner class `적재할 수 있다` {
+        @Test
+        fun `amount만큼 stockNumber가 증가한다`() {
+            //given
+            val before = 100L
+            val amount = 50L
+            val product = ProductFixture(stockNumber = before)
+            //when
+            product.restock(amount)
+
+            //then
+            assertEquals(before + amount, product.stockNumber)
+        }
+
+        @Test
+        fun `적재량이 1보다 작으면 ProductException을 발생시킨다`() {
+            //given
+            val before = 50L
+            val amount = 0L
+            val product = ProductFixture(stockNumber = before)
+            //when
+            assertThrows<ProductException> {
+                product.restock(amount)
+            }
+        }
+    }
 }

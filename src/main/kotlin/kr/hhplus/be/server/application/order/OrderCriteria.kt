@@ -15,7 +15,7 @@ class OrderCriteria {
             val productId: Long, @Schema(description = "수량") val amount: Long
         ) {
             fun toProductIdAndQuantity() =
-                ProductCommand.Release.ProductIdAndQuantity(productId, amount)
+                ProductCommand.ProductIdAndQuantity(productId, amount)
         }
 
         fun toProductReleaseCommand() =

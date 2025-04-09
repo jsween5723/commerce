@@ -6,8 +6,8 @@ class ProductCommandFixture {
             fun create(
                 productId: Long = 1L,
                 quantity: Long = 2L
-            ): ProductCommand.Release.ProductIdAndQuantity {
-                return ProductCommand.Release.ProductIdAndQuantity(productId, quantity)
+            ): ProductCommand.ProductIdAndQuantity {
+                return ProductCommand.ProductIdAndQuantity(productId, quantity)
             }
         }
     }
