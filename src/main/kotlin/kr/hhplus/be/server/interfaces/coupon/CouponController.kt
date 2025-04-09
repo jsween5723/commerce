@@ -1,8 +1,7 @@
-package kr.hhplus.be.server.api.coupon
+package kr.hhplus.be.server.interfaces.coupon
 
-import kr.hhplus.be.server.api.Authentication
-import kr.hhplus.be.server.api.Response
-import kr.hhplus.be.server.api.SuccessResponse
+import kr.hhplus.be.server.domain.auth.Authentication
+import kr.hhplus.be.server.interfaces.Response
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
 
@@ -14,12 +13,12 @@ class CouponController : CouponSpec {
         authentication: Authentication,
         @PathVariable id: Long
     ): Response<RegisterCouponResponse> {
-        return SuccessResponse(RegisterCouponResponse(id = 1))
+        return Response.success(RegisterCouponResponse(id = 1))
     }
 
     @GetMapping("/me")
     override fun getMyRegisteredCoupons(authentication: Authentication): Response<GetMyRegisteredCouponsResponse> {
-        return SuccessResponse(
+        return Response.success(
             GetMyRegisteredCouponsResponse(
                 coupons = listOf(
                     GetMyRegisteredCouponsResponse.RegisteredCoupon(

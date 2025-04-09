@@ -1,8 +1,8 @@
-package kr.hhplus.be.server.api.product
+package kr.hhplus.be.server.interfaces.product
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
-import kr.hhplus.be.server.api.Response
+import kr.hhplus.be.server.interfaces.Response
 
 @Tag(name = "상품", description = "상품 관련 API")
 interface ProductSpec {

@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.api.point
+package kr.hhplus.be.server.interfaces.point
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -6,9 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
-import kr.hhplus.be.server.api.Authentication
-import kr.hhplus.be.server.api.ErrorResponse
-import kr.hhplus.be.server.api.Response
+import kr.hhplus.be.server.domain.auth.Authentication
+import kr.hhplus.be.server.interfaces.Response
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.RequestBody
 
@@ -23,7 +22,7 @@ interface PointSpec {
             responseCode = "400",
             description = "1. 충전량은 음수가 될수 없습니다. \n 2. 충전 결과가 최대치를 초과했습니다.",
             content = [Content(
-                schema = Schema(implementation = ErrorResponse::class),
+                schema = Schema(implementation = Response::class),
                 mediaType = MediaType.APPLICATION_JSON_VALUE,
             )]
         )]

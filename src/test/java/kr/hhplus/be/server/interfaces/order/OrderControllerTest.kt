@@ -1,20 +1,17 @@
-package kr.hhplus.be.server.api.point
+package kr.hhplus.be.server.interfaces.order
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
-import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.get
 import org.springframework.test.web.servlet.post
 
-@SpringBootTest
-@AutoConfigureMockMvc
-class PointControllerTest {
+@WebMvcTest(OrderController::class)
+class OrderControllerTest {
     @Autowired
     private lateinit var mockMvc: MockMvc
 
@@ -22,26 +19,31 @@ class PointControllerTest {
     private lateinit var objectMapper: ObjectMapper
 
     @Test
-    fun `POST api_v1_points_charge`() {
-        val contentBody = objectMapper.writeValueAsString(ChargePointRequest(amount = 3956))
-        println(contentBody)
-        mockMvc.post("/api/v1/points/charge") {
+    fun `POST api_v1_orders`() {
+        mockMvc.post("/api/v1/orders") {
             contentType = MediaType.APPLICATION_JSON
-            content = contentBody
-            header(HttpHeaders.AUTHORIZATION, "1")
+            header(
+                HttpHeaders.AUTHORIZATION, "1"
+            )
+            content = objectMapper.writeValueAsString(
+                CreateOrderRequest(
+                    orderItems = listOf(
+                        CreateOrderRequest.CreateOrderItem(
+                            productId = 1, amount = 30
+                        )
+                    ), registeredCouponIds = listOf(1, 2, 3)
+                )
+            )
         }
             .andExpect {
                 status { is2xxSuccessful() }
-                jsonPath(
-                    "$.success", `is`(true)
-                )
+                jsonPath("$.success", `is`(true))
             }
     }
 
     @Test
-    fun `GET api_v1_points_me`() {
-        mockMvc.get("/api/v1/points/me") {
-            contentType = MediaType.APPLICATION_JSON
+    fun `POST api_v1_orders_{id}_pay`() {
+        mockMvc.post("/api/v1/orders/1/pay") {
             header(HttpHeaders.AUTHORIZATION, "1")
         }
             .andExpect {

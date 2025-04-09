@@ -1,7 +1,6 @@
-package kr.hhplus.be.server.api.product
+package kr.hhplus.be.server.interfaces.product
 
-import kr.hhplus.be.server.api.Response
-import kr.hhplus.be.server.api.SuccessResponse
+import kr.hhplus.be.server.interfaces.Response
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 class ProductController : ProductSpec {
     @GetMapping
     override fun getList(): Response<GetProductListResponse> {
-        return SuccessResponse(
+        return Response.success(
             GetProductListResponse(
                 listOf(
                     GetProductListResponse.Product(
@@ -24,7 +23,7 @@ class ProductController : ProductSpec {
 
     @GetMapping("popular")
     override fun getRankedList(): Response<GetRankedProductListResponse> {
-        return SuccessResponse(
+        return Response.success(
             GetRankedProductListResponse(
                 listOf(
                     GetRankedProductListResponse.RankedProduct(

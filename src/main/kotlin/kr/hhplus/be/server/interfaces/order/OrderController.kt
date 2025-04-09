@@ -1,8 +1,7 @@
-package kr.hhplus.be.server.api.order
+package kr.hhplus.be.server.interfaces.order
 
-import kr.hhplus.be.server.api.Authentication
-import kr.hhplus.be.server.api.Response
-import kr.hhplus.be.server.api.SuccessResponse
+import kr.hhplus.be.server.domain.auth.Authentication
+import kr.hhplus.be.server.interfaces.Response
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -13,7 +12,7 @@ class OrderController : OrderSpec {
         authentication: Authentication,
         @RequestBody request: CreateOrderRequest
     ): Response<CreateOrderResponse> {
-        return SuccessResponse(CreateOrderResponse(1L))
+        return Response.success(CreateOrderResponse(1L))
     }
 
     @PostMapping("{id}/pay")
@@ -21,6 +20,6 @@ class OrderController : OrderSpec {
         authentication: Authentication,
         @PathVariable id: Long
     ): Response<PayOrderResponse> {
-        return SuccessResponse(PayOrderResponse(1L))
+        return Response.success(PayOrderResponse(1L))
     }
 }

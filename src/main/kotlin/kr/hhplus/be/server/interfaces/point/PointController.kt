@@ -1,8 +1,7 @@
-package kr.hhplus.be.server.api.point
+package kr.hhplus.be.server.interfaces.point
 
-import kr.hhplus.be.server.api.Authentication
-import kr.hhplus.be.server.api.Response
-import kr.hhplus.be.server.api.SuccessResponse
+import kr.hhplus.be.server.domain.auth.Authentication
+import kr.hhplus.be.server.interfaces.Response
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -15,11 +14,11 @@ class PointController : PointSpec {
     override fun charge(
         authentication: Authentication, request: ChargePointRequest
     ): Response<ChargePointResponse> {
-        return SuccessResponse(data = ChargePointResponse(userId = 3537, point = 1753))
+        return Response.success(data = ChargePointResponse(userId = 3537, point = 1753))
     }
 
     @GetMapping("me")
     override fun getMyPoint(authentication: Authentication): Response<MyPointResponse> {
-        return SuccessResponse(data = MyPointResponse(userId = 3537, point = 1753))
+        return Response.success(data = MyPointResponse(userId = 3537, point = 1753))
     }
 }

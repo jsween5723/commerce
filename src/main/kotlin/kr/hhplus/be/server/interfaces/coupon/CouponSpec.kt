@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.api.coupon
+package kr.hhplus.be.server.interfaces.coupon
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -6,9 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
-import kr.hhplus.be.server.api.Authentication
-import kr.hhplus.be.server.api.ErrorResponse
-import kr.hhplus.be.server.api.Response
+import kr.hhplus.be.server.domain.auth.Authentication
+import kr.hhplus.be.server.interfaces.Response
 import org.springframework.http.MediaType
 import java.time.LocalDateTime
 
@@ -23,12 +22,12 @@ interface CouponSpec {
             responseCode = "400",
             description = "1. 쿠폰의 잔여량이 부족합니다. \n 2. 발급기한이 만료된 쿠폰입니다.",
             content = [Content(
-                schema = Schema(implementation = ErrorResponse::class),
+                schema = Schema(implementation = Response::class),
                 mediaType = MediaType.APPLICATION_JSON_VALUE,
             )]
         ), ApiResponse(
             responseCode = "404", description = "존재하지 않는 쿠폰입니다.", content = [Content(
-                schema = Schema(implementation = ErrorResponse::class),
+                schema = Schema(implementation = Response::class),
                 mediaType = MediaType.APPLICATION_JSON_VALUE,
             )]
         )]

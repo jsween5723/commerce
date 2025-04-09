@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.api.order
+package kr.hhplus.be.server.interfaces.order
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -6,9 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
-import kr.hhplus.be.server.api.Authentication
-import kr.hhplus.be.server.api.ErrorResponse
-import kr.hhplus.be.server.api.Response
+import kr.hhplus.be.server.domain.auth.Authentication
+import kr.hhplus.be.server.interfaces.Response
 import org.springframework.http.MediaType
 
 @Tag(name = "주문 / 결제", description = "주문과 주문에 대한 결제를 수행하는 데 관련된 API입니다.")
@@ -20,14 +19,14 @@ interface OrderSpec {
     @ApiResponses(
         value = [ApiResponse(
             responseCode = "400", description = "1. 상품 재고가 충분하지 않습니다.", content = [Content(
-                schema = Schema(implementation = ErrorResponse::class),
+                schema = Schema(implementation = Response::class),
                 mediaType = MediaType.APPLICATION_JSON_VALUE,
             )]
         ), ApiResponse(
             responseCode = "404",
             description = "1. 존재하지 않는 상품이 포함됐습니다. \n 2. 존재하지 않는 쿠폰이 포함됐습니다.",
             content = [Content(
-                schema = Schema(implementation = ErrorResponse::class),
+                schema = Schema(implementation = Response::class),
                 mediaType = MediaType.APPLICATION_JSON_VALUE,
             )]
         )]
@@ -43,12 +42,12 @@ interface OrderSpec {
     @ApiResponses(
         value = [ApiResponse(
             responseCode = "400", description = "잔액이 부족합니다.", content = [Content(
-                schema = Schema(implementation = ErrorResponse::class),
+                schema = Schema(implementation = Response::class),
                 mediaType = MediaType.APPLICATION_JSON_VALUE,
             )]
         ), ApiResponse(
             responseCode = "404", description = "존재하지 않는 주문입니다.", content = [Content(
-                schema = Schema(implementation = ErrorResponse::class),
+                schema = Schema(implementation = Response::class),
                 mediaType = MediaType.APPLICATION_JSON_VALUE,
             )]
         )]
