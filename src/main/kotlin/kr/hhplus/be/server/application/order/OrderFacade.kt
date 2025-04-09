@@ -36,7 +36,8 @@ class OrderFacade(
 //        결제 완료 처리
         val info = order.pay(criteria.authentication)
         //        포인트 차감
-        pointService.use(PointCommand.Use(order.totalPrice, criteria.authentication.userId, criteria.authentication))
+
+        pointService.use(PointCommand.Use(order.totalPrice, criteria.authentication.id, criteria.authentication))
         dataPlatformSender.send(order)
         return OrderResult.Pay(orderId = order.id, paymentId = order.payment.id)
     }

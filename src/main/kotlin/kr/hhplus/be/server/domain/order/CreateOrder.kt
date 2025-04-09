@@ -1,16 +1,17 @@
 package kr.hhplus.be.server.domain.order
 
 import kr.hhplus.be.server.domain.auth.Authentication
+import kr.hhplus.be.server.domain.auth.UserId
 import kr.hhplus.be.server.domain.product.Product
 import java.math.BigDecimal
 import java.util.*
 
 
-class CreateOrder private constructor(val receipt: CreateReceipt, val userId: Long) {
+class CreateOrder private constructor(val receipt: CreateReceipt, val userId: UserId) {
 
     companion object {
         fun from(releaseItems: List<Product.ReleaseInfo>, authentication: Authentication) =
-            CreateOrder(receipt = CreateReceipt.from(releaseItems), userId = authentication.userId)
+            CreateOrder(receipt = CreateReceipt.from(releaseItems), userId = authentication.id)
     }
 }
 

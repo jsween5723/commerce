@@ -1,14 +1,21 @@
 package kr.hhplus.be.server.domain.auth
 
 import io.swagger.v3.oas.annotations.Hidden
+import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
 
 @Hidden
-data class Authentication(val userId: Long, @Transient val isSuper: Boolean = false) {
+class Authentication(userId: Long, @Transient val isSuper: Boolean = false) {
+    val id: UserId = UserId(userId)
+
     init {
         validate()
     }
 
     private fun validate() {
-        if (userId <= 0L) throw AuthException.InvalidAuthenticationException()
+        if (id.userId <= 0L) throw AuthException.InvalidAuthenticationException()
     }
 }
+
+@Embeddable
+class UserId(@Column(nullable = false) val userId: Long)

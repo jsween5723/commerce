@@ -3,6 +3,7 @@ package kr.hhplus.be.server.domain.order
 import jakarta.persistence.*
 import kr.hhplus.be.server.domain.auth.AuthException
 import kr.hhplus.be.server.domain.auth.Authentication
+import kr.hhplus.be.server.domain.auth.UserId
 import kr.hhplus.be.server.domain.order.payment.Payment
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -11,7 +12,8 @@ import java.time.LocalDateTime
 
 @Entity(name = "orders")
 class Order private constructor(
-    createReceipt: CreateReceipt, @Column(nullable = false) val userId: Long
+    createReceipt: CreateReceipt,
+    val userId: UserId
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -59,7 +61,7 @@ class Order private constructor(
     }
 
     private fun authorize(authentication: Authentication) {
-        if (!authentication.isSuper && authentication.userId != userId) throw AuthException.ForbiddenException()
+        if (!authentication.isSuper && authentication.id.userId != userId.userId) throw AuthException.ForbiddenException()
     }
 
     companion object {

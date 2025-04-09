@@ -3,6 +3,7 @@ package kr.hhplus.be.server.domain.order.payment
 import jakarta.persistence.*
 import kr.hhplus.be.server.domain.auth.AuthException
 import kr.hhplus.be.server.domain.auth.Authentication
+import kr.hhplus.be.server.domain.auth.UserId
 import kr.hhplus.be.server.domain.order.Order
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -11,7 +12,7 @@ import java.time.LocalDateTime
 
 @Entity(name = "payments")
 class Payment protected constructor(
-    @Column(nullable = false) val amount: BigDecimal, @Column(nullable = false) val userId: Long
+    @Column(nullable = false) val amount: BigDecimal, val userId: UserId
 ) {
     @Id
     @GeneratedValue
@@ -46,7 +47,7 @@ class Payment protected constructor(
      * 현재 요구사항에선 조건이 false인 상황이 발생하지 않지만 유지보수상의 방어코드입니다.
      */
     private fun authorize(authentication: Authentication) {
-        if (authentication.userId != userId) throw AuthException.ForbiddenException()
+        if (authentication.id.userId != userId.userId) throw AuthException.ForbiddenException()
     }
 
     companion object {
