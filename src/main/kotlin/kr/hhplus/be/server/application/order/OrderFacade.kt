@@ -1,6 +1,8 @@
 package kr.hhplus.be.server.application.order
 
+import kr.hhplus.be.server.domain.order.Order
 import kr.hhplus.be.server.domain.order.OrderCommand
+import kr.hhplus.be.server.domain.order.OrderQuery
 import kr.hhplus.be.server.domain.order.OrderService
 import kr.hhplus.be.server.domain.point.PointCommand
 import kr.hhplus.be.server.domain.point.PointService
@@ -35,7 +37,7 @@ class OrderFacade(
 //        결제 완료 처리
         val info = order.pay(criteria.authentication)
         //        포인트 차감
-        pointService.use(PointCommand.Use(order.totalPrice, criteria.authentication))
+        pointService.use(PointCommand.Use(order.totalPrice, criteria.authentication.userId, criteria.authentication))
 //        TODO: 데이터 플랫폼 전송
         return OrderResult.Pay(orderId = order.id, paymentId = order.payment.id)
     }
@@ -50,10 +52,24 @@ class OrderFacade(
         if (info.hasAmount) {
             pointService.charge(
                 PointCommand.Charge(
-                    amount = order.totalPrice, authentication = criteria.authentication
+                    amount = order.totalPrice, userId = order.payment.userId, authentication = criteria.authentication
                 )
             )
         }
         return OrderResult.Cancel(orderId = order.id, paymentId = order.payment.id)
+    }
+
+    @Transactional
+    fun cancelByDate(criteria: OrderCriteria.CancelBy) {
+        val orders =
+            orderService.findForCancel(OrderQuery.ForCancelSchedule(Order.Status.PENDING, criteria.pendingTime))
+        orders.forEach {
+            it.cancel(criteria.authentication)
+            pointService.charge(
+                PointCommand.Charge(
+                    amount = it.totalPrice, it.payment.userId, authentication = criteria.authentication
+                )
+            )
+        }
     }
 }

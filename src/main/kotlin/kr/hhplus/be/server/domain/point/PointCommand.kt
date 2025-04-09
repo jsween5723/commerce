@@ -4,13 +4,13 @@ import kr.hhplus.be.server.domain.auth.Authentication
 import java.math.BigDecimal
 
 class PointCommand {
-    data class Charge(val amount: BigDecimal, val authentication: Authentication) {
+    data class Charge(val amount: BigDecimal, val userId: Long, val authentication: Authentication) {
         init {
             if (amount < BigDecimal.ZERO) throw PointException.MinusAmountCantApply()
         }
     }
 
-    data class Use(val amount: BigDecimal, val authentication: Authentication) {
+    data class Use(val amount: BigDecimal, val userId: Long, val authentication: Authentication) {
         init {
             if (amount < BigDecimal.ZERO) throw PointException.MinusAmountCantApply()
         }

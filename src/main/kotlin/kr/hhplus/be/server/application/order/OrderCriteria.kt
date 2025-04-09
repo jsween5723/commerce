@@ -3,6 +3,7 @@ package kr.hhplus.be.server.application.order
 import io.swagger.v3.oas.annotations.media.Schema
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.product.ProductCommand
+import java.time.LocalDateTime
 
 class OrderCriteria {
     data class Create(
@@ -23,4 +24,5 @@ class OrderCriteria {
 
     data class Pay(val orderId: Long, val authentication: Authentication)
     data class Cancel(val orderId: Long, val authentication: Authentication)
+    data class CancelBy(val pendingTime: LocalDateTime, val authentication: Authentication)
 }

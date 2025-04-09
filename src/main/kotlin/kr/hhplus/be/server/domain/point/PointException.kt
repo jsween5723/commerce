@@ -28,5 +28,6 @@ private enum class PointErrorCode(override val message: String) : ErrorCode {
     ),
     MINUS_AMOUNT_CANT_APPLY(
         "음수로 증감시킬 수 없습니다."
-    ), ;
+    ),
+    INVALID_USER_ID("유효하지 않은 대상입니다.");
 }

@@ -58,7 +58,7 @@ class Order private constructor(
     }
 
     private fun authorize(authentication: Authentication) {
-        if (authentication.userId != userId) throw AuthException.ForbiddenException()
+        if (!authentication.isSuper && authentication.userId != userId) throw AuthException.ForbiddenException()
     }
 
     companion object {

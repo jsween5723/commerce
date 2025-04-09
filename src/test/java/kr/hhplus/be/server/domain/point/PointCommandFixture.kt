@@ -8,12 +8,12 @@ class ChargeFixture(
     amount: BigDecimal = BigDecimal.valueOf(100),
     authentication: Authentication = mock(Authentication::class.java),
 ) {
-    val charge = PointCommand.Charge(amount, authentication)
+    val charge = PointCommand.Charge(amount, authentication.userId, authentication)
 }
 
 class UseFixture(
     amount: BigDecimal = BigDecimal.valueOf(100),
     authentication: Authentication = mock(Authentication::class.java),
 ) {
-    val charge = PointCommand.Use(amount, authentication)
+    val charge = PointCommand.Use(amount, authentication.userId, authentication)
 }

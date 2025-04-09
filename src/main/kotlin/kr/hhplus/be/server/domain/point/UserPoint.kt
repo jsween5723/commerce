@@ -1,6 +1,8 @@
 package kr.hhplus.be.server.domain.point
 
 import jakarta.persistence.*
+import kr.hhplus.be.server.domain.auth.AuthException
+import kr.hhplus.be.server.domain.auth.Authentication
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.math.BigDecimal
@@ -32,17 +34,24 @@ class UserPoint(
         if (point < BigDecimal.ZERO) throw PointException.UnderZeroPoint()
     }
 
-    fun charge(amount: BigDecimal) {
+    fun charge(amount: BigDecimal, authentication: Authentication) {
+        authorize(authentication)
         if (amount < BigDecimal.ZERO) throw PointException.MinusAmountCantApply()
         if (point + amount > MAX) throw PointException.OverMaxPoint()
         point = point.plus(amount)
     }
 
-    fun use(amount: BigDecimal) {
+    fun use(amount: BigDecimal, authentication: Authentication) {
+        authorize(authentication)
         if (amount < BigDecimal.ZERO) throw PointException.MinusAmountCantApply()
         if (point < amount) throw PointException.AmountOverPoint()
         point = point.minus(amount)
     }
+
+    private fun authorize(authentication: Authentication) {
+        if (!authentication.isSuper && authentication.userId != userId) throw AuthException.ForbiddenException()
+    }
+
 
     companion object {
         val MAX = BigDecimal(100_000L)

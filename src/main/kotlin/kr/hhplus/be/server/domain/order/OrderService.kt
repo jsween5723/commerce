@@ -10,6 +10,8 @@ class OrderService(private val orderRepository: OrderRepository) {
         query
     )
 
+    fun findForCancel(query: OrderQuery.ForCancelSchedule) = orderRepository.findForCancel(query)
+
     @Transactional
     fun create(command: OrderCommand.Create): Order {
         val (releaseItems, authentication) = command

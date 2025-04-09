@@ -10,17 +10,17 @@ class PointService(
 
     @Transactional
     fun charge(command: PointCommand.Charge): UserPoint {
-        val (amount, authentication) = command
-        val point = pointRepository.findByUserId(userId = authentication.userId)
-        point.charge(amount = amount)
+        val (amount, userId, authentication) = command
+        val point = pointRepository.findByUserId(userId = userId)
+        point.charge(amount = amount, authentication)
         return point
     }
 
     @Transactional
     fun use(command: PointCommand.Use): UserPoint {
-        val (amount, authentication) = command
+        val (amount, userId, authentication) = command
         val point = pointRepository.findByUserId(userId = authentication.userId)
-        point.use(amount = amount)
+        point.use(amount = amount, authentication)
         return point
     }
 }

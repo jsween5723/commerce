@@ -11,6 +11,6 @@ class PointCriteria {
             if (amount < BigDecimal.ZERO) throw PointException.MinusAmountCantApply()
         }
 
-        fun toChargeCommand() = PointCommand.Charge(amount, authentication)
+        fun toChargeCommand() = PointCommand.Charge(amount, authentication.userId, authentication)
     }
 }
