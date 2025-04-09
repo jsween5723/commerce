@@ -8,7 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-@Entity
+@Entity(name = "user_points")
 class UserPoint(
     val userId: Long = 0L,
     @Column(nullable = false)
