@@ -2,6 +2,7 @@ package kr.hhplus.be.server.interfaces.order
 
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.interfaces.Response
+import kr.hhplus.be.server.interfaces.order.OrderResponse.CreateOrderResponse
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -10,7 +11,7 @@ class OrderController : OrderSpec {
     @PostMapping
     override fun create(
         authentication: Authentication,
-        @RequestBody request: CreateOrderRequest
+        @RequestBody request: OrderRequest.CreateOrder
     ): Response<CreateOrderResponse> {
         return Response.success(CreateOrderResponse(1L))
     }
@@ -19,7 +20,7 @@ class OrderController : OrderSpec {
     override fun pay(
         authentication: Authentication,
         @PathVariable id: Long
-    ): Response<PayOrderResponse> {
-        return Response.success(PayOrderResponse(1L))
+    ): Response<OrderResponse.PayOrderResponse> {
+        return Response.success(OrderResponse.PayOrderResponse(1L))
     }
 }

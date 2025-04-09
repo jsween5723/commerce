@@ -32,8 +32,8 @@ interface OrderSpec {
         )]
     )
     fun create(
-        authentication: Authentication, request: CreateOrderRequest
-    ): Response<CreateOrderResponse>
+        authentication: Authentication, request: OrderRequest.CreateOrder
+    ): Response<OrderResponse.CreateOrderResponse>
 
     @Operation(
         summary = "주문 결제 API",
@@ -54,15 +54,5 @@ interface OrderSpec {
     )
     fun pay(
         authentication: Authentication, id: Long
-    ): Response<PayOrderResponse>
+    ): Response<OrderResponse.PayOrderResponse>
 }
-
-data class CreateOrderRequest(
-    val orderItems: List<CreateOrderItem>, val registeredCouponIds: List<Long>
-) {
-    data class CreateOrderItem(val productId: Long, @Schema(description = "수량") val amount: Int)
-}
-
-data class CreateOrderResponse(@Schema(description = "생성된 주문 id") val id: Long = 0)
-
-data class PayOrderResponse(@Schema(description = "완료된 결제 id") val id: Long = 0)

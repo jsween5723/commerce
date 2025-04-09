@@ -26,9 +26,9 @@ class OrderControllerTest {
                 HttpHeaders.AUTHORIZATION, "1"
             )
             content = objectMapper.writeValueAsString(
-                CreateOrderRequest(
+                OrderRequest.CreateOrder(
                     orderItems = listOf(
-                        CreateOrderRequest.CreateOrderItem(
+                        OrderRequest.CreateOrder.CreateOrderItem(
                             productId = 1, amount = 30
                         )
                     ), registeredCouponIds = listOf(1, 2, 3)
