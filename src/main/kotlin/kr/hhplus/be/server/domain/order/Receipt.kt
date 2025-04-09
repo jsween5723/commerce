@@ -10,7 +10,7 @@ import java.util.*
 @Embeddable
 class Receipt protected constructor(
     @OneToMany(
-        cascade = [(CascadeType.ALL)], orphanRemoval = true
+        mappedBy = "order", cascade = [(CascadeType.ALL)], orphanRemoval = true
     ) val items: MutableList<OrderItem> = LinkedList()
 ) {
     @get: Transient
