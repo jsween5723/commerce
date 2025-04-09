@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.interfaces.product
+package kr.hhplus.be.server.interfaces.api.product
 
 import kr.hhplus.be.server.application.product.ProductResult
 import kr.hhplus.be.server.domain.product.Product

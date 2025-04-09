@@ -1,7 +1,7 @@
-package kr.hhplus.be.server.interfaces.coupon
+package kr.hhplus.be.server.interfaces.api.coupon
 
 import kr.hhplus.be.server.domain.auth.Authentication
-import kr.hhplus.be.server.interfaces.Response
+import kr.hhplus.be.server.interfaces.api.Response
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDateTime
 

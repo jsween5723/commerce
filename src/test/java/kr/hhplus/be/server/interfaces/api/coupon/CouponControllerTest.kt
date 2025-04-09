@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.interfaces.coupon
+package kr.hhplus.be.server.interfaces.api.coupon
 
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Test

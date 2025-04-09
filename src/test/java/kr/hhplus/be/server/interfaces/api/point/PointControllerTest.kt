@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.interfaces.point
+package kr.hhplus.be.server.interfaces.api.point
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.hamcrest.Matchers.`is`

@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.interfaces.product
+package kr.hhplus.be.server.interfaces.api.product
 
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.Test

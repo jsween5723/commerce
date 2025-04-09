@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.interfaces.order
+package kr.hhplus.be.server.interfaces.api.order
 
 import io.swagger.v3.oas.annotations.media.Schema
 

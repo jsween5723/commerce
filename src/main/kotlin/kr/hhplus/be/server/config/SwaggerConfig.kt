@@ -12,7 +12,7 @@ import io.swagger.v3.oas.models.responses.ApiResponse
 import io.swagger.v3.oas.models.responses.ApiResponses
 import kr.hhplus.be.server.domain.auth.AuthException
 import kr.hhplus.be.server.domain.auth.Authentication
-import kr.hhplus.be.server.interfaces.Response
+import kr.hhplus.be.server.interfaces.api.Response
 import org.springdoc.core.customizers.OperationCustomizer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

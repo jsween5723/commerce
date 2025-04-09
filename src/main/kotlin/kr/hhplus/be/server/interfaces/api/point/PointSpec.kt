@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.interfaces.point
+package kr.hhplus.be.server.interfaces.api.point
 
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import kr.hhplus.be.server.domain.auth.Authentication
-import kr.hhplus.be.server.interfaces.Response
+import kr.hhplus.be.server.interfaces.api.Response
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.RequestBody
 

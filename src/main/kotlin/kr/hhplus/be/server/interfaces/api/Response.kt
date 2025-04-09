@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.interfaces
+package kr.hhplus.be.server.interfaces.api
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import kr.hhplus.be.server.domain.CustomException

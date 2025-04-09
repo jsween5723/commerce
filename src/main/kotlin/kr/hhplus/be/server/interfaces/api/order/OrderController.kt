@@ -1,8 +1,8 @@
-package kr.hhplus.be.server.interfaces.order
+package kr.hhplus.be.server.interfaces.api.order
 
 import kr.hhplus.be.server.domain.auth.Authentication
-import kr.hhplus.be.server.interfaces.Response
-import kr.hhplus.be.server.interfaces.order.OrderResponse.CreateOrderResponse
+import kr.hhplus.be.server.interfaces.api.Response
+import kr.hhplus.be.server.interfaces.api.order.OrderResponse.CreateOrderResponse
 import org.springframework.web.bind.annotation.*
 
 @RestController

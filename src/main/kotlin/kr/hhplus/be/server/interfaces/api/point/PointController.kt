@@ -1,7 +1,7 @@
-package kr.hhplus.be.server.interfaces.point
+package kr.hhplus.be.server.interfaces.api.point
 
 import kr.hhplus.be.server.domain.auth.Authentication
-import kr.hhplus.be.server.interfaces.Response
+import kr.hhplus.be.server.interfaces.api.Response
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping

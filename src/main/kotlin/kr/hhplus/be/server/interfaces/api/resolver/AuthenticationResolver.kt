@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.interfaces.resolver
+package kr.hhplus.be.server.interfaces.api.resolver
 
 import kr.hhplus.be.server.domain.auth.AuthException
 import kr.hhplus.be.server.domain.auth.Authentication
