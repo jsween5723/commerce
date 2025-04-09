@@ -38,7 +38,7 @@ class CreateReceipt private constructor(
 //생성 경로를 ReleaseVO로 제한합니다.
 //따라서 해당 클래스에서 검증하는 역할은 수행하지 않습니다.
 class CreateOrderItem private constructor(
-    val product: Product,
+    val productId: Long,
     val name: String,
     val priceOfOne: BigDecimal,
     val quantity: Long,
@@ -49,13 +49,11 @@ class CreateOrderItem private constructor(
 
     private fun validate() {
         if (quantity < 1L) throw OrderException.OrderItemIsGreaterThanZero()
-//        발생할 수 있는 경우가 없으나 유지보수시 간과하지 않도록 하기위한 방어코드입니다.
-        if (name != product.name || priceOfOne != product.price) throw OrderException.OrderItemInfoValidateFail()
     }
 
     companion object {
         fun from(releaseItem: Product.ReleaseInfo) = CreateOrderItem(
-            product = releaseItem.product,
+            productId = releaseItem.product.id,
             name = releaseItem.product.name,
             priceOfOne = releaseItem.product.price,
             quantity = releaseItem.quantity

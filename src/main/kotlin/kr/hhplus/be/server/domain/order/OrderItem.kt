@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.domain.order
 
 import jakarta.persistence.*
-import kr.hhplus.be.server.domain.product.Product
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.math.BigDecimal
@@ -13,9 +12,10 @@ class OrderItem protected constructor(
     @JoinColumn(
         name = "order_id", nullable = false
     ) @ManyToOne(fetch = FetchType.LAZY) val order: Order?,
+// 프로덕트 도메인과 연관 끊기
     @JoinColumn(
-        name = "product_id", nullable = false
-    ) @ManyToOne(fetch = FetchType.LAZY) val product: Product,
+        name = "product_id", nullable = false, table = "order_items", referencedColumnName = "id"
+    ) val productId: Long,
     @Column(nullable = false) val name: String,
     @Column(nullable = false) val priceOfOne: BigDecimal,
     @Column(nullable = false) val quantity: Long,
@@ -36,7 +36,7 @@ class OrderItem protected constructor(
     companion object {
         fun from(createOrderItem: CreateOrderItem) = OrderItem(
             order = null,
-            product = createOrderItem.product,
+            productId = createOrderItem.productId,
             name = createOrderItem.name,
             priceOfOne = createOrderItem.priceOfOne,
             quantity = createOrderItem.quantity
