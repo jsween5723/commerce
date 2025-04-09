@@ -11,29 +11,21 @@ import java.time.LocalDateTime
 @Entity(name = "published_coupon")
 class PublishedCoupon(
     val userId: UserId,
-    val expireAt: LocalDateTime,
+    @Column(nullable = false) val expireAt: LocalDateTime,
     var usedAt: LocalDateTime? = null,
-    coupon: Coupon? = null,
+    @JoinColumn(name = "coupon_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    val coupon: Coupon
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long = 0
-
-    @JoinColumn(name = "coupon_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    lateinit var coupon: Coupon
 
     @CreationTimestamp
     lateinit var createdAt: LocalDateTime
 
     @UpdateTimestamp
     lateinit var updatedAt: LocalDateTime
-
-    init {
-        if (coupon != null) {
-            this.coupon = coupon
-        }
-    }
 
     @get:Transient
     val used: Boolean get() = usedAt != null
