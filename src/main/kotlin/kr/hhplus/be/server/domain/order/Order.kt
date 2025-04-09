@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 
 @Entity(name = "orders")
 class Order private constructor(
-    private val receipt: Receipt, @Column(nullable = false) val userId: Long
+    val receipt: Receipt, @Column(nullable = false) val userId: Long
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

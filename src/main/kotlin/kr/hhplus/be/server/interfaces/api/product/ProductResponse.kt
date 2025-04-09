@@ -43,7 +43,6 @@ class ProductResponse {
             val stockNumber: Long,
             val totalSellingCount: Long,
             val totalIncome: BigDecimal,
-            val rank: Int,
             val createdDate: LocalDate
         ) {
             companion object {
@@ -54,7 +53,6 @@ class ProductResponse {
                     stockNumber = rankedProduct.product.stockNumber,
                     totalSellingCount = rankedProduct.totalSellingCount,
                     totalIncome = rankedProduct.totalIncome,
-                    rank = rankedProduct.rank,
                     createdDate = rankedProduct.createdDate
                 )
 

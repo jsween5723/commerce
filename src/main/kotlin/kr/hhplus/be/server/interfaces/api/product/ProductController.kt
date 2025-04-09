@@ -38,7 +38,6 @@ class ProductController : ProductSpec {
                         stockNumber = 4191,
                         totalSellingCount = 3535,
                         totalIncome = BigDecimal.valueOf(4861),
-                        rank = 8604,
                         createdDate = LocalDate.now()
                     )
                 )

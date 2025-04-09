@@ -6,6 +6,9 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class OrderService(private val orderRepository: OrderRepository) {
     fun findById(id: Long): Order = orderRepository.findById(id) ?: throw OrderException.OrderNotFound()
+    fun findByForStatistics(query: OrderQuery.ForStatistics) = orderRepository.findByForStatistics(
+        query
+    )
 
     @Transactional
     fun create(command: OrderCommand.Create): Order {
