@@ -1,0 +1,58 @@
+package kr.hhplus.be.server.interfaces.product
+
+import kr.hhplus.be.server.application.product.ProductResult
+import kr.hhplus.be.server.domain.product.Product
+import kr.hhplus.be.server.domain.product.RankedProduct
+import java.time.LocalDate
+
+class ProductResponse {
+    data class GetProductList(val products: List<ProductDTO>) {
+        companion object {
+            fun from(result: ProductResult.GetProductList) =
+                GetProductList(result.products.map { ProductDTO.from(it) })
+        }
+
+        data class ProductDTO(val id: Long, val name: String, val price: Long, val stock: Long) {
+            companion object {
+                fun from(product: Product) = ProductDTO(
+                    id = product.id,
+                    name = product.name,
+                    price = product.price,
+                    stock = product.stockNumber
+                )
+            }
+        }
+    }
+
+    data class GetRankedProductList(val products: List<RankedProductDTO>) {
+        companion object {
+            fun from(result: ProductResult.GetRankedList) =
+                GetRankedProductList(result.rankedProducts.map { RankedProductDTO.from(it) })
+        }
+
+        data class RankedProductDTO(
+            val productId: Long,
+            val name: String,
+            val price: Long = 0,
+            val stockNumber: Long = 0,
+            val totalSellingCount: Long,
+            val totalIncome: Long,
+            val rank: Int,
+            val createdDate: LocalDate
+        ) {
+            companion object {
+                fun from(rankedProduct: RankedProduct) = RankedProductDTO(
+                    productId = rankedProduct.id,
+                    name = rankedProduct.product.name,
+                    price = rankedProduct.product.price,
+                    stockNumber = rankedProduct.product.stockNumber,
+                    totalSellingCount = rankedProduct.totalSellingCount,
+                    totalIncome = rankedProduct.totalIncome,
+                    rank = rankedProduct.rank,
+                    createdDate = rankedProduct.createdDate
+                )
+
+            }
+        }
+    }
+}

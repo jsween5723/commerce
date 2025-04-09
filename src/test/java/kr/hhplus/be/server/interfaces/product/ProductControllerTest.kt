@@ -19,7 +19,7 @@ class ProductControllerTest {
             .andExpect {
                 jsonPath(
                     "$.data.products",
-                    Matchers.instanceOf<List<GetProductListResponse.Product>>(List::class.java)
+                    Matchers.instanceOf<List<ProductResponse.GetProductList.ProductDTO>>(List::class.java)
                 )
             }
     }
@@ -31,7 +31,9 @@ class ProductControllerTest {
             .andExpect {
                 jsonPath(
                     "$.data.products",
-                    Matchers.instanceOf<List<GetRankedProductListResponse.RankedProduct>>(List::class.java)
+                    Matchers.instanceOf<List<ProductResponse.GetRankedProductList.RankedProductDTO>>(
+                        List::class.java
+                    )
                 )
             }
     }
