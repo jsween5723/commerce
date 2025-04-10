@@ -2,6 +2,8 @@
 
 userId는 외부에서 공급받습니다.
 
+# 쿠폰을 제외한 도메인
+
 ```mermaid
 erDiagram
     PRODUCTS {
@@ -58,8 +60,9 @@ erDiagram
     PRODUCTS ||--o{ RANKED_PRODUCTS: "연관"
     ORDERS ||--|{ ORDER_ITEMS: "포함"
     PAYMENTS ||--|| ORDERS: "연관"
-    PRODUCTS ||--o{ ORDER_ITEMS: ""
 ```
+
+# 쿠폰 도메인
 
 ```mermaid
 erDiagram
