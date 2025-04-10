@@ -17,6 +17,7 @@ class Receipt protected constructor(
     val totalPrice: BigDecimal get() = items.sumOf { it.totalPrice }
 
     companion object {
-        fun from(createReceipt: CreateReceipt) = Receipt(createReceipt.items.map { OrderItem.from(it) }.toMutableList())
+        fun from(createReceipt: CreateReceipt, order: Order) =
+            Receipt(createReceipt.items.map { OrderItem.from(it, order) }.toMutableList())
     }
 }

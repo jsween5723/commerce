@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 class OrderItem protected constructor(
     @JoinColumn(
         name = "order_id", nullable = false
-    ) @ManyToOne(fetch = FetchType.LAZY) val order: Order?,
+    ) @ManyToOne(fetch = FetchType.LAZY) val order: Order,
 // 프로덕트 도메인과 연관 끊기
     @JoinColumn(
         name = "product_id", nullable = false, table = "order_items", referencedColumnName = "id"
@@ -34,8 +34,8 @@ class OrderItem protected constructor(
     val totalPrice: BigDecimal get() = priceOfOne.multiply(BigDecimal(quantity))
 
     companion object {
-        fun from(createOrderItem: CreateOrderItem) = OrderItem(
-            order = null,
+        fun from(createOrderItem: CreateOrderItem, order: Order) = OrderItem(
+            order = order,
             productId = createOrderItem.productId,
             name = createOrderItem.name,
             priceOfOne = createOrderItem.priceOfOne,

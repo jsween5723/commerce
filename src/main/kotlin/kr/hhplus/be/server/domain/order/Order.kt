@@ -11,11 +11,13 @@ import java.time.LocalDateTime
 
 @Entity(name = "orders")
 class Order private constructor(
-    val receipt: Receipt, @Column(nullable = false) val userId: Long
+    createReceipt: CreateReceipt, @Column(nullable = false) val userId: Long
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long = 0L
+
+    val receipt: Receipt = Receipt.from(createReceipt = createReceipt, order = this)
 
     //    주문 생성시 결제는 같은 시점에 대기 상태로 생성돼야하므로
 //    cascade persist를 지정한다.
@@ -37,7 +39,6 @@ class Order private constructor(
 
     @UpdateTimestamp
     lateinit var updatedAt: LocalDateTime
-
     fun pay(authentication: Authentication): OrderInfo.Pay {
         authorize(authentication)
         if (status == Status.PAID) throw OrderException.AleadyPaid()
@@ -63,7 +64,7 @@ class Order private constructor(
 
     companion object {
         fun from(createOrder: CreateOrder) =
-            Order(receipt = Receipt.from(createOrder.receipt), userId = createOrder.userId)
+            Order(createReceipt = createOrder.receipt, userId = createOrder.userId)
     }
 
     enum class Status {
