@@ -3,6 +3,7 @@ package kr.hhplus.be.server.interfaces.scheduler
 
 import kr.hhplus.be.server.application.order.OrderCriteria
 import kr.hhplus.be.server.application.order.OrderFacade
+import kr.hhplus.be.server.domain.auth.Authentication
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -18,7 +19,7 @@ class OrderCancelScheduler(
         orderFacade.cancelByDate(
             OrderCriteria.CancelBy(
                 pendingTime = LocalDateTime.now().minusDays(1),
-                authentication = kr.hhplus.be.server.domain.auth.Authentication(userId = Long.MAX_VALUE, isSuper = true)
+                authentication = Authentication(userId = Long.MAX_VALUE, isSuper = true)
             )
         )
     }

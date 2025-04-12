@@ -3,6 +3,7 @@ package kr.hhplus.be.server.domain.point
 import jakarta.persistence.*
 import kr.hhplus.be.server.domain.auth.AuthException
 import kr.hhplus.be.server.domain.auth.Authentication
+import kr.hhplus.be.server.domain.auth.UserId
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.math.BigDecimal
@@ -10,9 +11,8 @@ import java.time.LocalDateTime
 
 @Entity(name = "user_points")
 class UserPoint(
-    val userId: Long = 0L,
-    @Column(nullable = false)
-    var point: BigDecimal = BigDecimal.ZERO,
+    val userId: UserId,
+    @Column(nullable = false) var point: BigDecimal = BigDecimal.ZERO,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -49,7 +49,7 @@ class UserPoint(
     }
 
     private fun authorize(authentication: Authentication) {
-        if (!authentication.isSuper && authentication.userId != userId) throw AuthException.ForbiddenException()
+        if (!authentication.isSuper && authentication.id.userId != userId.userId) throw AuthException.ForbiddenException()
     }
 
 

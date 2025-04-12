@@ -2,6 +2,7 @@ package kr.hhplus.be.server.domain.order
 
 import kr.hhplus.be.server.domain.auth.AuthException
 import kr.hhplus.be.server.domain.auth.Authentication
+import kr.hhplus.be.server.domain.coupon.PublishedCouponFixture
 import kr.hhplus.be.server.domain.order.payment.Payment
 import kr.hhplus.be.server.domain.product.ProductFixture
 import org.assertj.core.api.Assertions.*
@@ -37,6 +38,21 @@ class OrderTest {
             assertThat(order.paymentStatus).isEqualTo(Payment.Status.PENDING)
 
         }
+
+        @Test
+        fun `생성 시 쿠폰의 usedAt이 null이 아니게 된다`() {
+            //            given
+            val releaseInfo = ProductFixture(price = BigDecimal.valueOf(200)).ReleaseInfo(2)
+            val releaseInfo2 = ProductFixture(price = BigDecimal.valueOf(500)).ReleaseInfo(3)
+            val publishedCoupon = PublishedCouponFixture()
+            val createOrder = CreateOrder.from(
+                listOf(releaseInfo, releaseInfo2), Authentication(1L), publishedCoupons = listOf(publishedCoupon)
+            )
+            val order = Order.from(createOrder = createOrder)
+//            when
+            //then
+            assertThat(publishedCoupon.usedAt).isNotNull()
+        }
     }
 
     @Test
@@ -57,6 +73,29 @@ class OrderTest {
     }
 
     @Nested
+    inner class `쿠폰을 적용할 수 있다` {
+        @Test
+        fun `쿠폰 할인이 적용된다`() {
+            //given
+            val releaseInfo = ProductFixture(price = BigDecimal.valueOf(200)).ReleaseInfo(2)
+            val releaseInfo2 = ProductFixture(price = BigDecimal.valueOf(500)).ReleaseInfo(3)
+            val publishedCoupon = PublishedCouponFixture()
+            val createOrder = CreateOrder.from(
+                listOf(releaseInfo, releaseInfo2), Authentication(1L), publishedCoupons = listOf(publishedCoupon)
+            )
+            val order = Order.from(createOrder = createOrder)
+
+//        when
+            val totalPrice = order.totalPrice
+//        then
+            assertThat(totalPrice).isEqualTo(
+                publishedCoupon.discount(releaseInfo.totalPrice + releaseInfo2.totalPrice)
+            )
+        }
+    }
+
+
+    @Nested
     inner class `cancel 메소드를 통해 주문을 취소할 수 있다` {
         @Test
         fun `성공한다`() {
@@ -67,6 +106,22 @@ class OrderTest {
             val order = Order.from(createOrder = createOrder)
 //            when
             assertThatCode { order.cancel(Authentication(1L)) }
+        }
+
+        @Test
+        fun `성공 시 쿠폰의 usedAt이 null이 된다`() {
+            //            given
+            val releaseInfo = ProductFixture(price = BigDecimal.valueOf(200)).ReleaseInfo(2)
+            val releaseInfo2 = ProductFixture(price = BigDecimal.valueOf(500)).ReleaseInfo(3)
+            val publishedCoupon = PublishedCouponFixture()
+            val createOrder = CreateOrder.from(
+                listOf(releaseInfo, releaseInfo2), Authentication(1L), publishedCoupons = listOf(publishedCoupon)
+            )
+            val order = Order.from(createOrder = createOrder)
+//            when
+            order.cancel(Authentication(1L))
+            //then
+            assertThat(publishedCoupon.usedAt).isNull()
         }
 
         @Test
