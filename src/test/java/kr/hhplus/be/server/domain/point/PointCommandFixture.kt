@@ -1,19 +1,18 @@
 package kr.hhplus.be.server.domain.point
 
 import kr.hhplus.be.server.domain.auth.Authentication
-import org.mockito.Mockito.mock
 import java.math.BigDecimal
 
 class ChargeFixture(
     amount: BigDecimal = BigDecimal.valueOf(100),
-    authentication: Authentication = mock(Authentication::class.java),
+    authentication: Authentication = Authentication(1L),
 ) {
-    val charge = PointCommand.Charge(amount, authentication.userId, authentication)
+    val charge = PointCommand.Charge(amount, authentication.id, authentication)
 }
 
 class UseFixture(
     amount: BigDecimal = BigDecimal.valueOf(100),
-    authentication: Authentication = mock(Authentication::class.java),
+    authentication: Authentication = Authentication(1L),
 ) {
-    val charge = PointCommand.Use(amount, authentication.userId, authentication)
+    val charge = PointCommand.Use(amount, authentication.id, authentication)
 }

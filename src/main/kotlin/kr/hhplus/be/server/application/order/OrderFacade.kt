@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.application.order
 
+import kr.hhplus.be.server.domain.coupon.CouponService
 import kr.hhplus.be.server.domain.order.*
 import kr.hhplus.be.server.domain.point.PointCommand
 import kr.hhplus.be.server.domain.point.PointService
@@ -13,16 +14,20 @@ class OrderFacade(
     private val orderService: OrderService,
     private val productService: ProductService,
     private val pointService: PointService,
-    private val dataPlatformSender: DataPlatformSender
+    private val dataPlatformSender: DataPlatformSender,
+    private val couponService: CouponService,
 ) {
     @Transactional
     fun create(criteria: OrderCriteria.Create): OrderResult.Create {
 //        재고 확인 및 재고 선차감
         val releaseInfo = productService.release(criteria.toProductReleaseCommand())
+        val publishedCoupons = couponService.findPublishedByIds(criteria.publishedCouponIds)
 //        주문 생성
         val order = orderService.create(
             OrderCommand.Create(
-                releaseItems = releaseInfo, authentication = criteria.authentication
+                releaseItems = releaseInfo,
+                publishedCoupons = publishedCoupons,
+                authentication = criteria.authentication
             )
         )
 //        주문 id 반환
@@ -36,7 +41,8 @@ class OrderFacade(
 //        결제 완료 처리
         val info = order.pay(criteria.authentication)
         //        포인트 차감
-        pointService.use(PointCommand.Use(order.totalPrice, criteria.authentication.userId, criteria.authentication))
+
+        pointService.use(PointCommand.Use(order.totalPrice, criteria.authentication.id, criteria.authentication))
         dataPlatformSender.send(order)
         return OrderResult.Pay(orderId = order.id, paymentId = order.payment.id)
     }

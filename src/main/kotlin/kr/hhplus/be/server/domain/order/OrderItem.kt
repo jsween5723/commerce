@@ -13,8 +13,8 @@ class OrderItem protected constructor(
         name = "order_id", nullable = false
     ) @ManyToOne(fetch = FetchType.LAZY) val order: Order,
 // 프로덕트 도메인과 연관 끊기
-    @JoinColumn(
-        name = "product_id", nullable = false, table = "order_items", referencedColumnName = "id"
+    @Column(
+        name = "product_id", nullable = false
     ) val productId: Long,
     @Column(nullable = false) val name: String,
     @Column(nullable = false) val priceOfOne: BigDecimal,

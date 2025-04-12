@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 class OrderCriteria {
     data class Create(
         val orderItems: List<CreateOrderItem>,
-        val registeredCouponIds: List<Long>,
+        val publishedCouponIds: List<Long>,
         val authentication: Authentication
     ) {
         data class CreateOrderItem(

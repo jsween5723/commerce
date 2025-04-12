@@ -12,40 +12,10 @@ Authorization: {userId}
 
 ```mermaid
 sequenceDiagram
-    autonumber
-    actor User
-    participant CouponController
-    participant CouponService
-    participant Coupon
-    participant CouponRepository
-    participant Database
-    User ->>+ CouponController: POST /api/v1/coupons/{id}/register
-    CouponController ->>+ CouponService: registerCoupon
-    CouponService ->>+ CouponRepository: Coupon 조회
-    CouponRepository ->>+ Database: Coupon 조회
-    Database -->>- CouponRepository: CouponEntity or null
-    break 반환값이 null이면
-        CouponRepository -->> User: 404 Not Found
-    end
-    CouponRepository ->>+ Database: CouponInventoryEntity 목록 조회
-    Database -->>- CouponRepository: CouponInventoryEntity 목록
-    CouponRepository -->>- CouponService: Coupon
-    CouponService ->>+ Coupon: register
-    break Coupon의 amount가 모자라면
-        Coupon -->> User: 400 Bad Request
-    end
-    break Coupon의 from > now or to < now
-        Coupon -->> User: 400 Bad Request
-    end
-    Coupon -->>- CouponService: RegisteredCouponCreate
-    CouponService ->>+ CouponRepository: registerCoupon(RegisteredCouponCreate)
-    CouponRepository ->> Database: CouponInventoryEntity insert
-    CouponRepository ->> Database: CouponInventoryHistoryEntity insert
-    CouponRepository ->>+ Database: insert RegisteredCouponEntity
-    Database -->>- CouponRepository: RegisteredCouponEntity with id
-    CouponRepository -->>- CouponService: RegisteredCoupon
-    CouponService -->>- CouponController: RegisteredCoupon
-    CouponController -->>- User: RegisterCouponResponse
+    Client ->>+ CouponFacade: 발급하기
+    CouponFacade ->>+ CouponService: 발급하기
+    CouponService -->>- CouponFacade: 발급된 쿠폰
+    CouponFacade ->>- Client: CouponResult.Publish(publishedCoupon.id)
 ```
 
 ## 보유 쿠폰 조회 API
@@ -55,18 +25,11 @@ Authorization: {userId}
 
 ```mermaid
 sequenceDiagram
-    autonumber
-    actor User
-    participant CouponController
-    participant CouponService
-    participant CouponRepository
-    participant Database
-    User ->>+ CouponController: GET /api/v1/coupons/me
-    CouponController ->>+ CouponService: RegisteredCoupon 목록 조회
-    CouponService ->>+ CouponRepository: RegisteredCoupon 목록 조회
-    CouponRepository ->>+ Database: RegisteredCouponEntity 목록 조회 (join CouponEntity)
-    Database -->>- CouponRepository: RegisteredCoupon 목록
-    CouponRepository -->>- CouponService: RegisteredCoupon 목록
-    CouponService -->>- CouponController: RegisteredCoupon 목록
-    CouponController -->>- User: MyRegisteredCouponResponse
+    participant Client as Client
+    participant Facade as CouponFacade
+    participant Service as CouponService
+    Client ->> Facade: 특정유저의 발급받은 쿠폰조회
+    Facade ->> Service: 특정유저의 발급받은 쿠폰조회
+    Service -->> Facade: 발급받은 쿠폰목록
+    Facade -->> Client: 발급받은 쿠폰목록
 ```

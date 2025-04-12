@@ -17,7 +17,7 @@ class PointFacade(
     @Transactional
     fun charge(criteria: PointCriteria.Charge): PointResult.Charge {
         val (amount, authentication) = criteria
-        val result = lockManager.runWithLock(authentication.userId) {
+        val result = lockManager.runWithLock(authentication.id.userId) {
             val point = pointService.charge(criteria.toChargeCommand())
         }
         return PointResult.Charge(true)
