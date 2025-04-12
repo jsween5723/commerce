@@ -10,12 +10,13 @@ import io.swagger.v3.oas.models.media.StringSchema
 import io.swagger.v3.oas.models.parameters.Parameter
 import io.swagger.v3.oas.models.responses.ApiResponse
 import io.swagger.v3.oas.models.responses.ApiResponses
-import kr.hhplus.be.server.api.Authentication
-import kr.hhplus.be.server.api.ErrorCode
-import kr.hhplus.be.server.api.ErrorResponse
+import kr.hhplus.be.server.domain.auth.AuthException
+import kr.hhplus.be.server.domain.auth.Authentication
+import kr.hhplus.be.server.interfaces.api.Response
 import org.springdoc.core.customizers.OperationCustomizer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.web.ErrorResponse
 import org.springframework.web.method.HandlerMethod
 
 
@@ -31,11 +32,9 @@ class SwaggerConfig(private val objectMapper: ObjectMapper) {
             }
 
             if (hasAuthenticationParameter) {
-                val authHeader = Parameter().`in`("header")
-                    .schema(StringSchema())
-                    .name("Authorization")
-                    .description("{userId}")
-                    .required(true)
+                val authHeader =
+                    Parameter().`in`("header").schema(StringSchema()).name("Authorization").description("{userId}")
+                        .required(true)
                 operation.addParametersItem(authHeader)
                 val apiResponses: ApiResponses = operation.responses ?: ApiResponses()
                 val unauthorizedResponse = ApiResponse().apply {
@@ -47,8 +46,8 @@ class SwaggerConfig(private val objectMapper: ObjectMapper) {
                             }
                             val example = Example().apply {
                                 value = objectMapper.writeValueAsString(
-                                    ErrorResponse(
-                                        code = ErrorCode.UNAUTHORIZED
+                                    Response.error<AuthException>(
+                                        exception = AuthException.InvalidAuthenticationException()
                                     )
                                 )
                             }

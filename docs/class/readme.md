@@ -1,99 +1,106 @@
-## 규칙
-1. 상품 재고는 이벤트기반으로 관리하고 도메인 클래스만을 기재합니다.
-2. 도메인 클래스 생성시에 필요하긴하지만 도메인로직에서 사용되지 않는 디비엔티티의 상태는 기재하지 않습니다.
+# 주문-결제 도메인
+
+```mermaid
+classDiagram
+    class Order {
+        +Long id
+        +Receipt receipt
+        +Long userId
+        +Payment payment
+        +Status status
+        +LocalDateTime createdAt
+        +LocalDateTime updatedAt
+        +BigDecimal getTotalPrice()
+        +Payment.Status getPaymentStatus()
+        +OrderInfo.Pay pay(Authentication authentication)
+        +OrderInfo.Cancel cancel(Authentication authentication)
+        -void authorize(Authentication authentication)
+    }
+    class OrderItem {
+        +Long id
+        +Long productId
+        +String name
+        +BigDecimal priceOfOne
+        +Long quantity
+        +LocalDateTime createdAt
+        +LocalDateTime updatedAt
+        +BigDecimal getTotalPrice()
+    }
+    class Receipt {
+        +List~OrderItem~ items
+        +BigDecimal getTotalPrice()
+    }
+    class Payment {
+        +Long id
+        +BigDecimal amount
+        +Long userId
+        +Status status
+        +LocalDateTime createdAt
+        +LocalDateTime updatedAt
+        +PaymentInfo.Cancel cancel(Authentication authentication)
+        +PaymentInfo.Pay pay(Authentication authentication)
+        -void authorize(Authentication authentication)
+    }
+    Order <|-- Receipt: "포함"
+    Order <|-- Payment: "포함"
+    Receipt <|-- OrderItem: "포함"
+```
+
+# 포인트 도메인
 
 ```mermaid
 classDiagram
     class UserPoint {
-        - Long userId
-        - Int amount
-        + use(Int amount)
-        + charge(Int amount)
+        +Long id
+        +Long userId
+        +BigDecimal point
+        +LocalDateTime createdAt
+        +LocalDateTime updatedAt
+        +void charge(BigDecimal amount, Authentication authentication)
+        +void use(BigDecimal amount, Authentication authentication)
+        -void validate()
+        -void authorize(Authentication authentication)
     }
-    
-    class RegisteredCoupon {
-        - Long id
-        - Long userId
-        - LocalDateTime expiredAt
-        + validateExpired(LocalDateTime when)
-        + apply(Int amount): Int
+```
+
+# 인증 도메인
+
+```mermaid
+classDiagram
+    class Authentication {
+        +Long userId
+        +Boolean isSuper
     }
-    
-    
-    class Coupon {
-        - Long id
-        - Schedule publishSchedule
-        - Duration expireDuration
-        + register(Long userId) RegisterdCoupon
-        + apply(Int amount) : Int
-    }
-    
-    Coupon *-- DiscountPolicy
-    
-    class DiscountPolicy {
-        <<interface>>
-        + apply(Int amount) : Int
-    }
-    
-    class PercentageDiscountPolicy {
-        Double percent
-        + apply(Int amount) : Int
-    }
-    class FixedAmountDiscountPolicy {
-        Int amount
-        + apply(Int amount) : Int
-    }
-    DiscountPolicy <|-- PercentageDiscountPolicy
-    DiscountPolicy <|-- FixedAmountDiscountPolicy
-    
-    class Schedule {
-        - LocalDateTime from
-        - LocalDateTime to
-        + between(LocalDateTime when)
-    }
-    
-    
-    User --* RegisteredCoupon
-    Coupon --* RegisteredCoupon
-    
+
+    UserPoint <-- Authentication: "인가"
+    Order <-- Authentication: "인가"
+    Payment <-- Authentication: "인가"
+```
+
+# 상품
+
+```mermaid
+classDiagram
     class Product {
-        - Long id
-        - String name
-        - Int stockNumber
-        - Int price
-        + release(OrderItem)
-        + stock(amount)
+        +Long id
+        +String name
+        +BigDecimal price
+        +Long stockNumber
+        +LocalDateTime createdAt
+        +LocalDateTime updatedAt
+        +ReleaseInfo release(Long amount)
+        +void restock(Long amount)
+        -void validate()
     }
-    
-    class OrderItem {
-        - Long id
-        - String name
-        - Int price
-        - Int amount
-        + totalPrice(): Int
+
+    class RankedProduct {
+        +Long id
+        +Long productId
+        +Long totalSellingCount
+        +BigDecimal totalIncome
+        +LocalDate createdDate
+        +LocalDateTime createdAt
+        +LocalDateTime updatedAt
     }
-    
-    class PaymentState {
-        <<ENUMERATION>>
-        PAYMENT_PENDING
-        PAYED
-    }
-    
-    class Order {
-        - Long id
-        - Long userId
-        - PaymentState state
-        - List~OrderItem~ items
-        - List~RegisteredCoupon~ coupons
-        + pay(UserPoint point): OrderPayment
-    }
-    
-    class OrderPayment {
-        - Long id
-        - Long userId
-        - Int amount
-    }
-    Order --* OrderPayment
-    OrderItem "1..*" --> "1" Order
-    Product --* OrderItem
+    Product <|-- RankedProduct: "연관"
 ```
