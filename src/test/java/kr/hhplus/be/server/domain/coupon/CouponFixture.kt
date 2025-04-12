@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.domain.coupon
 
 import kr.hhplus.be.server.domain.auth.UserId
+import kr.hhplus.be.server.domain.order.coupon.SelectedCouponSnapshot
 import java.math.BigDecimal
 import java.time.Duration
 import java.time.LocalDateTime
@@ -13,7 +14,7 @@ class CouponFixture(
     publishTo: LocalDateTime = LocalDateTime.now().plusDays(1),
 //   발급 후 ~ 만료 까지 기간
     expireDuration: Duration = Duration.ofDays(3),
-    type: Type = Type.FIXED,
+    type: DiscountPolicy.Type = DiscountPolicy.Type.FIXED,
 //    수치
     amount: BigDecimal = BigDecimal.valueOf(20),
 //    수량
@@ -36,4 +37,14 @@ class PublishedCouponFixture(
     coupon: Coupon = CouponFixture()
 ) : PublishedCoupon(
     userId = userId, expireAt = expireAt, usedAt = usedAt, coupon = coupon
+)
+
+fun CouponSnapshotFixture() = SelectedCouponSnapshot(
+    couponId = 8971,
+    publishedCouponId = 9992,
+    name = "Pamela Shields",
+    description = "curabitur",
+    expireAt = LocalDateTime.now().plusDays(2),
+    type = kr.hhplus.be.server.domain.order.coupon.DiscountPolicy.Type.PERCENT,
+    amount = BigDecimal.valueOf(20),
 )

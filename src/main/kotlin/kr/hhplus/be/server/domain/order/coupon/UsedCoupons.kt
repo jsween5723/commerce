@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.domain.order
+package kr.hhplus.be.server.domain.order.coupon
 
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Embeddable
@@ -7,7 +7,7 @@ import java.math.BigDecimal
 import java.util.*
 
 @Embeddable
-class UsedCoupons protected constructor(
+class UsedCoupons(
     @OneToMany(
         cascade = [(CascadeType.ALL)], orphanRemoval = true
     ) val items: List<UsedCouponToOrder> = LinkedList()
@@ -18,14 +18,5 @@ class UsedCoupons protected constructor(
             result = it.discount(result)
         }
         return result
-    }
-
-    fun deuse() {
-        items.forEach { it.deuse() }
-    }
-
-    companion object {
-        fun from(createUsedCoupons: CreateUsedCoupons) =
-            UsedCoupons(createUsedCoupons.coupons.map { UsedCouponToOrder(it) })
     }
 }

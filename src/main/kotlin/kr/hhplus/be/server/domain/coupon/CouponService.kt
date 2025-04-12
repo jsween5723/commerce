@@ -16,4 +16,12 @@ class CouponService(private val couponRepository: CouponRepository) {
         val coupon = couponRepository.findById(couponId) ?: throw CouponException.CouponNotFound()
         return coupon.publish(authentication.id, LocalDateTime.now())
     }
+
+    @Transactional
+    fun selectPublishedCoupons(command: CouponCommand.Select): List<PublishedCoupon> {
+        val (authentication, couponIds) = command
+        val publishedCoupons = couponRepository.findPublishedByIds(couponIds)
+        publishedCoupons.forEach { it.use(LocalDateTime.now(), authentication) }
+        return publishedCoupons
+    }
 }

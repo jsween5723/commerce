@@ -1,13 +1,13 @@
 package kr.hhplus.be.server.domain.order
 
 import kr.hhplus.be.server.domain.auth.Authentication
-import kr.hhplus.be.server.domain.coupon.PublishedCoupon
-import kr.hhplus.be.server.domain.product.Product
+import kr.hhplus.be.server.domain.order.coupon.SelectedCouponSnapshot
+import kr.hhplus.be.server.domain.order.product.SelectedProductSnapshot
 
 class OrderCommand {
     data class Create(
-        val releaseItems: List<Product.ReleaseInfo>,
-        val publishedCoupons: List<PublishedCoupon>,
+        val selectedProducts: List<SelectedProductSnapshot>,
+        val publishedCoupons: List<SelectedCouponSnapshot>,
         val authentication: Authentication
     )
 }

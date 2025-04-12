@@ -3,21 +3,30 @@ package kr.hhplus.be.server.domain.order
 import jakarta.persistence.*
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.auth.UserId
+import kr.hhplus.be.server.domain.order.coupon.SelectedCouponSnapshot
+import kr.hhplus.be.server.domain.order.coupon.UsedCouponToOrder
+import kr.hhplus.be.server.domain.order.coupon.UsedCoupons
 import kr.hhplus.be.server.domain.order.payment.Payment
+import kr.hhplus.be.server.domain.order.product.OrderItem
+import kr.hhplus.be.server.domain.order.product.Receipt
+import kr.hhplus.be.server.domain.order.product.SelectedProductSnapshot
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.math.BigDecimal
 import java.time.LocalDateTime
+import java.time.LocalDateTime.now
 
 @Entity(name = "orders")
-class Order private constructor(
-    createReceipt: CreateReceipt, val userId: UserId,  val usedCoupons: UsedCoupons
+class Order protected constructor(
+    selectedProductSnapshots: List<SelectedProductSnapshot>,
+    val userId: UserId,
+    selectedCoupons: List<SelectedCouponSnapshot>
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long = 0L
-
-    val receipt: Receipt = Receipt.from(createReceipt = createReceipt, order = this)
+    val usedCoupons = UsedCoupons(selectedCoupons.map { UsedCouponToOrder.from(it, this) })
+    val receipt: Receipt = Receipt(selectedProductSnapshots.map { OrderItem.from(it, this) })
 
     //    주문 생성시 결제는 같은 시점에 대기 상태로 생성돼야하므로
 //    cascade persist를 지정한다.
@@ -54,22 +63,42 @@ class Order private constructor(
         if (status == Status.CANCELLED) throw OrderException.AleadyCancelled()
         if (status == Status.RELEASED) throw OrderException.CancelOnlyNotReleased()
         val cancelInfo = payment.cancel(authentication)
-//        TODO: receipt.restock()
-        usedCoupons.deuse()
         status = Status.CANCELLED
         return OrderInfo.Cancel(cancelInfo.pointAmount)
-    }
-
-
-    companion object {
-        fun from(createOrder: CreateOrder) = Order(
-            createReceipt = createOrder.receipt,
-            userId = createOrder.userId,
-            usedCoupons = UsedCoupons.from(createOrder.createUsedCoupons)
-        )
     }
 
     enum class Status {
         PENDING, PAID, RELEASED, CANCELLED
     }
+
+    class Create(
+        private val selectedProductSnapshots: List<SelectedProductSnapshot>,
+        private val authentication: Authentication,
+        private val selectedCouponSnapshots: List<SelectedCouponSnapshot> = listOf(),
+    ) {
+        init {
+            validateProducts(selectedProductSnapshots)
+            validateCoupons(selectedCouponSnapshots)
+        }
+
+        private fun validateProducts(selectedProductSnapshots: List<SelectedProductSnapshot>) {
+            if (selectedProductSnapshots.isEmpty()) throw OrderException.ReciptIsEmpty()
+            selectedProductSnapshots.forEach { if (it.quantity < 1L) throw OrderException.OrderItemIsGreaterThanZero() }
+        }
+
+        private fun validateCoupons(selectedCouponSnapshots: List<SelectedCouponSnapshot>) {
+            selectedCouponSnapshots.forEach {
+                if (now().isAfter(it.expireAt)) throw IllegalStateException("${it.expireAt}에 만료된 쿠폰입니다.")
+            }
+        }
+
+        fun toOrder(): Order {
+            return Order(
+                selectedProductSnapshots = selectedProductSnapshots,
+                userId = authentication.id,
+                selectedCoupons = selectedCouponSnapshots
+            )
+        }
+    }
 }
+

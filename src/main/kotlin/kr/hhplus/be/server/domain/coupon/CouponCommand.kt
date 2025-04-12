@@ -8,4 +8,10 @@ class CouponCommand {
             if (couponId < 1) throw CouponException.CouponNotFound()
         }
     }
+
+    data class Select(val authentication: Authentication, val publishedCouponIds: List<Long>) {
+        init {
+            publishedCouponIds.forEach { if (it < 1) throw CouponException.CouponNotFound() }
+        }
+    }
 }

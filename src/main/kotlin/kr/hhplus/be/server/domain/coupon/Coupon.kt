@@ -19,7 +19,7 @@ class Coupon(
     @Column(nullable = false) val publishTo: LocalDateTime,
 //   발급 후 ~ 만료 까지 기간
     @Column(nullable = false) val expireDuration: Duration,
-    @Enumerated(EnumType.STRING) @Column(nullable = false) val type: Type,
+    @Enumerated(EnumType.STRING) @Column(nullable = false) val type: DiscountPolicy.Type,
 //    수치
     @Column(nullable = false) val amount: BigDecimal,
 //    수량
@@ -38,19 +38,13 @@ class Coupon(
     @OneToMany(mappedBy = "coupon", cascade = [CascadeType.MERGE, CascadeType.REMOVE], orphanRemoval = true)
     val publishedCoupons: MutableList<PublishedCoupon> = mutableListOf()
 
-    enum class Type {
-        PERCENT, FIXED
-    }
-
     @get:Transient
     private val discountPolicy: DiscountPolicy get() = DiscountPolicy.create(type, amount)
 
-    fun publish(userId: UserId, publishedAt: LocalDateTime): PublishedCoupon {
-        if (publishFrom.isAfter(publishedAt) || publishTo.isBefore(publishedAt)) throw CouponException.CouponNotPublishing()
+    fun publish(userId: UserId, now: LocalDateTime): PublishedCoupon {
+        if (publishFrom.isAfter(now) || publishTo.isBefore(now)) throw CouponException.CouponNotPublishing()
         if (stock < 1) throw CouponException.CouponStockUnavailable()
-        val publishedCoupon = PublishedCoupon(
-            userId = userId, expireAt = publishedAt.plus(expireDuration), coupon = this
-        )
+        val publishedCoupon = PublishedCoupon.from(userId, this, now)
         this.publishedCoupons.add(
             publishedCoupon
         )
@@ -58,7 +52,6 @@ class Coupon(
         return publishedCoupon
     }
 
-    fun discount(target: BigDecimal): BigDecimal =
-        discountPolicy.discount(target)
+    fun discount(target: BigDecimal): BigDecimal = discountPolicy.discount(target)
 
 }

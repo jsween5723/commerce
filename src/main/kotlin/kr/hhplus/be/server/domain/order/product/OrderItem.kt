@@ -1,6 +1,7 @@
-package kr.hhplus.be.server.domain.order
+package kr.hhplus.be.server.domain.order.product
 
 import jakarta.persistence.*
+import kr.hhplus.be.server.domain.order.Order
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.math.BigDecimal
@@ -8,7 +9,7 @@ import java.time.LocalDateTime
 
 
 @Entity(name = "order_items")
-class OrderItem protected constructor(
+class OrderItem private constructor(
     @JoinColumn(
         name = "order_id", nullable = false
     ) @ManyToOne(fetch = FetchType.LAZY) val order: Order,
@@ -34,12 +35,12 @@ class OrderItem protected constructor(
     val totalPrice: BigDecimal get() = priceOfOne.multiply(BigDecimal(quantity))
 
     companion object {
-        fun from(createOrderItem: CreateOrderItem, order: Order) = OrderItem(
+        fun from(orderedProductSnapshot: SelectedProductSnapshot, order: Order) = OrderItem(
             order = order,
-            productId = createOrderItem.productId,
-            name = createOrderItem.name,
-            priceOfOne = createOrderItem.priceOfOne,
-            quantity = createOrderItem.quantity
+            productId = orderedProductSnapshot.id,
+            name = orderedProductSnapshot.name,
+            priceOfOne = orderedProductSnapshot.price,
+            quantity = orderedProductSnapshot.quantity,
         )
     }
 }

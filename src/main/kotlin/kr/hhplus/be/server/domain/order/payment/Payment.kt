@@ -10,7 +10,7 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @Entity(name = "payments")
-class Payment protected constructor(
+class Payment private constructor(
     @Column(nullable = false) val amount: BigDecimal, val userId: UserId
 ) {
     @Id

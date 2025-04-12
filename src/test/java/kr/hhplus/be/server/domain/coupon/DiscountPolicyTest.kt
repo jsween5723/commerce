@@ -11,14 +11,14 @@ class DiscountPolicyTest {
         @Test
         fun `생성할 수 있다`() {
             assertThatCode {
-                DiscountPolicy.create(Coupon.Type.FIXED, BigDecimal.valueOf(100))
+                DiscountPolicy.create(DiscountPolicy.Type.FIXED, BigDecimal.valueOf(100))
             }.doesNotThrowAnyException()
         }
 
         @Test
         fun `할인양이 음수면 CouponException을 발생시킨다`() {
             assertThatThrownBy {
-                DiscountPolicy.create(Coupon.Type.FIXED, BigDecimal.valueOf(-100))
+                DiscountPolicy.create(DiscountPolicy.Type.FIXED, BigDecimal.valueOf(-100))
             }.isInstanceOf(CouponException.DiscountAmountGreaterThanZero::class.java)
         }
 
@@ -27,7 +27,7 @@ class DiscountPolicyTest {
             //given
             val before = BigDecimal.valueOf(100)
             val amount = BigDecimal.valueOf(20)
-            val policy = DiscountPolicy.create(Coupon.Type.FIXED, amount)
+            val policy = DiscountPolicy.create(DiscountPolicy.Type.FIXED, amount)
             assertThat(policy.discount(before)).isEqualTo(before - amount)
         }
 
@@ -36,7 +36,7 @@ class DiscountPolicyTest {
             //given
             val before = BigDecimal.valueOf(100)
             val amount = BigDecimal.valueOf(200)
-            val policy = DiscountPolicy.create(Coupon.Type.FIXED, amount)
+            val policy = DiscountPolicy.create(DiscountPolicy.Type.FIXED, amount)
             assertThat(policy.discount(before)).isEqualTo(BigDecimal.ZERO)
         }
     }
@@ -46,21 +46,21 @@ class DiscountPolicyTest {
         @Test
         fun `생성할 수 있다`() {
             assertThatCode {
-                DiscountPolicy.create(Coupon.Type.PERCENT, BigDecimal.valueOf(100))
+                DiscountPolicy.create(DiscountPolicy.Type.PERCENT, BigDecimal.valueOf(100))
             }.doesNotThrowAnyException()
         }
 
         @Test
         fun `할인양이 음수면 CouponException을 발생시킨다`() {
             assertThatThrownBy {
-                DiscountPolicy.create(Coupon.Type.PERCENT, BigDecimal.valueOf(-100))
+                DiscountPolicy.create(DiscountPolicy.Type.PERCENT, BigDecimal.valueOf(-100))
             }.isInstanceOf(CouponException.DiscountAmountGreaterThanZero::class.java)
         }
 
         @Test
         fun `할인비율이 100보다 크면 CouponException을 발생시킨다`() {
             assertThatThrownBy {
-                DiscountPolicy.create(Coupon.Type.PERCENT, BigDecimal.valueOf(101))
+                DiscountPolicy.create(DiscountPolicy.Type.PERCENT, BigDecimal.valueOf(101))
             }.isInstanceOf(CouponException.PercentSmallerThan100::class.java)
         }
 
@@ -70,7 +70,7 @@ class DiscountPolicyTest {
             val before = BigDecimal.valueOf(100)
             val amount = BigDecimal.valueOf(20)
             val expected = BigDecimal.valueOf(80)
-            val policy = DiscountPolicy.create(Coupon.Type.PERCENT, amount)
+            val policy = DiscountPolicy.create(DiscountPolicy.Type.PERCENT, amount)
             assertThat(policy.discount(before)).isEqualTo(expected)
         }
 

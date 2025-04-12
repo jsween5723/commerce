@@ -1,12 +1,21 @@
-package kr.hhplus.be.server.domain.coupon
+package kr.hhplus.be.server.domain.order.coupon
 
+import kr.hhplus.be.server.domain.coupon.CouponException
 import java.math.BigDecimal
 
 
 sealed interface DiscountPolicy {
     fun discount(target: BigDecimal): BigDecimal
     enum class Type {
-        PERCENT, FIXED
+        PERCENT, FIXED;
+
+        companion object {
+            fun fromString(name: String) = when (name) {
+                "PERCENT" -> PERCENT
+                "FIXED" -> FIXED
+                else -> throw IllegalArgumentException("Unknown discount policy type '$name'")
+            }
+        }
     }
 
     companion object {

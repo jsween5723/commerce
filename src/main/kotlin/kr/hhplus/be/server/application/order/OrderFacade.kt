@@ -16,17 +16,20 @@ class OrderFacade(
     private val pointService: PointService,
     private val dataPlatformSender: DataPlatformSender,
     private val couponService: CouponService,
+    private val orderMapper: OrderMapper
 ) {
     @Transactional
     fun create(criteria: OrderCriteria.Create): OrderResult.Create {
 //        재고 확인 및 재고 선차감
-        val releaseInfo = productService.release(criteria.toProductReleaseCommand())
-        val publishedCoupons = couponService.findPublishedByIds(criteria.publishedCouponIds)
+        val productSnapshots = productService.release(criteria.toProductReleaseCommand())
+            .map { orderMapper.toSelectedProductAndQuantitySnapshot(it) }
+        val selectedCoupons = couponService.findPublishedByIds(criteria.publishedCouponIds)
+            .map { orderMapper.toSelectedCouponSnapshot(it) }
 //        주문 생성
         val order = orderService.create(
             OrderCommand.Create(
-                releaseItems = releaseInfo,
-                publishedCoupons = publishedCoupons,
+                selectedProducts = productSnapshots,
+                publishedCoupons = selectedCoupons,
                 authentication = criteria.authentication
             )
         )
