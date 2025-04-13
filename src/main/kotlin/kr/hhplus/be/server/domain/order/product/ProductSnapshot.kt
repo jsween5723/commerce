@@ -8,5 +8,5 @@ data class ProductSnapshot(
     val quantity: Long,
     val price: BigDecimal
 ) {
-    val totalPrice: BigDecimal = price.multiply(BigDecimal(quantity))
+    val totalPrice: BigDecimal get() = price.multiply(BigDecimal(quantity))
 }
