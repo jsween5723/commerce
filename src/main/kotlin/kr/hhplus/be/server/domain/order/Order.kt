@@ -3,13 +3,13 @@ package kr.hhplus.be.server.domain.order
 import jakarta.persistence.*
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.auth.UserId
-import kr.hhplus.be.server.domain.order.coupon.SelectedCouponSnapshot
+import kr.hhplus.be.server.domain.order.coupon.CouponSnapshot
 import kr.hhplus.be.server.domain.order.coupon.UsedCouponToOrder
 import kr.hhplus.be.server.domain.order.coupon.UsedCoupons
 import kr.hhplus.be.server.domain.order.payment.Payment
 import kr.hhplus.be.server.domain.order.product.OrderItem
+import kr.hhplus.be.server.domain.order.product.ProductSnapshot
 import kr.hhplus.be.server.domain.order.product.Receipt
-import kr.hhplus.be.server.domain.order.product.SelectedProductSnapshot
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.math.BigDecimal
@@ -18,20 +18,20 @@ import java.time.LocalDateTime.now
 
 @Entity(name = "orders")
 class Order protected constructor(
-    selectedProductSnapshots: List<SelectedProductSnapshot>,
+    productSnapshots: List<ProductSnapshot>,
     val userId: UserId,
-    selectedCoupons: List<SelectedCouponSnapshot>
+    selectedCoupons: List<CouponSnapshot>
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long = 0L
     val usedCoupons = UsedCoupons(selectedCoupons.map { UsedCouponToOrder.from(it, this) })
-    val receipt: Receipt = Receipt(selectedProductSnapshots.map { OrderItem.from(it, this) })
+    val receipt: Receipt = Receipt(productSnapshots.map { OrderItem.from(it, this) })
 
     //    주문 생성시 결제는 같은 시점에 대기 상태로 생성돼야하므로
 //    cascade persist를 지정한다.
     @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST])
-    @JoinColumn(name = "payment_id", nullable = false)
+    @JoinColumn(name = "payment_id")
     var payment: Payment = Payment.from(this)
 
     @Enumerated(EnumType.STRING)
@@ -72,31 +72,31 @@ class Order protected constructor(
     }
 
     class Create(
-        private val selectedProductSnapshots: List<SelectedProductSnapshot>,
+        private val productSnapshots: List<ProductSnapshot>,
         private val authentication: Authentication,
-        private val selectedCouponSnapshots: List<SelectedCouponSnapshot> = listOf(),
+        private val couponSnapshots: List<CouponSnapshot> = listOf(),
     ) {
         init {
-            validateProducts(selectedProductSnapshots)
-            validateCoupons(selectedCouponSnapshots)
+            validateProducts(productSnapshots)
+            validateCoupons(couponSnapshots)
         }
 
-        private fun validateProducts(selectedProductSnapshots: List<SelectedProductSnapshot>) {
-            if (selectedProductSnapshots.isEmpty()) throw OrderException.ReciptIsEmpty()
-            selectedProductSnapshots.forEach { if (it.quantity < 1L) throw OrderException.OrderItemIsGreaterThanZero() }
+        private fun validateProducts(productSnapshots: List<ProductSnapshot>) {
+            if (productSnapshots.isEmpty()) throw OrderException.ReciptIsEmpty()
+            productSnapshots.forEach { if (it.quantity < 1L) throw OrderException.OrderItemIsGreaterThanZero() }
         }
 
-        private fun validateCoupons(selectedCouponSnapshots: List<SelectedCouponSnapshot>) {
-            selectedCouponSnapshots.forEach {
+        private fun validateCoupons(couponSnapshots: List<CouponSnapshot>) {
+            couponSnapshots.forEach {
                 if (now().isAfter(it.expireAt)) throw IllegalStateException("${it.expireAt}에 만료된 쿠폰입니다.")
             }
         }
 
         fun toOrder(): Order {
             return Order(
-                selectedProductSnapshots = selectedProductSnapshots,
+                productSnapshots = productSnapshots,
                 userId = authentication.id,
-                selectedCoupons = selectedCouponSnapshots
+                selectedCoupons = couponSnapshots
             )
         }
     }

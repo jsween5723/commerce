@@ -1,14 +1,12 @@
 package kr.hhplus.be.server.domain.order
 
-import kr.hhplus.be.server.application.order.OrderMapper
 import kr.hhplus.be.server.domain.auth.Authentication
-import kr.hhplus.be.server.domain.product.ProductSnapshotFixture
+import kr.hhplus.be.server.domain.order.product.ProductSnapshotFixture
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class CreateTest {
-    private val orderMapper: OrderMapper = OrderMapper()
 
     @Nested
     inner class `CreateOrder를 생성할 수 있다` {

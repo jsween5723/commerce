@@ -20,7 +20,7 @@ class Coupon(
 //   발급 후 ~ 만료 까지 기간
     @Column(nullable = false) val expireDuration: Duration,
     @Enumerated(EnumType.STRING) @Column(nullable = false) val type: DiscountPolicy.Type,
-//    수치
+//    할인수치
     @Column(nullable = false) val amount: BigDecimal,
 //    수량
     @Column(nullable = false) var stock: Long,

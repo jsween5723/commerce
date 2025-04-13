@@ -34,14 +34,14 @@ class UsedCouponToOrder private constructor(
     fun discount(target: BigDecimal): BigDecimal = discountPolicy.discount(target)
 
     companion object {
-        fun from(selectedCouponSnapshot: SelectedCouponSnapshot, order: Order): UsedCouponToOrder = UsedCouponToOrder(
-            couponId = selectedCouponSnapshot.couponId,
-            publishedCouponId = selectedCouponSnapshot.publishedCouponId,
-            name = selectedCouponSnapshot.name,
-            description = selectedCouponSnapshot.description,
-            expireAt = selectedCouponSnapshot.expireAt,
-            type = selectedCouponSnapshot.type,
-            amount = selectedCouponSnapshot.amount,
+        fun from(couponSnapshot: CouponSnapshot, order: Order): UsedCouponToOrder = UsedCouponToOrder(
+            couponId = couponSnapshot.couponId,
+            publishedCouponId = couponSnapshot.publishedCouponId,
+            name = couponSnapshot.name,
+            description = couponSnapshot.description,
+            expireAt = couponSnapshot.expireAt,
+            type = couponSnapshot.type,
+            amount = couponSnapshot.amount,
             order = order,
         )
 

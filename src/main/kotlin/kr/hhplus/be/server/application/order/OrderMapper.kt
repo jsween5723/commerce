@@ -1,16 +1,14 @@
 package kr.hhplus.be.server.application.order
 
 import kr.hhplus.be.server.domain.coupon.PublishedCoupon
+import kr.hhplus.be.server.domain.order.coupon.CouponSnapshot
 import kr.hhplus.be.server.domain.order.coupon.DiscountPolicy
-import kr.hhplus.be.server.domain.order.coupon.SelectedCouponSnapshot
-import kr.hhplus.be.server.domain.order.product.SelectedProductSnapshot
+import kr.hhplus.be.server.domain.order.product.ProductSnapshot
 import kr.hhplus.be.server.domain.product.Product
-import org.springframework.stereotype.Component
 
-@Component
-class OrderMapper {
-    fun toSelectedProductAndQuantitySnapshot(releaseInfo: Product.ReleaseInfo): SelectedProductSnapshot {
-        return SelectedProductSnapshot(
+object OrderMapper {
+    fun toSelectedProductAndQuantitySnapshot(releaseInfo: Product.ReleaseInfo): ProductSnapshot {
+        return ProductSnapshot(
             id = releaseInfo.product.id,
             name = releaseInfo.product.name,
             quantity = releaseInfo.quantity,
@@ -18,8 +16,8 @@ class OrderMapper {
         )
     }
 
-    fun toSelectedCouponSnapshot(publishedCoupon: PublishedCoupon): SelectedCouponSnapshot {
-        return SelectedCouponSnapshot(
+    fun toSelectedCouponSnapshot(publishedCoupon: PublishedCoupon): CouponSnapshot {
+        return CouponSnapshot(
             couponId = publishedCoupon.coupon.id,
             publishedCouponId = publishedCoupon.id,
             name = publishedCoupon.coupon.name,

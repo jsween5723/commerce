@@ -16,8 +16,8 @@ class OrderService(private val orderRepository: OrderRepository) {
     fun create(command: OrderCommand.Create): Order {
         val (selectedProducts, selectedCoupons, authentication) = command
         val createOrder = Order.Create(
-            selectedProductSnapshots = selectedProducts,
-            selectedCouponSnapshots = selectedCoupons,
+            productSnapshots = selectedProducts,
+            couponSnapshots = selectedCoupons,
             authentication = authentication
         )
         return orderRepository.create(createOrder)

@@ -3,7 +3,7 @@ package kr.hhplus.be.server.domain.order.payment
 import kr.hhplus.be.server.domain.auth.AuthException
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.order.Order
-import kr.hhplus.be.server.domain.product.ProductSnapshotFixture
+import kr.hhplus.be.server.domain.order.product.ProductSnapshotFixture
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

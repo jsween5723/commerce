@@ -3,7 +3,7 @@ package kr.hhplus.be.server.domain.order.coupon
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-data class SelectedCouponSnapshot(
+data class CouponSnapshot(
     val couponId: Long,
     val publishedCouponId: Long,
     val name: String,

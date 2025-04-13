@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.domain.coupon
 
 import kr.hhplus.be.server.domain.auth.UserId
-import kr.hhplus.be.server.domain.order.coupon.SelectedCouponSnapshot
+import kr.hhplus.be.server.domain.order.coupon.CouponSnapshot
 import java.math.BigDecimal
 import java.time.Duration
 import java.time.LocalDateTime
@@ -39,7 +39,7 @@ class PublishedCouponFixture(
     userId = userId, expireAt = expireAt, usedAt = usedAt, coupon = coupon
 )
 
-fun CouponSnapshotFixture() = SelectedCouponSnapshot(
+fun CouponSnapshotFixture() = CouponSnapshot(
     couponId = 8971,
     publishedCouponId = 9992,
     name = "Pamela Shields",
