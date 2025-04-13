@@ -23,8 +23,8 @@ object OrderMapper {
             name = publishedCoupon.coupon.name,
             description = publishedCoupon.coupon.description,
             expireAt = publishedCoupon.expireAt,
-            type = DiscountPolicy.Type.fromString(publishedCoupon.coupon.type.name),
-            amount = publishedCoupon.coupon.amount,
+            type = DiscountPolicy.Type.fromString(publishedCoupon.coupon.discountType.name),
+            amount = publishedCoupon.coupon.discountAmount,
         )
     }
 }

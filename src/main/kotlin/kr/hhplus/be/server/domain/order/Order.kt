@@ -4,7 +4,7 @@ import jakarta.persistence.*
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.auth.UserId
 import kr.hhplus.be.server.domain.order.coupon.CouponSnapshot
-import kr.hhplus.be.server.domain.order.coupon.UsedCouponToOrder
+import kr.hhplus.be.server.domain.order.coupon.UsedCoupon
 import kr.hhplus.be.server.domain.order.coupon.UsedCoupons
 import kr.hhplus.be.server.domain.order.payment.Payment
 import kr.hhplus.be.server.domain.order.product.OrderItem
@@ -17,7 +17,7 @@ import java.time.LocalDateTime
 import java.time.LocalDateTime.now
 
 @Entity(name = "orders")
-class Order protected constructor(
+class Order private constructor(
     productSnapshots: List<ProductSnapshot>,
     val userId: UserId,
     selectedCoupons: List<CouponSnapshot>
@@ -25,7 +25,7 @@ class Order protected constructor(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long = 0L
-    val usedCoupons = UsedCoupons(selectedCoupons.map { UsedCouponToOrder.from(it, this) })
+    val usedCoupons = UsedCoupons(selectedCoupons.map { UsedCoupon.from(it, this) })
     val receipt: Receipt = Receipt(productSnapshots.map { OrderItem.from(it, this) })
 
     //    주문 생성시 결제는 같은 시점에 대기 상태로 생성돼야하므로

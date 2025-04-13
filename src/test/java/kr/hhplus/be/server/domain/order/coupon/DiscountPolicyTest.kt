@@ -1,4 +1,5 @@
-package kr.hhplus.be.server.domain.coupon
+package kr.hhplus.be.server.domain.order.coupon
+
 
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Nested

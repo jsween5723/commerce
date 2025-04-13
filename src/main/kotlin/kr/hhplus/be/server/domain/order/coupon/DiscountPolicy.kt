@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.domain.order.coupon
 
-import kr.hhplus.be.server.domain.coupon.CouponException
 import java.math.BigDecimal
 
 

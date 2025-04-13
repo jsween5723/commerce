@@ -8,7 +8,7 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @Entity(name = "used_coupons_to_order")
-class UsedCouponToOrder private constructor(
+class UsedCoupon private constructor(
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "order_id", nullable = false) val order: Order,
     @Column(nullable = false) val couponId: Long,
     @Column(nullable = false) val publishedCouponId: Long,
@@ -34,7 +34,7 @@ class UsedCouponToOrder private constructor(
     fun discount(target: BigDecimal): BigDecimal = discountPolicy.discount(target)
 
     companion object {
-        fun from(couponSnapshot: CouponSnapshot, order: Order): UsedCouponToOrder = UsedCouponToOrder(
+        fun from(couponSnapshot: CouponSnapshot, order: Order): UsedCoupon = UsedCoupon(
             couponId = couponSnapshot.couponId,
             publishedCouponId = couponSnapshot.publishedCouponId,
             name = couponSnapshot.name,

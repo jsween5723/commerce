@@ -2,7 +2,7 @@ package kr.hhplus.be.server.domain.order
 
 import kr.hhplus.be.server.domain.auth.AuthException
 import kr.hhplus.be.server.domain.auth.Authentication
-import kr.hhplus.be.server.domain.coupon.CouponSnapshotFixture
+import kr.hhplus.be.server.domain.order.coupon.CouponSnapshotFixture
 import kr.hhplus.be.server.domain.order.payment.Payment
 import kr.hhplus.be.server.domain.order.product.ProductSnapshotFixture
 import org.assertj.core.api.Assertions.*

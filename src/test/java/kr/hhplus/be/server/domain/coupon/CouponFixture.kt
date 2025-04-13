@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.domain.coupon
 
 import kr.hhplus.be.server.domain.auth.UserId
-import kr.hhplus.be.server.domain.order.coupon.CouponSnapshot
 import java.math.BigDecimal
 import java.time.Duration
 import java.time.LocalDateTime
@@ -25,26 +24,15 @@ class CouponFixture(
     publishFrom = publishFrom,
     publishTo = publishTo,
     expireDuration = expireDuration,
-    type = type,
-    amount = amount,
+    discountType = type,
+    discountAmount = amount,
     stock = stock
 )
 
-class PublishedCouponFixture(
+fun PublishedCouponFixture(
     userId: UserId = UserId(1L),
-    expireAt: LocalDateTime = LocalDateTime.now().plusDays(2),
-    usedAt: LocalDateTime? = null,
+    now: LocalDateTime = LocalDateTime.now(),
     coupon: Coupon = CouponFixture()
-) : PublishedCoupon(
-    userId = userId, expireAt = expireAt, usedAt = usedAt, coupon = coupon
-)
-
-fun CouponSnapshotFixture() = CouponSnapshot(
-    couponId = 8971,
-    publishedCouponId = 9992,
-    name = "Pamela Shields",
-    description = "curabitur",
-    expireAt = LocalDateTime.now().plusDays(2),
-    type = kr.hhplus.be.server.domain.order.coupon.DiscountPolicy.Type.PERCENT,
-    amount = BigDecimal.valueOf(20),
+) = PublishedCoupon.from(
+    userId = userId, now = now, coupon = coupon
 )

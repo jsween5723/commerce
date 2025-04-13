@@ -4,6 +4,7 @@ import kr.hhplus.be.server.domain.auth.Authentication
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import java.time.Duration
 import java.time.LocalDateTime
 
 class PublishedCouponTest {
@@ -24,8 +25,11 @@ class PublishedCouponTest {
 
         @Test
         fun `만료됐다면 CouponException을 발생시킨다`() {
-            val coupon = PublishedCouponFixture(expireAt = LocalDateTime.now().minusDays(1))
-            val now = LocalDateTime.now()
+            val coupon = PublishedCouponFixture(
+                now = LocalDateTime.now(),
+                coupon = CouponFixture(expireDuration = Duration.ZERO)
+            )
+            val now = LocalDateTime.now().plusDays(1)
             assertThatThrownBy {
                 coupon.use(
                     now, Authentication(coupon.userId.userId)

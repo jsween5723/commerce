@@ -13,7 +13,11 @@ class PublishedCoupon protected constructor(
     val userId: UserId,
     @Column(nullable = false) val expireAt: LocalDateTime,
     var usedAt: LocalDateTime? = null,
-    @JoinColumn(name = "coupon_id") @ManyToOne(fetch = FetchType.LAZY) val coupon: Coupon
+    @JoinColumn(name = "coupon_id") @ManyToOne(fetch = FetchType.LAZY) val coupon: Coupon,
+    @Column(nullable = false) val name: String,
+    @Column(nullable = false) val description: String,
+    @Enumerated(EnumType.STRING) @Column(nullable = false) val discountType: DiscountPolicy.Type,
+    @Column(nullable = false) val discountAmount: BigDecimal,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -39,11 +43,14 @@ class PublishedCoupon protected constructor(
         usedAt = null
     }
 
-    fun discount(target: BigDecimal): BigDecimal = coupon.discount(target)
-
     companion object {
         fun from(userId: UserId, coupon: Coupon, now: LocalDateTime): PublishedCoupon = PublishedCoupon(
-            userId = userId, expireAt = now.plus(coupon.expireDuration), coupon = coupon
+            userId = userId, expireAt = now.plus(coupon.expireDuration), coupon = coupon,
+            usedAt = null,
+            name = coupon.name,
+            description = coupon.description,
+            discountType = coupon.discountType,
+            discountAmount = coupon.discountAmount
         )
 
     }

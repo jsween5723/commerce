@@ -10,7 +10,7 @@ import java.util.*
 class UsedCoupons(
     @OneToMany(
         cascade = [(CascadeType.ALL)], orphanRemoval = true
-    ) val items: List<UsedCouponToOrder> = LinkedList()
+    ) val items: List<UsedCoupon> = LinkedList()
 ) {
     fun discount(target: BigDecimal): BigDecimal {
         var result = target
