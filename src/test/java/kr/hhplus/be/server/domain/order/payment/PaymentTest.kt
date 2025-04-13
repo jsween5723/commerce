@@ -2,7 +2,7 @@ package kr.hhplus.be.server.domain.order.payment
 
 import kr.hhplus.be.server.domain.auth.AuthException
 import kr.hhplus.be.server.domain.auth.Authentication
-import kr.hhplus.be.server.domain.order.Order
+import kr.hhplus.be.server.domain.order.CreateOrder
 import kr.hhplus.be.server.domain.order.product.ProductSnapshotFixture
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Nested
@@ -18,8 +18,7 @@ class PaymentTest {
 //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val createOrder = Order.Create(listOf(releaseInfo, releaseInfo2), Authentication(1L))
-            val order = createOrder.toOrder()
+            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L))
 //            when
             assertThatCode { Payment.from(order) }.doesNotThrowAnyException()
         }
@@ -32,8 +31,8 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val createOrder = Order.Create(listOf(releaseInfo, releaseInfo2), Authentication(1L))
-            val payment = createOrder.toOrder().payment
+            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L))
+            val payment = order.payment
             val expected = PaymentInfo.Cancel(payment.amount)
             payment.pay(Authentication(1L))
 //            when
@@ -47,8 +46,8 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val createOrder = Order.Create(listOf(releaseInfo, releaseInfo2), Authentication(1L))
-            val payment = createOrder.toOrder().payment
+            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L))
+            val payment = order.payment
             val expected = PaymentInfo.Cancel(ZERO)
 //            when
             val info = payment.cancel(Authentication(1L))
@@ -61,8 +60,8 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val createOrder = Order.Create(listOf(releaseInfo, releaseInfo2), Authentication(1L))
-            val payment = createOrder.toOrder().payment
+            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L))
+            val payment = order.payment
 //            when
             assertThatThrownBy {
                 payment.cancel(Authentication(2L))
@@ -74,8 +73,8 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val createOrder = Order.Create(listOf(releaseInfo, releaseInfo2), Authentication(1L))
-            val payment = createOrder.toOrder().payment
+            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L))
+            val payment = order.payment
             payment.cancel(Authentication(1L))
 //            when
             assertThatThrownBy {
@@ -91,8 +90,8 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val createOrder = Order.Create(listOf(releaseInfo, releaseInfo2), Authentication(1L))
-            val payment = createOrder.toOrder().payment
+            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L))
+            val payment = order.payment
             val expected = PaymentInfo.Pay(payment.amount)
 //            when
             val info = payment.pay(Authentication(1L))
@@ -105,8 +104,8 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val createOrder = Order.Create(listOf(releaseInfo, releaseInfo2), Authentication(1L))
-            val payment = createOrder.toOrder().payment
+            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L))
+            val payment = order.payment
 //            when
             assertThatThrownBy {
                 payment.pay(Authentication(2L))
@@ -118,8 +117,8 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val createOrder = Order.Create(listOf(releaseInfo, releaseInfo2), Authentication(1L))
-            val payment = createOrder.toOrder().payment
+            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L))
+            val payment = order.payment
             payment.pay(Authentication(1L))
 //            when
             assertThatThrownBy {
@@ -132,8 +131,8 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val createOrder = Order.Create(listOf(releaseInfo, releaseInfo2), Authentication(1L))
-            val payment = createOrder.toOrder().payment
+            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L))
+            val payment = order.payment
             payment.cancel(Authentication(1L))
 //            when
             assertThatThrownBy {

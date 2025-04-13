@@ -14,10 +14,9 @@ import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.math.BigDecimal
 import java.time.LocalDateTime
-import java.time.LocalDateTime.now
 
 @Entity(name = "orders")
-class Order private constructor(
+class Order protected constructor(
     productSnapshots: List<ProductSnapshot>,
     val userId: UserId,
     selectedCoupons: List<CouponSnapshot>
@@ -69,36 +68,6 @@ class Order private constructor(
 
     enum class Status {
         PENDING, PAID, RELEASED, CANCELLED
-    }
-
-    class Create(
-        private val productSnapshots: List<ProductSnapshot>,
-        private val authentication: Authentication,
-        private val couponSnapshots: List<CouponSnapshot> = listOf(),
-    ) {
-        init {
-            validateProducts(productSnapshots)
-            validateCoupons(couponSnapshots)
-        }
-
-        private fun validateProducts(productSnapshots: List<ProductSnapshot>) {
-            if (productSnapshots.isEmpty()) throw OrderException.ReciptIsEmpty()
-            productSnapshots.forEach { if (it.quantity < 1L) throw OrderException.OrderItemIsGreaterThanZero() }
-        }
-
-        private fun validateCoupons(couponSnapshots: List<CouponSnapshot>) {
-            couponSnapshots.forEach {
-                if (now().isAfter(it.expireAt)) throw IllegalStateException("${it.expireAt}에 만료된 쿠폰입니다.")
-            }
-        }
-
-        fun toOrder(): Order {
-            return Order(
-                productSnapshots = productSnapshots,
-                userId = authentication.id,
-                selectedCoupons = couponSnapshots
-            )
-        }
     }
 }
 

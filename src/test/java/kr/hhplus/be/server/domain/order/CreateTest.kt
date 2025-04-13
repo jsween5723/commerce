@@ -15,7 +15,7 @@ class CreateTest {
             //given
             val releaseInfo = ProductSnapshotFixture()
             //when
-            Order.Create(listOf(releaseInfo), Authentication(1L))
+            CreateOrder(listOf(releaseInfo), Authentication(1L))
         }
 
         @Test
@@ -23,7 +23,7 @@ class CreateTest {
             //given
             val releaseInfo = ProductSnapshotFixture(quantity = 0)
             //when
-            assertThatThrownBy { Order.Create(listOf(releaseInfo), Authentication(1L)) }
+            assertThatThrownBy { CreateOrder(listOf(releaseInfo), Authentication(1L)) }
         }
     }
 }

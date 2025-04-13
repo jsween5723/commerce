@@ -15,7 +15,7 @@ class OrderService(private val orderRepository: OrderRepository) {
     @Transactional
     fun create(command: OrderCommand.Create): Order {
         val (selectedProducts, selectedCoupons, authentication) = command
-        val createOrder = Order.Create(
+        val createOrder = CreateOrder(
             productSnapshots = selectedProducts,
             couponSnapshots = selectedCoupons,
             authentication = authentication
