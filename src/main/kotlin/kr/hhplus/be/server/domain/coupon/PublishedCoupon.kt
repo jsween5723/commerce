@@ -8,7 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-@Entity(name = "published_coupon")
+@Entity(name = "published_coupons")
 class PublishedCoupon protected constructor(
     val userId: UserId,
     @Column(nullable = false) val expireAt: LocalDateTime,

@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.application.order
 
+import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.coupon.CouponService
 import kr.hhplus.be.server.domain.order.*
 import kr.hhplus.be.server.domain.point.PointCommand
@@ -54,21 +55,7 @@ class OrderFacade(
 //        주문 조회
         val order = orderService.findById(criteria.orderId)
 //        주문 취소 및 결제 취소 후 재고 환수
-        val info = order.cancel(criteria.authentication)
-//        환급 포인트가 있다면 포인트 환급
-        if (info.hasAmount) {
-            pointService.charge(
-                PointCommand.Charge(
-                    amount = order.totalPrice, userId = order.payment.userId, authentication = criteria.authentication
-                )
-            )
-        }
-        val idAndQuantities = order.receipt.items.map { orderItem ->
-            ProductCommand.ProductIdAndQuantity(
-                orderItem.productId, orderItem.quantity
-            )
-        }
-        productService.restock(ProductCommand.Restock(idAndQuantities))
+        cancel(order, criteria.authentication)
         return OrderResult.Cancel(orderId = order.id, paymentId = order.payment.id)
     }
 
@@ -77,18 +64,19 @@ class OrderFacade(
         val orders =
             orderService.findForCancel(OrderQuery.ForCancelSchedule(Order.Status.PENDING, criteria.pendingTime))
         orders.forEach {
-            it.cancel(criteria.authentication)
+            cancel(it, criteria.authentication)
+        }
+    }
+
+    private fun cancel(order: Order, authentication: Authentication) {
+        val info = order.cancel(authentication)
+        if (info.hasAmount)
             pointService.charge(
                 PointCommand.Charge(
-                    amount = it.totalPrice, it.payment.userId, authentication = criteria.authentication
+                    amount = order.totalPrice, order.payment.userId, authentication = authentication
                 )
             )
-            val idAndQuantities = it.receipt.items.map { orderItem ->
-                ProductCommand.ProductIdAndQuantity(
-                    orderItem.productId, orderItem.quantity
-                )
-            }
-            productService.restock(ProductCommand.Restock(idAndQuantities))
-        }
+        val idAndQuantities = OrderMapper.toProductIdAndQuantities(order.receipt)
+        productService.restock(ProductCommand.Restock(idAndQuantities))
     }
 }

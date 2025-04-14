@@ -1,5 +1,8 @@
 package kr.hhplus.be.server.domain.order
 
+import org.springframework.stereotype.Component
+
+@Component
 interface DataPlatformSender {
-    fun send(Order: Order)
+    fun send(order: Order)
 }

@@ -4,7 +4,9 @@ import kr.hhplus.be.server.domain.coupon.PublishedCoupon
 import kr.hhplus.be.server.domain.order.coupon.CouponSnapshot
 import kr.hhplus.be.server.domain.order.coupon.DiscountPolicy
 import kr.hhplus.be.server.domain.order.product.ProductSnapshot
+import kr.hhplus.be.server.domain.order.product.Receipt
 import kr.hhplus.be.server.domain.product.Product
+import kr.hhplus.be.server.domain.product.ProductCommand
 
 object OrderMapper {
     fun toSelectedProductAndQuantitySnapshot(releaseInfo: Product.ReleaseInfo): ProductSnapshot {
@@ -26,5 +28,13 @@ object OrderMapper {
             type = DiscountPolicy.Type.fromString(publishedCoupon.coupon.discountType.name),
             amount = publishedCoupon.coupon.discountAmount,
         )
+    }
+
+    fun toProductIdAndQuantities(receipt: Receipt): List<ProductCommand.ProductIdAndQuantity> {
+        return receipt.items.map { orderItem ->
+            ProductCommand.ProductIdAndQuantity(
+                orderItem.productId, orderItem.quantity
+            )
+        }
     }
 }
