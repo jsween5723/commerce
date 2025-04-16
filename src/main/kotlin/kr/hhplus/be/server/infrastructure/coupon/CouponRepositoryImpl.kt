@@ -6,7 +6,9 @@ import kr.hhplus.be.server.domain.coupon.PublishedCoupon
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.stereotype.Repository
 
+@Repository
 class CouponRepositoryImpl(private val couponJpaRepository: CouponJpaRepository) : CouponRepository {
     override fun findPublishedByUserId(userId: Long): List<PublishedCoupon> {
         return couponJpaRepository.findPublishedByUserId(userId)

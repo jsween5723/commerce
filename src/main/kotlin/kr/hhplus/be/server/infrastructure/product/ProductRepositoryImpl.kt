@@ -11,12 +11,13 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.BatchPreparedStatementSetter
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.stereotype.Repository
 import java.sql.Date
 import java.sql.PreparedStatement
 import java.sql.Timestamp
 import java.time.LocalDate
 
-
+@Repository
 class ProductRepositoryImpl(
     private val productJpaRepository: ProductJpaRepository,
     private val entityManager: EntityManager,
@@ -27,11 +28,11 @@ class ProductRepositoryImpl(
     }
 
     override fun containsIds(productIds: List<Long>): Boolean {
-        return productJpaRepository.existsByIds(productIds)
+        return productJpaRepository.countByIdIn(productIds) == productIds.size.toLong()
     }
 
     override fun findByIds(productIds: List<Long>): List<Product> {
-        return productJpaRepository.findByIds(productIds)
+        return productJpaRepository.findByIdIn(productIds)
     }
 
     override fun findRankedBy(query: ProductQuery.Ranked): List<RankedProduct> {
@@ -71,8 +72,8 @@ class ProductRepositoryImpl(
 }
 
 interface ProductJpaRepository : JpaRepository<Product, Long> {
-    fun existsByIds(ids: List<Long>): Boolean
-    fun findByIds(ids: List<Long>): List<Product>
+    fun countByIdIn(ids: List<Long>): Long
+    fun findByIdIn(ids: List<Long>): List<Product>
 
     @Query("select rp from ranked_products rp join fetch rp.product where rp.createdDate = :date  ")
     fun findRankedProductOrderBy(date: LocalDate, query: ProductQuery.Ranked): List<RankedProduct>
