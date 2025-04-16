@@ -1,5 +1,7 @@
 package kr.hhplus.be.server.interfaces.api.order
 
+import kr.hhplus.be.server.application.order.OrderCriteria
+import kr.hhplus.be.server.application.order.OrderFacade
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.interfaces.api.Response
 import kr.hhplus.be.server.interfaces.api.order.OrderResponse.CreateOrderResponse
@@ -7,13 +9,20 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/v1/orders")
-class OrderController : OrderSpec {
+class OrderController(private val orderFacade: OrderFacade) : OrderSpec {
     @PostMapping
     override fun create(
         authentication: Authentication,
         @RequestBody request: OrderRequest.CreateOrder
     ): Response<CreateOrderResponse> {
-        return Response.success(CreateOrderResponse(1L))
+        val created = orderFacade.create(
+            OrderCriteria.Create(
+                orderItems = request.orderItems.map { it.toCriteria() },
+                publishedCouponIds = request.registeredCouponIds,
+                authentication = authentication
+            )
+        )
+        return Response.success(CreateOrderResponse(created.orderId))
     }
 
     @PostMapping("{id}/pay")
@@ -21,6 +30,12 @@ class OrderController : OrderSpec {
         authentication: Authentication,
         @PathVariable id: Long
     ): Response<OrderResponse.PayOrderResponse> {
-        return Response.success(OrderResponse.PayOrderResponse(1L))
+        val paid = orderFacade.pay(
+            criteria = OrderCriteria.Pay(
+                orderId = id,
+                authentication = authentication
+            )
+        )
+        return Response.success(OrderResponse.PayOrderResponse(paid.paymentId))
     }
 }

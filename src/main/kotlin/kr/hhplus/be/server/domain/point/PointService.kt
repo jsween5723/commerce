@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.point
 
+import kr.hhplus.be.server.domain.auth.UserId
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -7,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional
 class PointService(
     private val pointRepository: PointRepository
 ) {
+    fun findByUserId(userId: UserId) = pointRepository.findByUserId(userId)
 
     @Transactional
     fun charge(command: PointCommand.Charge): UserPoint {

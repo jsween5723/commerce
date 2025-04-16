@@ -7,7 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-@Entity(name = "used_coupons_to_order")
+@Entity(name = "used_coupons")
 class UsedCoupon private constructor(
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "order_id", nullable = false) val order: Order,
     @Column(nullable = false) val couponId: Long,

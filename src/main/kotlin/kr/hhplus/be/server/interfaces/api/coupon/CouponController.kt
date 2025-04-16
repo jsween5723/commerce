@@ -1,41 +1,28 @@
 package kr.hhplus.be.server.interfaces.api.coupon
 
+import kr.hhplus.be.server.application.coupon.CouponCriteria
+import kr.hhplus.be.server.application.coupon.CouponFacade
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.interfaces.api.Response
 import org.springframework.web.bind.annotation.*
-import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/api/v1/coupons")
-class CouponController : CouponSpec {
+class CouponController(private val couponFacade: CouponFacade) : CouponSpec {
     @PostMapping("{id}/register")
     override fun register(
         authentication: Authentication,
         @PathVariable id: Long
-    ): Response<RegisterCouponResponse> {
-        return Response.success(RegisterCouponResponse(id = 1))
+    ): Response<CouponResponse.RegisterCouponResponse> {
+        val published = couponFacade.publish(CouponCriteria.Publish(authentication, id))
+        return Response.success(CouponResponse.RegisterCouponResponse(id = published.publishedCouponId))
     }
 
     @GetMapping("/me")
-    override fun getMyRegisteredCoupons(authentication: Authentication): Response<GetMyRegisteredCouponsResponse> {
+    override fun getMyRegisteredCoupons(authentication: Authentication): Response<CouponResponse.GetMyRegisteredCouponsResponse> {
+        val coupons = couponFacade.findPublishedByUserId(authentication)
         return Response.success(
-            GetMyRegisteredCouponsResponse(
-                coupons = listOf(
-                    GetMyRegisteredCouponsResponse.RegisteredCoupon(
-                        id = 3721,
-                        userId = 1636,
-                        coupon = GetMyRegisteredCouponsResponse.Coupon(
-                            id = 4092,
-                            name = "비율 할인 쿠폰",
-                            description = "모든 상품에 비율할인을 적용합니다.",
-                            type = GetMyRegisteredCouponsResponse.DiscountType.PERCENT,
-                            amount = 2.3
-                        ),
-                        expiredAt = LocalDateTime.now()
-                            .plusDays(3)
-                    )
-                )
-            )
+            CouponResponse.GetMyRegisteredCouponsResponse.from(coupons)
         )
     }
 }
