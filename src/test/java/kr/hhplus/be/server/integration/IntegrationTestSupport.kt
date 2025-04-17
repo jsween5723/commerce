@@ -27,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.jpa.repository.JpaRepository
 import java.math.BigDecimal
-import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import kotlin.random.Random
 
@@ -93,32 +92,6 @@ class IntegrationTestSupport {
         }
     }
 
-    fun insertProducts() {
-        products = LongRange(1, MAX_COUNT).map {
-            Instancio.of(Product::class.java)
-                .generate(field("stockNumber")) { gen -> gen.longs().min(500).max(1000) }
-                .supply(
-                    field("price")
-                ) { _ -> BigDecimal.valueOf(Random.nextInt(300, 500).toLong()) }
-                .ignore(field("id")).create()
-        }
-        insertTemplate(
-            products
-        )
-    }
-
-    fun insertRankedProducts() {
-        val longFixture = LongFixture()
-        rankedProducts = LongRange(1, MAX_COUNT).map {
-            Instancio.of(RankedProduct::class.java).set(field("productId"), longFixture.productId())
-                .ignore(field("id"))
-                .generate(field("totalSellingCount")) { gen -> gen.longs().min(1).max(10000) }
-                .supply(field("totalIncome")) { gen -> BigDecimal(Random.nextInt(0, 10000)) }
-                .supply(field("createdDate")) { gen -> LocalDate.now() }
-                .create()
-        }
-        insertTemplate(rankedProducts)
-    }
 
     fun insertCoupons() {
         coupons = LongRange(1, MAX_COUNT).map {

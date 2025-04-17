@@ -35,7 +35,6 @@ class OrderFacadeIntegrationTest : IntegrationTestSupport() {
 
     @BeforeAll
     fun beforeAll() {
-        insertProducts()
         insertCoupons()
     }
 

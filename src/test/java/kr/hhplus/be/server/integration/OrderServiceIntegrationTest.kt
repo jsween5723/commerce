@@ -16,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest
 class OrderServiceIntegrationTest : IntegrationTestSupport() {
     @BeforeAll
     fun beforeAll() {
-        insertProducts()
         insertCoupons()
     }
 
