@@ -56,11 +56,6 @@ class OrderFacade(
             orderService.findForCancel(OrderQuery.ForCancelSchedule(Order.Status.PENDING, criteria.pendingTime))
         orders.forEach { order ->
             val info = order.cancel(authentication)
-            pointService.charge(
-                PointCommand.Charge(
-                    amount = order.totalPrice, order.payment.userId, authentication = authentication
-                )
-            )
             val idAndQuantities = OrderMapper.toProductIdAndQuantities(order.receipt)
             productService.restock(ProductCommand.Restock(idAndQuantities))
         }
