@@ -27,6 +27,6 @@ interface CouponJpaRepository : JpaRepository<Coupon, Long> {
     @Query("select pc from published_coupons pc where pc.userId.userId = :userId")
     fun findPublishedByUserId(userId: Long): List<PublishedCoupon>
 
-    @Query("select pc from published_coupons pc where pc.userId.userId in (:userIds)")
+    @Query("select pc from published_coupons pc where pc.userId.userId in (:ids)")
     fun findPublishedByIds(ids: List<Long>): List<PublishedCoupon>
 }

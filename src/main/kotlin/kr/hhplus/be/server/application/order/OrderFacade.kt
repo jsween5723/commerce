@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.application.order
 
-import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.coupon.CouponService
 import kr.hhplus.be.server.domain.order.*
 import kr.hhplus.be.server.domain.point.PointCommand
@@ -51,32 +50,19 @@ class OrderFacade(
     }
 
     @Transactional
-    fun cancel(criteria: OrderCriteria.Cancel): OrderResult.Cancel {
-//        주문 조회
-        val order = orderService.findById(criteria.orderId)
-//        주문 취소 및 결제 취소 후 재고 환수
-        cancel(order, criteria.authentication)
-        return OrderResult.Cancel(orderId = order.id, paymentId = order.payment.id)
-    }
-
-    @Transactional
     fun cancelByDate(criteria: OrderCriteria.CancelBy) {
+        val (pending, authentication) = criteria
         val orders =
             orderService.findForCancel(OrderQuery.ForCancelSchedule(Order.Status.PENDING, criteria.pendingTime))
-        orders.forEach {
-            cancel(it, criteria.authentication)
-        }
-    }
-
-    private fun cancel(order: Order, authentication: Authentication) {
-        val info = order.cancel(authentication)
-        if (info.hasAmount)
+        orders.forEach { order ->
+            val info = order.cancel(authentication)
             pointService.charge(
                 PointCommand.Charge(
                     amount = order.totalPrice, order.payment.userId, authentication = authentication
                 )
             )
-        val idAndQuantities = OrderMapper.toProductIdAndQuantities(order.receipt)
-        productService.restock(ProductCommand.Restock(idAndQuantities))
+            val idAndQuantities = OrderMapper.toProductIdAndQuantities(order.receipt)
+            productService.restock(ProductCommand.Restock(idAndQuantities))
+        }
     }
 }

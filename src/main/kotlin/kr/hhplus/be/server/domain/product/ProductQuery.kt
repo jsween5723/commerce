@@ -17,5 +17,5 @@ data class RankedProductOrderBy(override val field: RankedProductField, override
     OrderBy(field = field, type = type)
 
 enum class RankedProductField(override val field: String) : OrderBy.OrderField {
-    TOTAL_SELLING_COUNT("TOTAL_SELLING_COUNT"), TOTAL_INCOME("TOTAL_INCOME")
+    TOTAL_SELLING_COUNT("totalSellingCount"), TOTAL_INCOME("totalIncome")
 }

@@ -13,25 +13,13 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     open-in-view: false
-    generate-ddl: true
-    show-sql: true
+    generate-ddl: false
+    show-sql: false
     hibernate:
       ddl-auto: create
     properties:
       hibernate.timezone.default_storage: NORMALIZE_UTC
       hibernate.jdbc.time_zone: UTC
-      hibernate:
-        format_sql: true # SQL 포맷팅
-        highlight_sql: true # ANSI 코드에 색을 나타낸다
-        use_sql_comments: true # SQL 내부에 /* */ 주석 추가
 springdoc:
   swagger-ui:
     path: /api
----
-spring.config.activate.on-profile: local, test
-
-spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/hhplus?characterEncoding=UTF-8&serverTimezone=UTC
-    username: application
-    password: application

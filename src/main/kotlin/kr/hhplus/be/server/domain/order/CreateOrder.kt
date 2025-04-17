@@ -6,10 +6,10 @@ import kr.hhplus.be.server.domain.order.product.ProductSnapshot
 import java.time.LocalDateTime.now
 
 class CreateOrder(
-    productSnapshots: List<ProductSnapshot>,
-    authentication: Authentication,
-    couponSnapshots: List<CouponSnapshot> = listOf(),
-) : Order(productSnapshots = productSnapshots, userId = authentication.id, selectedCoupons = couponSnapshots) {
+    val productSnapshots: List<ProductSnapshot>,
+    val authentication: Authentication,
+    val couponSnapshots: List<CouponSnapshot> = listOf(),
+) {
     init {
         validateProducts(productSnapshots)
         validateCoupons(couponSnapshots)
@@ -24,5 +24,9 @@ class CreateOrder(
         couponSnapshots.forEach {
             if (now().isAfter(it.expireAt)) throw IllegalStateException("${it.expireAt}에 만료된 쿠폰입니다.")
         }
+    }
+
+    fun toOrder(): Order {
+        return Order(productSnapshots = productSnapshots, userId = authentication.id, selectedCoupons = couponSnapshots)
     }
 }

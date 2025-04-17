@@ -16,7 +16,7 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @Entity(name = "orders")
-class Order protected constructor(
+class Order(
     productSnapshots: List<ProductSnapshot>,
     val userId: UserId,
     selectedCoupons: List<CouponSnapshot>

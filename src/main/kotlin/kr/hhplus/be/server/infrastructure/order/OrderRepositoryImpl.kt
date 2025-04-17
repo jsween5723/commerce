@@ -30,7 +30,7 @@ class OrderRepositoryImpl(private val orderJpaRepository: OrderJpaRepository) : 
     }
 
     override fun create(createOrder: CreateOrder): Order {
-        return orderJpaRepository.save(createOrder)
+        return orderJpaRepository.save(createOrder.toOrder())
     }
 }
 
