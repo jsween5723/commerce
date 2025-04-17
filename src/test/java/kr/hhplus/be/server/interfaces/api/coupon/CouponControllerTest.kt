@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.interfaces.api.coupon
 
-import kr.hhplus.be.server.IntegrationTestSupport
-import kr.hhplus.be.server.LongFixture
+import kr.hhplus.be.server.integration.IntegrationTestSupport
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,7 +16,6 @@ import org.springframework.test.web.servlet.post
 class CouponControllerTest : IntegrationTestSupport() {
     @Autowired
     private lateinit var mockMvc: MockMvc
-    private val longFixture = LongFixture()
 
     @Test
     fun `POST api_v1_coupons_{id}_register`() {

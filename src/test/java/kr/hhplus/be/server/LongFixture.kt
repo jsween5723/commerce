@@ -1,7 +1,9 @@
 package kr.hhplus.be.server
 
+import org.springframework.stereotype.Component
 import java.util.concurrent.atomic.AtomicLong
 
+@Component
 class LongFixture {
     private var orderId = AtomicLong(1)
     private var couponId = AtomicLong(1)

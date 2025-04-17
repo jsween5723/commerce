@@ -1,6 +1,7 @@
-package kr.hhplus.be.server
+package kr.hhplus.be.server.integration
 
 import jakarta.persistence.EntityManagerFactory
+import kr.hhplus.be.server.LongFixture
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.auth.UserId
 import kr.hhplus.be.server.domain.coupon.Coupon
@@ -48,7 +49,7 @@ class IntegrationTestSupport {
     lateinit var couponService: CouponService
 
     companion object {
-        const val MAX_COUNT = 10L
+        const val MAX_COUNT = 50L
         const val MAX_STOCK_NUMBER = 1000L
         const val MAX_COUPON_STOCK_NUMBER = 100L
         const val ZERO_STOCK_ID_MOD = 2
@@ -72,7 +73,10 @@ class IntegrationTestSupport {
 
     @Autowired
     lateinit var pointRepository: JpaRepository<UserPoint, Long>
-    protected val idGenerator = LongFixture()
+
+    @Autowired
+    lateinit var longFixture: LongFixture
+
     protected lateinit var products: List<Product>
 
     fun insertTemplate(entities: Collection<Any>) {

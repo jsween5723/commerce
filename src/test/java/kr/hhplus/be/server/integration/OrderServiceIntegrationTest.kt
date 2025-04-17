@@ -1,7 +1,7 @@
-package kr.hhplus.be.server.domain.order
+package kr.hhplus.be.server.integration
 
-import kr.hhplus.be.server.IntegrationTestSupport
 import kr.hhplus.be.server.domain.auth.Authentication
+import kr.hhplus.be.server.domain.order.Order
 import kr.hhplus.be.server.domain.order.product.ProductSnapshotFixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
@@ -23,7 +23,7 @@ class OrderServiceIntegrationTest : IntegrationTestSupport() {
 
     @Test
     fun `상품을 조회하고 주문한 뒤 결제할 수 있다_취소되면_상태가_바뀐다`() {
-        val userId = idGenerator.userId()
+        val userId = longFixture.userId()
 
 //        상품 조회
         val products = 상품목록을_조회한다()
@@ -36,7 +36,7 @@ class OrderServiceIntegrationTest : IntegrationTestSupport() {
         }
 
 //        쿠폰 발급
-        val couponId = idGenerator.couponId() * 2
+        val couponId = longFixture.couponId() * 2 + 1
         val 발급된_쿠폰 = 쿠폰을_발급한다(userId, couponId)
         val 대상_쿠폰 = 대상_쿠폰_목록을_사용한다(userId, listOf(발급된_쿠폰.id))[0]
 

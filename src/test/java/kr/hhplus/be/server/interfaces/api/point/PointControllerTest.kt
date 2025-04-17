@@ -1,8 +1,7 @@
 package kr.hhplus.be.server.interfaces.api.point
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import kr.hhplus.be.server.IntegrationTestSupport
-import kr.hhplus.be.server.LongFixture
+import kr.hhplus.be.server.integration.IntegrationTestSupport
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,7 +23,6 @@ class PointControllerTest : IntegrationTestSupport() {
     @Autowired
     private lateinit var objectMapper: ObjectMapper
 
-    private val longFixture: LongFixture = LongFixture()
 
     @Test
     fun `POST api_v1_points_charge`() {

@@ -1,6 +1,6 @@
-package kr.hhplus.be.server.domain.product
+package kr.hhplus.be.server.integration
 
-import kr.hhplus.be.server.IntegrationTestSupport
+import kr.hhplus.be.server.domain.product.ProductQuery
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -14,7 +14,6 @@ class ProductServiceIntegrationTest : IntegrationTestSupport() {
 
     @BeforeAll
     fun beforeAll() {
-        insertProducts()
         insertRankedProducts()
     }
 

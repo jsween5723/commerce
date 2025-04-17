@@ -1,8 +1,9 @@
-package kr.hhplus.be.server.application.order
+package kr.hhplus.be.server.integration
 
-import kr.hhplus.be.server.IntegrationTestSupport
 import kr.hhplus.be.server.application.coupon.CouponCriteria
 import kr.hhplus.be.server.application.coupon.CouponFacade
+import kr.hhplus.be.server.application.order.OrderCriteria
+import kr.hhplus.be.server.application.order.OrderFacade
 import kr.hhplus.be.server.application.point.PointCriteria
 import kr.hhplus.be.server.application.point.PointFacade
 import kr.hhplus.be.server.application.product.ProductFacade
@@ -40,7 +41,7 @@ class OrderFacadeIntegrationTest : IntegrationTestSupport() {
 
     @Test
     fun `주문 생성 및 결제, 취소 플로우`() {
-        val userId = idGenerator.userId()
+        val userId = longFixture.userId()
 
 //        포인트 충전
         pointFacade.charge(
@@ -53,11 +54,11 @@ class OrderFacadeIntegrationTest : IntegrationTestSupport() {
         val orderItems = products.products.slice(0..MAX_COUNT.toInt() - 1).mapIndexed { index, products ->
             OrderCriteria.Create.CreateOrderItem(
                 products.id,
-                amount = products.stockNumber - 1
+                amount = index + 1L
             )
         }
 // 쿠폰 발급
-        val couponId = idGenerator.couponId() * 2 - 1
+        val couponId = longFixture.couponId() * 2 - 1
         val publishedCouponId = couponFacade.publish(
             CouponCriteria.Publish(
                 authentication = Authentication(userId),
