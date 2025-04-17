@@ -164,10 +164,6 @@ class IntegrationTestSupport {
         )
     }
 
-    protected fun 쿠폰을_발급한다(userId: Long, couponId: Long): PublishedCoupon {
-        val command = CouponCommand.Publish(Authentication(userId), couponId)
-        return couponService.publish(command)
-    }
 
     protected fun 사용자의_쿠폰_목록을_조회한다(userId: Long): List<PublishedCoupon> {
         return couponService.findPublishedByUserId(userId)
@@ -211,6 +207,11 @@ class IntegrationTestSupport {
 
     protected fun 인기_상품목록을_조회한다(query: ProductQuery.Ranked): List<RankedProduct> {
         return productService.findRankedBy(query)
+    }
+
+    protected fun 쿠폰을_발급한다(userId: Long, couponId: Long): PublishedCoupon {
+        val command = CouponCommand.Publish(Authentication(userId), couponId)
+        return couponService.publish(command)
     }
 }
 
