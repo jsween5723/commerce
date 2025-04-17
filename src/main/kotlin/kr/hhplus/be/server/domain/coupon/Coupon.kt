@@ -35,7 +35,7 @@ class Coupon(
     @UpdateTimestamp
     lateinit var updatedAt: LocalDateTime
 
-    @OneToMany(mappedBy = "coupon", cascade = [CascadeType.MERGE, CascadeType.REMOVE], orphanRemoval = true)
+    @OneToMany(mappedBy = "coupon", cascade = [CascadeType.ALL], orphanRemoval = true)
     val publishedCoupons: MutableList<PublishedCoupon> = mutableListOf()
 
     fun publish(userId: UserId, now: LocalDateTime): PublishedCoupon {
