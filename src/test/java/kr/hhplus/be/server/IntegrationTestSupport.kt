@@ -95,7 +95,7 @@ class IntegrationTestSupport {
                 .generate(field("stockNumber")) { gen -> gen.longs().min(500).max(1000) }
                 .supply(
                     field("price")
-                ) { _ -> BigDecimal.valueOf(Random.nextInt(300, 3000).toLong()) }
+                ) { _ -> BigDecimal.valueOf(Random.nextInt(300, 500).toLong()) }
                 .ignore(field("id")).create()
         }
         insertTemplate(
@@ -119,7 +119,7 @@ class IntegrationTestSupport {
     fun insertCoupons() {
         coupons = LongRange(1, MAX_COUNT).map {
             Instancio.of(Coupon::class.java).supply(field("discountAmount")) { _ ->
-                val number = Random.nextLong(100)
+                val number = Random.nextLong(1, 100)
                 BigDecimal(number)
             }.generate(field("expireDuration")) { gen ->
                 gen.temporal().duration().min(1, ChronoUnit.DAYS).max(MAX_COUPON_DURATION, ChronoUnit.DAYS)
@@ -127,7 +127,7 @@ class IntegrationTestSupport {
                 .generate(field("publishTo")) { gen -> gen.temporal().localDateTime().future() }
                 .supply(field("stock")) { gen ->
                     if (it % 2 == 0.toLong()) 0 else gen.longRange(
-                        1,
+                        20,
                         MAX_COUPON_STOCK_NUMBER
                     )
                 }
