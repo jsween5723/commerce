@@ -90,7 +90,7 @@ class IntegrationTestSupport {
     }
 
     fun insertProducts() {
-        products = LongRange(0, MAX_COUNT).map {
+        products = LongRange(1, MAX_COUNT).map {
             Instancio.of(Product::class.java)
                 .generate(field("stockNumber")) { gen -> gen.longs().min(500).max(1000) }
                 .supply(
@@ -105,7 +105,7 @@ class IntegrationTestSupport {
 
     fun insertRankedProducts() {
         val longFixture = LongFixture()
-        rankedProducts = LongRange(0, MAX_COUNT).map {
+        rankedProducts = LongRange(1, MAX_COUNT).map {
             Instancio.of(RankedProduct::class.java).set(field("productId"), longFixture.productId())
                 .ignore(field("id"))
                 .generate(field("totalSellingCount")) { gen -> gen.longs().min(1).max(10000) }
@@ -117,7 +117,7 @@ class IntegrationTestSupport {
     }
 
     fun insertCoupons() {
-        coupons = LongRange(0, MAX_COUNT).map {
+        coupons = LongRange(1, MAX_COUNT).map {
             Instancio.of(Coupon::class.java).supply(field("discountAmount")) { _ ->
                 val number = Random.nextLong(100)
                 BigDecimal(number)
