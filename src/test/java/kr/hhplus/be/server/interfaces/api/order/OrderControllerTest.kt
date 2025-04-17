@@ -1,11 +1,13 @@
 package kr.hhplus.be.server.interfaces.api.order
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.convertValue
 import kr.hhplus.be.server.IntegrationTestSupport
 import kr.hhplus.be.server.LongFixture
+import kr.hhplus.be.server.domain.auth.UserId
+import kr.hhplus.be.server.domain.point.UserPoint
 import org.hamcrest.Matchers.`is`
-import org.junit.jupiter.api.Order
+import org.instancio.Instancio
+import org.instancio.Select.field
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -23,41 +25,45 @@ class OrderControllerTest : IntegrationTestSupport() {
 
     @Autowired
     private lateinit var objectMapper: ObjectMapper
-
-    private val longFixture = LongFixture()
-    val id = longFixture.orderId()
-    var orderId = 0L
+    val longFixture = LongFixture()
+    val userId = longFixture.userId()
+    val orderId = longFixture.orderId()
 
     @Test
-    @Order(1)
-    fun `POST api_v1_orders`() {
+    fun `1_POST api_v1_orders`() {
         val result = mockMvc.post("/api/v1/orders") {
             contentType = MediaType.APPLICATION_JSON
             header(
-                HttpHeaders.AUTHORIZATION, id
+                HttpHeaders.AUTHORIZATION, userId
             )
             content = objectMapper.writeValueAsString(
                 OrderRequest.CreateOrder(
                     orderItems = listOf(
                         OrderRequest.CreateOrder.CreateOrderItem(
-                            productId = longFixture.orderId(), amount = 30
+                            productId = longFixture.productId(), amount = 30
                         )
-                    ), registeredCouponIds = listOf(1, 2, 3)
+                    ),
+                    registeredCouponIds = listOf()
                 )
             )
         }
             .andExpect {
                 status { is2xxSuccessful() }
                 jsonPath("$.success", `is`(true))
-            }.andReturn().response.contentAsString
-        orderId = objectMapper.convertValue<OrderResponse.CreateOrderResponse>(result).id
+            }
     }
 
     @Test
-    @Order(2)
-    fun `POST api_v1_orders_{id}_pay`() {
-        mockMvc.post("/api/v1/orders/${orderId}/pay") {
-            header(HttpHeaders.AUTHORIZATION, id)
+    fun `2_POST api_v1_orders_{id}_pay`() {
+        insertTemplate(
+            listOf(
+                Instancio.of(UserPoint::class.java)
+                    .supply(field("userId")) { gen -> UserId(userId) }
+                    .supply(field("point")) { gen -> gen.longRange(10000, 10000000).toBigDecimal() }
+                    .create())
+        )
+        mockMvc.post("/api/v1/orders/1/pay") {
+            header(HttpHeaders.AUTHORIZATION, userId)
         }
             .andExpect {
                 status { is2xxSuccessful() }

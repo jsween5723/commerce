@@ -7,6 +7,5 @@ import org.springframework.stereotype.Component
 @Component
 class DataPlatformSenderImpl : DataPlatformSender {
     override fun send(order: Order) {
-        TODO("Not yet implemented")
     }
 }

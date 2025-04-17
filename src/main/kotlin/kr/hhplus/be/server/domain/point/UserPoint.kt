@@ -54,6 +54,6 @@ class UserPoint(
 
 
     companion object {
-        val MAX = BigDecimal(100_000L)
+        val MAX = BigDecimal(100_000_000L)
     }
 }

@@ -22,7 +22,7 @@ class CouponControllerTest : IntegrationTestSupport() {
     @Test
     fun `POST api_v1_coupons_{id}_register`() {
         mockMvc.post("/api/v1/coupons/1/register") {
-            header(AUTHORIZATION, longFixture.orderId())
+            header(AUTHORIZATION, longFixture.couponId())
         }
             .andExpect {
                 status { is2xxSuccessful() }
@@ -33,7 +33,7 @@ class CouponControllerTest : IntegrationTestSupport() {
     @Test
     fun `GET api_v1_coupons_me`() {
         mockMvc.get("/api/v1/coupons/me") {
-            header(AUTHORIZATION, longFixture.orderId())
+            header(AUTHORIZATION, longFixture.userId())
         }
             .andExpect {
                 status { is2xxSuccessful() }
