@@ -1,7 +1,6 @@
-package kr.hhplus.be.server.integration
+package kr.hhplus.be.server
 
 import jakarta.persistence.EntityManagerFactory
-import kr.hhplus.be.server.LongFixture
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.auth.UserId
 import kr.hhplus.be.server.domain.coupon.Coupon
@@ -36,26 +35,6 @@ class IntegrationTestSupport {
     private lateinit var coupons: List<Coupon>
 
     @Autowired
-    lateinit var productService: ProductService
-
-    @Autowired
-    lateinit var orderService: OrderService
-
-    @Autowired
-    lateinit var pointService: PointService
-
-    @Autowired
-    lateinit var couponService: CouponService
-
-    companion object {
-        const val MAX_COUNT = 50L
-        const val MAX_STOCK_NUMBER = 1000L
-        const val MAX_COUPON_STOCK_NUMBER = 100L
-        const val ZERO_STOCK_ID_MOD = 2
-        const val MAX_COUPON_DURATION = 5L
-    }
-
-    @Autowired
     lateinit var couponRepository: JpaRepository<Coupon, Long>
 
     @Autowired
@@ -75,6 +54,27 @@ class IntegrationTestSupport {
 
     @Autowired
     lateinit var longFixture: LongFixture
+
+    @Autowired
+    lateinit var productService: ProductService
+
+    @Autowired
+    lateinit var orderService: OrderService
+
+    @Autowired
+    lateinit var pointService: PointService
+
+    @Autowired
+    lateinit var couponService: CouponService
+
+    companion object {
+        const val MAX_COUNT = 10L
+        const val MAX_STOCK_NUMBER = 1000L
+        const val MAX_COUPON_STOCK_NUMBER = 100L
+        const val ZERO_STOCK_ID_MOD = 2
+        const val MAX_COUPON_DURATION = 5L
+    }
+
 
     protected lateinit var products: List<Product>
 
@@ -103,7 +103,7 @@ class IntegrationTestSupport {
             }.generate(field("publishFrom")) { gen -> gen.temporal().localDateTime().past() }
                 .generate(field("publishTo")) { gen -> gen.temporal().localDateTime().future() }
                 .supply(field("stock")) { gen ->
-                    if (it % 2 == 0.toLong()) 0 else gen.longRange(
+                    if (it % 2 == 0.toLong()) 1 else gen.longRange(
                         20,
                         MAX_COUPON_STOCK_NUMBER
                     )

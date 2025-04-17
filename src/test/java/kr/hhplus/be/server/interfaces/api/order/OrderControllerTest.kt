@@ -1,9 +1,9 @@
 package kr.hhplus.be.server.interfaces.api.order
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import kr.hhplus.be.server.IntegrationTestSupport
 import kr.hhplus.be.server.domain.auth.UserId
 import kr.hhplus.be.server.domain.point.UserPoint
-import kr.hhplus.be.server.integration.IntegrationTestSupport
 import org.hamcrest.Matchers.`is`
 import org.instancio.Instancio
 import org.instancio.Select.field

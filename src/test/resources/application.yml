@@ -7,7 +7,7 @@ spring:
     name: HangHaePlusDataSource
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
-      maximum-pool-size: 100
+      maximum-pool-size: 10000
       connection-timeout: 10000
       max-lifetime: 60000
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -27,3 +27,11 @@ spring:
 springdoc:
   swagger-ui:
     path: /api
+---
+spring.config.activate.on-profile: local, test
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/hhplus?characterEncoding=UTF-8&serverTimezone=UTC
+    username: application
+    password: application

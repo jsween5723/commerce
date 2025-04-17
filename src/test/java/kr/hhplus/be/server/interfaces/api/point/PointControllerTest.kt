@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.interfaces.api.point
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import kr.hhplus.be.server.integration.IntegrationTestSupport
+import kr.hhplus.be.server.IntegrationTestSupport
 import org.hamcrest.Matchers.`is`
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.integration
 
+import kr.hhplus.be.server.IntegrationTestSupport
 import kr.hhplus.be.server.domain.OrderBy
 import kr.hhplus.be.server.domain.product.ProductQuery
 import kr.hhplus.be.server.domain.product.RankedProductField
