@@ -53,10 +53,11 @@ class ProductRepositoryImpl(
             val tx = it.beginTransaction()
             try {
                 rankedProductRepository.saveAll(products)
+                tx.commit()
             } catch (e: Exception) {
                 tx.rollback()
             } finally {
-                tx.commit()
+
             }
         }
     }

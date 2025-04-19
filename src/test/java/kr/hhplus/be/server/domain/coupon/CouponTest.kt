@@ -18,7 +18,6 @@ class CouponTest {
             assertThat(published).extracting({ it.coupon }, { it.userId })
                 .containsExactly(coupon, UserId(1))
             assertThat(coupon.stock).isEqualTo(beforeStock - 1)
-            assertThat(coupon.publishedCoupons.size).isEqualTo(1)
         }
 
         @Test

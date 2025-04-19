@@ -56,7 +56,7 @@ class OrderControllerTest : IntegrationTestSupport() {
         insertTemplate(
             listOf(
                 Instancio.of(UserPoint::class.java)
-                    .supply(field("userId")) { gen -> UserId(userId) }
+                    .supply(field("userId")) { _ -> UserId(userId) }
                     .supply(field("point")) { gen -> gen.longRange(10000, 10000000).toBigDecimal() }
                     .create())
         )
