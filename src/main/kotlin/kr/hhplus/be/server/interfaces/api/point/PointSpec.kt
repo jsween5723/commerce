@@ -28,8 +28,8 @@ interface PointSpec {
         )]
     )
     fun charge(
-        authentication: Authentication, @RequestBody request: ChargePointRequest
-    ): Response<ChargePointResponse>
+        authentication: Authentication, @RequestBody request: PointRequest.Charge
+    ): Response<PointResponse.Charge>
 
     @Operation(
         summary = "내 포인트 조회 API",
@@ -37,17 +37,6 @@ interface PointSpec {
     )
     fun getMyPoint(
         authentication: Authentication
-    ): Response<MyPointResponse>
+    ): Response<PointResponse.MyPoint>
 }
 
-data class ChargePointRequest(@Schema(description = "충전할 양", required = true) val amount: Int = 0)
-
-data class ChargePointResponse(
-    @Schema(description = "충전된 user id") val userId: Long,
-    @Schema(description = "충전된 후의 포인트") val point: Int
-)
-
-data class MyPointResponse(
-    @Schema(description = "사용자의 id") val userId: Long,
-    @Schema(description = "사용자의 포인트") val point: Int
-)

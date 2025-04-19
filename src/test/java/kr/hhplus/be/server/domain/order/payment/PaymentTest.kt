@@ -18,7 +18,7 @@ class PaymentTest {
 //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L))
+            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
 //            when
             assertThatCode { Payment.from(order) }.doesNotThrowAnyException()
         }
@@ -31,7 +31,7 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L))
+            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
             val payment = order.payment
             val expected = PaymentInfo.Cancel(payment.amount)
             payment.pay(Authentication(1L))
@@ -46,7 +46,7 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L))
+            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
             val payment = order.payment
             val expected = PaymentInfo.Cancel(ZERO)
 //            when
@@ -60,7 +60,7 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L))
+            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
             val payment = order.payment
 //            when
             assertThatThrownBy {
@@ -73,7 +73,7 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L))
+            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
             val payment = order.payment
             payment.cancel(Authentication(1L))
 //            when
@@ -90,7 +90,7 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L))
+            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
             val payment = order.payment
             val expected = PaymentInfo.Pay(payment.amount)
 //            when
@@ -104,7 +104,7 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L))
+            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
             val payment = order.payment
 //            when
             assertThatThrownBy {
@@ -117,7 +117,7 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L))
+            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
             val payment = order.payment
             payment.pay(Authentication(1L))
 //            when
@@ -131,7 +131,7 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L))
+            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
             val payment = order.payment
             payment.cancel(Authentication(1L))
 //            when

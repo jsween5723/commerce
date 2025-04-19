@@ -50,44 +50,13 @@ class OrderFacade(
     }
 
     @Transactional
-    fun cancel(criteria: OrderCriteria.Cancel): OrderResult.Cancel {
-//        주문 조회
-        val order = orderService.findById(criteria.orderId)
-//        주문 취소 및 결제 취소 후 재고 환수
-        val info = order.cancel(criteria.authentication)
-//        환급 포인트가 있다면 포인트 환급
-        if (info.hasAmount) {
-            pointService.charge(
-                PointCommand.Charge(
-                    amount = order.totalPrice, userId = order.payment.userId, authentication = criteria.authentication
-                )
-            )
-        }
-        val idAndQuantities = order.receipt.items.map { orderItem ->
-            ProductCommand.ProductIdAndQuantity(
-                orderItem.productId, orderItem.quantity
-            )
-        }
-        productService.restock(ProductCommand.Restock(idAndQuantities))
-        return OrderResult.Cancel(orderId = order.id, paymentId = order.payment.id)
-    }
-
-    @Transactional
     fun cancelByDate(criteria: OrderCriteria.CancelBy) {
+        val (pending, authentication) = criteria
         val orders =
             orderService.findForCancel(OrderQuery.ForCancelSchedule(Order.Status.PENDING, criteria.pendingTime))
-        orders.forEach {
-            it.cancel(criteria.authentication)
-            pointService.charge(
-                PointCommand.Charge(
-                    amount = it.totalPrice, it.payment.userId, authentication = criteria.authentication
-                )
-            )
-            val idAndQuantities = it.receipt.items.map { orderItem ->
-                ProductCommand.ProductIdAndQuantity(
-                    orderItem.productId, orderItem.quantity
-                )
-            }
+        orders.forEach { order ->
+            val info = order.cancel(authentication)
+            val idAndQuantities = OrderMapper.toProductIdAndQuantities(order.receipt)
             productService.restock(ProductCommand.Restock(idAndQuantities))
         }
     }

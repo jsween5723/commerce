@@ -1,8 +1,7 @@
 package kr.hhplus.be.server.domain.point
 
-import org.springframework.stereotype.Repository
+import kr.hhplus.be.server.domain.auth.UserId
 
-@Repository
 interface PointRepository {
-    fun findByUserId(userId: Long): UserPoint
+    fun findByUserId(userId: UserId): UserPoint
 }

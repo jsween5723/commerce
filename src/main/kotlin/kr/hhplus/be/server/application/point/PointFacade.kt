@@ -1,7 +1,9 @@
 package kr.hhplus.be.server.application.point
 
+import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.point.PointLockTemplate
 import kr.hhplus.be.server.domain.point.PointService
+import kr.hhplus.be.server.interfaces.api.point.PointResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -21,5 +23,11 @@ class PointFacade(
             val point = pointService.charge(criteria.toChargeCommand())
         }
         return PointResult.Charge(true)
+    }
+
+    @Transactional
+    fun myPoint(authentication: Authentication): PointResponse.MyPoint {
+        val point = pointService.findByUserId(authentication.id)
+        return PointResponse.MyPoint(userId = point.userId.userId, point = point.point)
     }
 }

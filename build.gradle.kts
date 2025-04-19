@@ -69,6 +69,9 @@ dependencies {
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:mysql")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    // https://mvnrepository.com/artifact/org.instancio/instancio-junit
+    testImplementation("org.instancio:instancio-junit:5.4.1")
+    testImplementation(kotlin("test"))
 }
 
 tasks.withType<Test> {
