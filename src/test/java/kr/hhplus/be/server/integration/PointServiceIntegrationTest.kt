@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.integration
 
+import kr.hhplus.be.server.IntegrationTestSupport
 import kr.hhplus.be.server.domain.auth.UserId
 import kr.hhplus.be.server.domain.point.PointException
 import kr.hhplus.be.server.domain.point.UserPoint

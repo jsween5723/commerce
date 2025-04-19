@@ -35,16 +35,10 @@ class Coupon(
     @UpdateTimestamp
     lateinit var updatedAt: LocalDateTime
 
-    @OneToMany(mappedBy = "coupon", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val publishedCoupons: MutableList<PublishedCoupon> = mutableListOf()
-
     fun publish(userId: UserId, now: LocalDateTime): PublishedCoupon {
         if (publishFrom.isAfter(now) || publishTo.isBefore(now)) throw CouponException.CouponNotPublishing()
         if (stock < 1) throw CouponException.CouponStockUnavailable()
         val publishedCoupon = PublishedCoupon.from(userId, this, now)
-        this.publishedCoupons.add(
-            publishedCoupon
-        )
         stock = stock.minus(1)
         return publishedCoupon
     }

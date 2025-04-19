@@ -9,7 +9,10 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 
 @Repository
-class CouponRepositoryImpl(private val couponJpaRepository: CouponJpaRepository) : CouponRepository {
+class CouponRepositoryImpl(
+    private val couponJpaRepository: CouponJpaRepository,
+    private val publishedCouponRepository: PublishedCouponRepository
+) : CouponRepository {
     override fun findPublishedByUserId(userId: Long): List<PublishedCoupon> {
         return couponJpaRepository.findPublishedByUserId(userId)
     }
@@ -21,8 +24,13 @@ class CouponRepositoryImpl(private val couponJpaRepository: CouponJpaRepository)
     override fun findById(id: Long): Coupon? {
         return couponJpaRepository.findByIdOrNull(id)
     }
+
+    override fun save(publishedCoupon: PublishedCoupon): PublishedCoupon {
+        return publishedCouponRepository.save(publishedCoupon)
+    }
 }
 
+@Repository
 interface CouponJpaRepository : JpaRepository<Coupon, Long> {
     @Query("select pc from published_coupons pc where pc.userId.userId = :userId")
     fun findPublishedByUserId(userId: Long): List<PublishedCoupon>
@@ -30,3 +38,6 @@ interface CouponJpaRepository : JpaRepository<Coupon, Long> {
     @Query("select pc from published_coupons pc where pc.userId.userId in (:ids)")
     fun findPublishedByIds(ids: List<Long>): List<PublishedCoupon>
 }
+
+@Repository
+interface PublishedCouponRepository : JpaRepository<PublishedCoupon, Long>

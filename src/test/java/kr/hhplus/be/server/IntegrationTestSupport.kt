@@ -1,7 +1,6 @@
-package kr.hhplus.be.server.integration
+package kr.hhplus.be.server
 
 import jakarta.persistence.EntityManagerFactory
-import kr.hhplus.be.server.LongFixture
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.auth.UserId
 import kr.hhplus.be.server.domain.coupon.Coupon
@@ -27,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.jpa.repository.JpaRepository
 import java.math.BigDecimal
-import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import kotlin.random.Random
 
@@ -35,26 +33,6 @@ import kotlin.random.Random
 class IntegrationTestSupport {
     private lateinit var rankedProducts: List<RankedProduct>
     private lateinit var coupons: List<Coupon>
-
-    @Autowired
-    lateinit var productService: ProductService
-
-    @Autowired
-    lateinit var orderService: OrderService
-
-    @Autowired
-    lateinit var pointService: PointService
-
-    @Autowired
-    lateinit var couponService: CouponService
-
-    companion object {
-        const val MAX_COUNT = 50L
-        const val MAX_STOCK_NUMBER = 1000L
-        const val MAX_COUPON_STOCK_NUMBER = 100L
-        const val ZERO_STOCK_ID_MOD = 2
-        const val MAX_COUPON_DURATION = 5L
-    }
 
     @Autowired
     lateinit var couponRepository: JpaRepository<Coupon, Long>
@@ -77,6 +55,27 @@ class IntegrationTestSupport {
     @Autowired
     lateinit var longFixture: LongFixture
 
+    @Autowired
+    lateinit var productService: ProductService
+
+    @Autowired
+    lateinit var orderService: OrderService
+
+    @Autowired
+    lateinit var pointService: PointService
+
+    @Autowired
+    lateinit var couponService: CouponService
+
+    companion object {
+        const val MAX_COUNT = 10L
+        const val MAX_STOCK_NUMBER = 1000L
+        const val MAX_COUPON_STOCK_NUMBER = 100L
+        const val ZERO_STOCK_ID_MOD = 2
+        const val MAX_COUPON_DURATION = 5L
+    }
+
+
     protected lateinit var products: List<Product>
 
     fun insertTemplate(entities: Collection<Any>) {
@@ -93,32 +92,6 @@ class IntegrationTestSupport {
         }
     }
 
-    fun insertProducts() {
-        products = LongRange(1, MAX_COUNT).map {
-            Instancio.of(Product::class.java)
-                .generate(field("stockNumber")) { gen -> gen.longs().min(500).max(1000) }
-                .supply(
-                    field("price")
-                ) { _ -> BigDecimal.valueOf(Random.nextInt(300, 500).toLong()) }
-                .ignore(field("id")).create()
-        }
-        insertTemplate(
-            products
-        )
-    }
-
-    fun insertRankedProducts() {
-        val longFixture = LongFixture()
-        rankedProducts = LongRange(1, MAX_COUNT).map {
-            Instancio.of(RankedProduct::class.java).set(field("productId"), longFixture.productId())
-                .ignore(field("id"))
-                .generate(field("totalSellingCount")) { gen -> gen.longs().min(1).max(10000) }
-                .supply(field("totalIncome")) { gen -> BigDecimal(Random.nextInt(0, 10000)) }
-                .supply(field("createdDate")) { gen -> LocalDate.now() }
-                .create()
-        }
-        insertTemplate(rankedProducts)
-    }
 
     fun insertCoupons() {
         coupons = LongRange(1, MAX_COUNT).map {
@@ -130,7 +103,7 @@ class IntegrationTestSupport {
             }.generate(field("publishFrom")) { gen -> gen.temporal().localDateTime().past() }
                 .generate(field("publishTo")) { gen -> gen.temporal().localDateTime().future() }
                 .supply(field("stock")) { gen ->
-                    if (it % 2 == 0.toLong()) 0 else gen.longRange(
+                    if (it % 2 == 0.toLong()) 1 else gen.longRange(
                         20,
                         MAX_COUPON_STOCK_NUMBER
                     )

@@ -1,9 +1,9 @@
 package kr.hhplus.be.server.interfaces.api.order
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import kr.hhplus.be.server.IntegrationTestSupport
 import kr.hhplus.be.server.domain.auth.UserId
 import kr.hhplus.be.server.domain.point.UserPoint
-import kr.hhplus.be.server.integration.IntegrationTestSupport
 import org.hamcrest.Matchers.`is`
 import org.instancio.Instancio
 import org.instancio.Select.field
@@ -56,7 +56,7 @@ class OrderControllerTest : IntegrationTestSupport() {
         insertTemplate(
             listOf(
                 Instancio.of(UserPoint::class.java)
-                    .supply(field("userId")) { gen -> UserId(userId) }
+                    .supply(field("userId")) { _ -> UserId(userId) }
                     .supply(field("point")) { gen -> gen.longRange(10000, 10000000).toBigDecimal() }
                     .create())
         )

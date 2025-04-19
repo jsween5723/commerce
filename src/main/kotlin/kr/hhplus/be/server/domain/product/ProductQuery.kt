@@ -4,6 +4,7 @@ import kr.hhplus.be.server.domain.OrderBy
 import java.time.LocalDate
 
 class ProductQuery {
+
     data class Ranked(
         val day: LocalDate = LocalDate.now(), val orders: Set<RankedProductOrderBy> = linkedSetOf(
             RankedProductOrderBy(

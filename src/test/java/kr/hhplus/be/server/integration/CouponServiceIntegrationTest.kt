@@ -1,14 +1,13 @@
 package kr.hhplus.be.server.integration
 
+import kr.hhplus.be.server.IntegrationTestSupport
 import kr.hhplus.be.server.domain.coupon.CouponException
-import kr.hhplus.be.server.domain.coupon.CouponService
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
@@ -17,13 +16,11 @@ import org.springframework.boot.test.context.SpringBootTest
 )
 class CouponServiceIntegrationTest : IntegrationTestSupport() {
 
-    @Autowired
-    lateinit var couponService2: CouponService
-
-    @BeforeAll
-    fun beforeAll() {
+    @BeforeEach
+    fun bv() {
         insertCoupons()
     }
+
 
     @Nested
     inner class `쿠폰을 발급받을 수 있다` {
@@ -38,7 +35,7 @@ class CouponServiceIntegrationTest : IntegrationTestSupport() {
         @Test
         fun `존재하지 않는 쿠폰을 발급하면 CouponException이 발생한다`() {
             val userId = longFixture.userId()
-            val couponId = MAX_COUNT.plus(2)
+            val couponId = 100000L
 
             assertThatThrownBy {
                 쿠폰을_발급한다(userId, couponId)
@@ -49,6 +46,7 @@ class CouponServiceIntegrationTest : IntegrationTestSupport() {
         fun `재고가 부족한 쿠폰을 발급하면 CouponException이 발생한다`() {
             val userId = longFixture.userId()
             val couponId = longFixture.couponId() * 2
+            쿠폰을_발급한다(userId, couponId)
             assertThatThrownBy {
                 쿠폰을_발급한다(userId, couponId)
             }.isInstanceOf(CouponException::class.java)

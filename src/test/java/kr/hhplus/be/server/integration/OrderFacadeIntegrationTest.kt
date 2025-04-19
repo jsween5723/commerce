@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.integration
 
+import kr.hhplus.be.server.IntegrationTestSupport
 import kr.hhplus.be.server.application.coupon.CouponCriteria
 import kr.hhplus.be.server.application.coupon.CouponFacade
 import kr.hhplus.be.server.application.order.OrderCriteria
@@ -10,7 +11,6 @@ import kr.hhplus.be.server.application.product.ProductFacade
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.order.OrderException
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
@@ -33,11 +33,6 @@ class OrderFacadeIntegrationTest : IntegrationTestSupport() {
     @Autowired
     private lateinit var pointFacade: PointFacade
 
-    @BeforeAll
-    fun beforeAll() {
-        insertProducts()
-        insertCoupons()
-    }
 
     @Test
     fun `주문 생성 및 결제, 취소 플로우`() {
@@ -54,11 +49,11 @@ class OrderFacadeIntegrationTest : IntegrationTestSupport() {
         val orderItems = products.products.slice(0..MAX_COUNT.toInt() - 1).mapIndexed { index, products ->
             OrderCriteria.Create.CreateOrderItem(
                 products.id,
-                amount = index + 1L
+                amount = 1L
             )
         }
 // 쿠폰 발급
-        val couponId = longFixture.couponId() * 2 - 1
+        val couponId = longFixture.couponId()
         val publishedCouponId = couponFacade.publish(
             CouponCriteria.Publish(
                 authentication = Authentication(userId),
