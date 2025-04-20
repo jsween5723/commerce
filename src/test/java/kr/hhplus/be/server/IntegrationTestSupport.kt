@@ -20,16 +20,16 @@ import kr.hhplus.be.server.domain.product.ProductQuery
 import kr.hhplus.be.server.domain.product.ProductService
 import kr.hhplus.be.server.domain.product.RankedProduct
 import org.hibernate.SessionFactory
-import org.instancio.Instancio
-import org.instancio.Select.field
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.Import
 import org.springframework.data.jpa.repository.JpaRepository
 import java.math.BigDecimal
-import java.time.temporal.ChronoUnit
-import kotlin.random.Random
 
 @SpringBootTest
+@ComponentScan(basePackages = ["kr.hhplus.be.server"])
+@Import(TestcontainersConfiguration::class)
 class IntegrationTestSupport {
     private lateinit var rankedProducts: List<RankedProduct>
     private lateinit var coupons: List<Coupon>
@@ -67,14 +67,6 @@ class IntegrationTestSupport {
     @Autowired
     lateinit var couponService: CouponService
 
-    companion object {
-        const val MAX_COUNT = 10L
-        const val MAX_STOCK_NUMBER = 1000L
-        const val MAX_COUPON_STOCK_NUMBER = 100L
-        const val ZERO_STOCK_ID_MOD = 2
-        const val MAX_COUPON_DURATION = 5L
-    }
-
 
     protected lateinit var products: List<Product>
 
@@ -90,29 +82,6 @@ class IntegrationTestSupport {
         } finally {
             it.close()
         }
-    }
-
-
-    fun insertCoupons() {
-        coupons = LongRange(1, MAX_COUNT).map {
-            Instancio.of(Coupon::class.java).supply(field("discountAmount")) { _ ->
-                val number = Random.nextLong(1, 100)
-                BigDecimal(number)
-            }.generate(field("expireDuration")) { gen ->
-                gen.temporal().duration().min(1, ChronoUnit.DAYS).max(MAX_COUPON_DURATION, ChronoUnit.DAYS)
-            }.generate(field("publishFrom")) { gen -> gen.temporal().localDateTime().past() }
-                .generate(field("publishTo")) { gen -> gen.temporal().localDateTime().future() }
-                .supply(field("stock")) { gen ->
-                    if (it % 2 == 0.toLong()) 1 else gen.longRange(
-                        20,
-                        MAX_COUPON_STOCK_NUMBER
-                    )
-                }
-                .ignore(field("id"))
-                .create()
-
-        }
-        insertTemplate(coupons)
     }
 
     protected fun 포인트를_조회한다(userId: UserId): UserPoint {

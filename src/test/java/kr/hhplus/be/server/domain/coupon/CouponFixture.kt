@@ -5,7 +5,7 @@ import java.math.BigDecimal
 import java.time.Duration
 import java.time.LocalDateTime
 
-class CouponFixture(
+fun CouponFixture(
     name: String = "Test Coupon",
     description: String = "Test Description",
 //    배포시각
@@ -18,7 +18,7 @@ class CouponFixture(
     amount: BigDecimal = BigDecimal.valueOf(20),
 //    수량
     stock: Long = 20L
-) : Coupon(
+) = Coupon(
     name = name,
     description = description,
     publishFrom = publishFrom,

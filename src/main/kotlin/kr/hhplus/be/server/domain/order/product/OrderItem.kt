@@ -22,7 +22,7 @@ class OrderItem private constructor(
     @Column(nullable = false) val quantity: Long,
 ) {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
 
     @CreationTimestamp

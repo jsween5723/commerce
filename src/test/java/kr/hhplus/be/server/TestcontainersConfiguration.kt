@@ -2,6 +2,7 @@ package kr.hhplus.be.server
 
 import jakarta.annotation.PreDestroy
 import org.springframework.context.annotation.Configuration
+import org.springframework.test.context.bean.override.convention.TestBean
 import org.testcontainers.containers.MySQLContainer
 import org.testcontainers.utility.DockerImageName
 
@@ -11,6 +12,9 @@ class TestcontainersConfiguration {
     fun preDestroy() {
         if (mySqlContainer.isRunning) mySqlContainer.stop()
     }
+
+    @TestBean
+    val longFixture: LongFixture = LongFixture()
 
     companion object {
         val mySqlContainer: MySQLContainer<*> = MySQLContainer(DockerImageName.parse("mysql:8.0"))
@@ -22,7 +26,10 @@ class TestcontainersConfiguration {
             }
 
         init {
-            System.setProperty("spring.datasource.url", mySqlContainer.getJdbcUrl() + "?characterEncoding=UTF-8&serverTimezone=UTC")
+            System.setProperty(
+                "spring.datasource.url",
+                mySqlContainer.jdbcUrl + "?characterEncoding=UTF-8&serverTimezone=UTC"
+            )
             System.setProperty("spring.datasource.username", mySqlContainer.username)
             System.setProperty("spring.datasource.password", mySqlContainer.password)
         }

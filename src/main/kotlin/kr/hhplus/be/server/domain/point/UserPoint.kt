@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.domain.point
 
 import jakarta.persistence.*
-import kr.hhplus.be.server.domain.auth.AuthException
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.auth.UserId
 import org.hibernate.annotations.CreationTimestamp
@@ -15,7 +14,7 @@ class UserPoint(
     @Column(nullable = false) var point: BigDecimal = BigDecimal.ZERO,
 ) {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
 
     @CreationTimestamp
@@ -35,23 +34,18 @@ class UserPoint(
     }
 
     fun charge(amount: BigDecimal, authentication: Authentication) {
-        authorize(authentication)
+        authentication.authorize(userId)
         if (amount < BigDecimal.ZERO) throw PointException.MinusAmountCantApply()
         if (point + amount > MAX) throw PointException.OverMaxPoint()
         point = point.plus(amount)
     }
 
     fun use(amount: BigDecimal, authentication: Authentication) {
-        authorize(authentication)
+        authentication.authorize(userId)
         if (amount < BigDecimal.ZERO) throw PointException.MinusAmountCantApply()
         if (point < amount) throw PointException.AmountOverPoint()
         point = point.minus(amount)
     }
-
-    private fun authorize(authentication: Authentication) {
-        if (!authentication.isSuper && authentication.id.userId != userId.userId) throw AuthException.ForbiddenException()
-    }
-
 
     companion object {
         val MAX = BigDecimal(100_000_000L)

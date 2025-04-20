@@ -22,7 +22,7 @@ class Order(
     selectedCoupons: List<CouponVO>
 ) {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
     val usedCoupons = UsedCoupons(selectedCoupons.map { UsedCoupon.from(it, this) })
     val receipt: Receipt = Receipt(productVOS.map { OrderItem.from(it, this) })

@@ -20,7 +20,7 @@ class PublishedCoupon protected constructor(
     @Column(nullable = false) val discountAmount: BigDecimal,
 ) {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
 
     @CreationTimestamp
@@ -37,10 +37,6 @@ class PublishedCoupon protected constructor(
         if (used) throw CouponException.CouponAlreadyUsed()
         if (time > expireAt) throw CouponException.CouponExpired()
         usedAt = time
-    }
-
-    fun deuse() {
-        usedAt = null
     }
 
     companion object {

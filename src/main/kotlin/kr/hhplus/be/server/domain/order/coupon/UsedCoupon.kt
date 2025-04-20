@@ -13,7 +13,7 @@ class UsedCoupon private constructor(
     val coupon: CouponVO
 ) {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
 
     @CreationTimestamp

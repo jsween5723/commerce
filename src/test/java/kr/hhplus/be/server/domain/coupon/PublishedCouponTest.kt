@@ -37,23 +37,4 @@ class PublishedCouponTest {
             }.isInstanceOf(CouponException.CouponExpired::class.java)
         }
     }
-
-    @Nested
-    inner class Deuse {
-        @Test
-        fun `사용취소하면 usedAt이 null이 된다`() {
-//            given
-            val coupon = PublishedCouponFixture()
-            val now = LocalDateTime.now()
-            coupon.use(
-                now, Authentication(coupon.userId.userId)
-            )
-//            when
-            assertThatCode {
-                coupon.deuse()
-            }.doesNotThrowAnyException()
-            assertThat(coupon.used).isEqualTo(false)
-            assertThat(coupon.usedAt).isNull()
-        }
-    }
 }

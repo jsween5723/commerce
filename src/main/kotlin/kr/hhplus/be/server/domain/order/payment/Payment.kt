@@ -14,7 +14,7 @@ class Payment private constructor(
     @Column(nullable = false) val amount: BigDecimal, val userId: UserId
 ) {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
 
     @Enumerated(EnumType.STRING)
