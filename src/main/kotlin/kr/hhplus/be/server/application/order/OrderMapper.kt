@@ -1,25 +1,25 @@
 package kr.hhplus.be.server.application.order
 
 import kr.hhplus.be.server.domain.coupon.PublishedCoupon
-import kr.hhplus.be.server.domain.order.coupon.CouponSnapshot
+import kr.hhplus.be.server.domain.order.coupon.CouponVO
 import kr.hhplus.be.server.domain.order.coupon.DiscountPolicy
-import kr.hhplus.be.server.domain.order.product.ProductSnapshot
+import kr.hhplus.be.server.domain.order.product.ProductVO
 import kr.hhplus.be.server.domain.order.product.Receipt
 import kr.hhplus.be.server.domain.product.Product
 import kr.hhplus.be.server.domain.product.ProductCommand
 
 object OrderMapper {
-    fun toSelectedProductAndQuantitySnapshot(releaseInfo: Product.ReleaseInfo): ProductSnapshot {
-        return ProductSnapshot(
-            id = releaseInfo.product.id,
+    fun toSelectedProductAndQuantitySnapshot(releaseInfo: Product.ReleaseInfo): ProductVO {
+        return ProductVO(
+            productId = releaseInfo.product.id,
             name = releaseInfo.product.name,
             quantity = releaseInfo.quantity,
-            price = releaseInfo.product.price
+            priceOfOne = releaseInfo.product.price
         )
     }
 
-    fun toSelectedCouponSnapshot(publishedCoupon: PublishedCoupon): CouponSnapshot {
-        return CouponSnapshot(
+    fun toSelectedCouponSnapshot(publishedCoupon: PublishedCoupon): CouponVO {
+        return CouponVO(
             couponId = publishedCoupon.coupon.id,
             publishedCouponId = publishedCoupon.id,
             name = publishedCoupon.coupon.name,

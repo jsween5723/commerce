@@ -10,13 +10,7 @@ import java.time.LocalDateTime
 @Entity(name = "used_coupons")
 class UsedCoupon private constructor(
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "order_id", nullable = false) val order: Order,
-    @Column(nullable = false) val couponId: Long,
-    @Column(nullable = false) val publishedCouponId: Long,
-    @Column(nullable = false) val name: String,
-    @Column(nullable = false) val description: String,
-    @Column(nullable = false) val expireAt: LocalDateTime,
-    @Enumerated(EnumType.STRING) @Column(nullable = false) val type: DiscountPolicy.Type,
-    @Column(nullable = false) val amount: BigDecimal,
+    val coupon: CouponVO
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,20 +22,11 @@ class UsedCoupon private constructor(
     @UpdateTimestamp
     lateinit var updatedAt: LocalDateTime
 
-    @get:Transient
-    private val discountPolicy: DiscountPolicy get() = DiscountPolicy.create(type, amount)
-
-    fun discount(target: BigDecimal): BigDecimal = discountPolicy.discount(target)
+    fun discount(target: BigDecimal): BigDecimal = coupon.discount(target)
 
     companion object {
-        fun from(couponSnapshot: CouponSnapshot, order: Order): UsedCoupon = UsedCoupon(
-            couponId = couponSnapshot.couponId,
-            publishedCouponId = couponSnapshot.publishedCouponId,
-            name = couponSnapshot.name,
-            description = couponSnapshot.description,
-            expireAt = couponSnapshot.expireAt,
-            type = couponSnapshot.type,
-            amount = couponSnapshot.amount,
+        fun from(couponVO: CouponVO, order: Order): UsedCoupon = UsedCoupon(
+            coupon = couponVO,
             order = order,
         )
 

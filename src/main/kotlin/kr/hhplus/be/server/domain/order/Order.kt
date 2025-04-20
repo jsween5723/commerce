@@ -3,12 +3,12 @@ package kr.hhplus.be.server.domain.order
 import jakarta.persistence.*
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.auth.UserId
-import kr.hhplus.be.server.domain.order.coupon.CouponSnapshot
+import kr.hhplus.be.server.domain.order.coupon.CouponVO
 import kr.hhplus.be.server.domain.order.coupon.UsedCoupon
 import kr.hhplus.be.server.domain.order.coupon.UsedCoupons
 import kr.hhplus.be.server.domain.order.payment.Payment
 import kr.hhplus.be.server.domain.order.product.OrderItem
-import kr.hhplus.be.server.domain.order.product.ProductSnapshot
+import kr.hhplus.be.server.domain.order.product.ProductVO
 import kr.hhplus.be.server.domain.order.product.Receipt
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
@@ -17,15 +17,15 @@ import java.time.LocalDateTime
 
 @Entity(name = "orders")
 class Order(
-    productSnapshots: List<ProductSnapshot>,
+    productVOS: List<ProductVO>,
     val userId: UserId,
-    selectedCoupons: List<CouponSnapshot>
+    selectedCoupons: List<CouponVO>
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long = 0L
     val usedCoupons = UsedCoupons(selectedCoupons.map { UsedCoupon.from(it, this) })
-    val receipt: Receipt = Receipt(productSnapshots.map { OrderItem.from(it, this) })
+    val receipt: Receipt = Receipt(productVOS.map { OrderItem.from(it, this) })
 
     //    주문 생성시 결제는 같은 시점에 대기 상태로 생성돼야하므로
 //    cascade persist를 지정한다.

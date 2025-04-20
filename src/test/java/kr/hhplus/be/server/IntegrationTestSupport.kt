@@ -10,8 +10,8 @@ import kr.hhplus.be.server.domain.coupon.PublishedCoupon
 import kr.hhplus.be.server.domain.order.Order
 import kr.hhplus.be.server.domain.order.OrderCommand
 import kr.hhplus.be.server.domain.order.OrderService
-import kr.hhplus.be.server.domain.order.coupon.CouponSnapshot
-import kr.hhplus.be.server.domain.order.product.ProductSnapshot
+import kr.hhplus.be.server.domain.order.coupon.CouponVO
+import kr.hhplus.be.server.domain.order.product.ProductVO
 import kr.hhplus.be.server.domain.point.PointCommand
 import kr.hhplus.be.server.domain.point.PointService
 import kr.hhplus.be.server.domain.point.UserPoint
@@ -153,8 +153,8 @@ class IntegrationTestSupport {
 
     protected fun 주문한다(
         userId: Long,
-        publishCoupons: List<CouponSnapshot>,
-        productIdAndQuantities: List<ProductSnapshot>
+        publishCoupons: List<CouponVO>,
+        productIdAndQuantities: List<ProductVO>
     ): Order {
         val command = OrderCommand.Create(
             selectedProducts = productIdAndQuantities,

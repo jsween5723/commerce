@@ -35,12 +35,12 @@ class OrderItem private constructor(
     val totalPrice: BigDecimal get() = priceOfOne.multiply(BigDecimal(quantity))
 
     companion object {
-        fun from(orderedProductSnapshot: ProductSnapshot, order: Order) = OrderItem(
+        fun from(orderedProductVO: ProductVO, order: Order) = OrderItem(
             order = order,
-            productId = orderedProductSnapshot.id,
-            name = orderedProductSnapshot.name,
-            priceOfOne = orderedProductSnapshot.price,
-            quantity = orderedProductSnapshot.quantity,
+            productId = orderedProductVO.productId,
+            name = orderedProductVO.name,
+            priceOfOne = orderedProductVO.priceOfOne,
+            quantity = orderedProductVO.quantity,
         )
     }
 }

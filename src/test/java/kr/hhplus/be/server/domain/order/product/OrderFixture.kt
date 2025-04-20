@@ -6,10 +6,10 @@ fun ProductSnapshotFixture(
     quantity: Long = 2000,
     price: BigDecimal = BigDecimal.ONE,
     productId: Long = 1L
-): ProductSnapshot =
-    ProductSnapshot(
-        id = productId,
+): ProductVO =
+    ProductVO(
+        productId = productId,
         name = "Emma Randolph",
         quantity = quantity,
-        price = price,
+        priceOfOne = price,
     )
