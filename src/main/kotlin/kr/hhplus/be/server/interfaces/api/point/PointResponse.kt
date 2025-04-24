@@ -9,7 +9,7 @@ class PointResponse {
     )
 
     data class MyPoint(
-        @Schema(description = "사용자의 id") val userId: Long,
-        @Schema(description = "사용자의 포인트") val point: BigDecimal
+        @Schema(description = "사용자의 id") val userId: Long = 0,
+        @Schema(description = "사용자의 포인트") val point: BigDecimal = BigDecimal.ZERO
     )
 }

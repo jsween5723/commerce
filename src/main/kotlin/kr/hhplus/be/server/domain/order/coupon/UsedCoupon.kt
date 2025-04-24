@@ -29,6 +29,5 @@ class UsedCoupon private constructor(
             coupon = couponVO,
             order = order,
         )
-
     }
 }

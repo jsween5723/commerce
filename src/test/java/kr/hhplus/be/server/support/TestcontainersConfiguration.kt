@@ -1,4 +1,4 @@
-package kr.hhplus.be.server
+package kr.hhplus.be.server.support
 
 import jakarta.annotation.PreDestroy
 import org.springframework.context.annotation.Configuration
@@ -14,7 +14,7 @@ class TestcontainersConfiguration {
     }
 
     @TestBean
-    val longFixture: LongFixture = LongFixture()
+    val idGenerator: IdGenerator = IdGenerator()
 
     companion object {
         val mySqlContainer: MySQLContainer<*> = MySQLContainer(DockerImageName.parse("mysql:8.0"))

@@ -32,10 +32,10 @@ class CouponRepositoryImpl(
 
 @Repository
 interface CouponJpaRepository : JpaRepository<Coupon, Long> {
-    @Query("select pc from published_coupons pc join fetch coupons c on pc.coupon = c where pc.userId.userId = :userId")
+    @Query("select pc from published_coupons pc join fetch pc.coupon where pc.userId.userId = :userId")
     fun findPublishedByUserId(userId: Long): List<PublishedCoupon>
 
-    @Query("select pc from published_coupons pc join fetch coupons c on pc.coupon = c where pc.userId.userId in (:ids)")
+    @Query("select pc from published_coupons pc join fetch pc.coupon where pc.userId.userId in (:ids)")
     fun findPublishedByIds(ids: List<Long>): List<PublishedCoupon>
 }
 

@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.domain.point
 
 import kr.hhplus.be.server.domain.auth.UserId
+import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -11,6 +12,7 @@ class PointService(
     fun findByUserId(userId: UserId) = pointRepository.findByUserId(userId)
 
     @Transactional
+    @Retryable
     fun charge(command: PointCommand.Charge): UserPoint {
         val (amount, userId, authentication) = command
         val point = pointRepository.findByUserId(userId = userId)

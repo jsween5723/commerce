@@ -1,10 +1,10 @@
-package kr.hhplus.be.server
+package kr.hhplus.be.server.support
 
 import org.springframework.boot.test.context.TestComponent
 import java.util.concurrent.atomic.AtomicLong
 
 @TestComponent
-class LongFixture {
+class IdGenerator {
     private var orderId = AtomicLong(1)
     private var couponId = AtomicLong(1)
     private var userId = AtomicLong(1)
