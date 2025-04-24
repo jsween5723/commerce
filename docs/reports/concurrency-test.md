@@ -2,7 +2,7 @@
 
 개념 설명은 하단으로 옮겼습니다.
 
-## 상황에 따른 락 선택
+## 문제 식별
 
 이번 과제에 있는 요구사항 중 값을 변경시키는 작업은 다음과 같다.
 
@@ -12,51 +12,145 @@
 4. 포인트 충전 (UserPoint의 point + {입력값})
 5. 포인트 차감 (UserPoint의 point - {입력값})
 6. 발급받은 쿠폰 사용 처리 (PublishedCoupon의 usedAt = {현재시간})
-7. 주문의 상태변경 (Order의 status = PAID)
+
+동시에 여러 사용자가 접근해 변경할 수 있는 가능성이 있거나,  
+자기자신만 접근할 수 있으나 실수 혹은 어뷰징으로 여러번 동시에 요청을 할 수 있는 경우를 찾는다.
+
+## 분석
 
 ### 낙관락
 
-위에서 알 수 있듯이 낙관락은 예외를 발생시키는 특징이 있다.  
+낙관락은 예외를 발생시키는 특징이 있다.  
 이를 이용해 재시도를 시도할 수 있지만, 동작들이 모두 데이터베이스가 아니라 애플리케이션에서 처리된다.  
 따라서 재시도마다 데이터베이스를 조회하게 되고 재시도와 동시 접근 요청이 많아질수록 네트워크 부하가 발생한다.
 
-이런 특징 때문에 동시 접근 수가 많아 재시도가 너무 많이 일어날 상황일 때,  
+이런 특징 때문에 동시 접근 수가 많아 재시도를 하더라도 너무 많이 일어날 상황일 때,  
 낙관락을 걸면 오히려 비관락보다 자원소모가 심할 수 있다.
 
-1. 한 트랜잭션을 제외한 모든 트랜잭션에 예외를 발생시켜도 무관한 경우엔 많은 경우 낙관락을 사용한다.
-   (해당 리소스에 대해 변경하는 값이 이분법적인 경우 (boolean처럼))
+1. 한 트랜잭션을 제외한 모든 트랜잭션에 예외를 발생시켜도 무관한 경우엔 많은 경우 낙관락을 사용한다.  
+   (해당 리소스에 대해 변경하는 값이 이분법적이고 다시변경 될 일이 없는 경우 (boolean처럼))
+    1. 멘토링 예약, 콘서트 좌석
 
 2. 이외에도 자기 자신만 접근할 수 있는 리소스의 경우에도 낙관락을 사용할 수 있다.
+    1. 포인트, 발급받은 쿠폰, 주문
 
 위와 같은 근거에 의해
 
-UserPoint (자기자신만 접근 가능하고 한 트랜잭션의 결과만 수용)
+#### UserPoint
+
+(자기자신만 접근 가능하고 한 트랜잭션의 결과만 수용)
 
 1. 포인트 충전 (UserPoint의 point + {입력값})
 2. 포인트 차감 (UserPoint의 point - {입력값})
 
-PublishedCoupon (자기자신만 접근 가능하고 한 트랜잭션의 결과만 수용)
+```kotlin
+    @Test
+fun `충전을 동시에 2번 실행시 1번만 적용`() {
+}
+
+@Test
+fun `차감을 동시에 2번 실행시 1번만 적용`() {
+}
+```
+
+#### PublishedCoupon
+
+(자기자신만 접근 가능하고 한 트랜잭션의 결과만 수용)
 
 1. 발급받은 쿠폰 사용 처리 (PublishedCoupon의 usedAt = {현재시간})
 
-Order (자기자신만 접근 가능하고 한 트랜잭션의 결과만 수용)
-
-1. 주문의 상태변경 (Order의 status = PAID)
+```kotlin
+    @Test
+fun `동시에 사용자에게 발급된 쿠폰 사용을 시도하면 하나만 적용된다`() {
+}
+```
 
 ### 비관락
 
 비관락의 경우 반대로 예외가 발생하지 않았으면 하는 리소스에서 사용한다.
 락 점유를 못했다고 예외가 발생하면 사용자 입장에서 큰 기회비용 손실이기 때문이다.
 
-Coupon (재고에 다수가 접근 가능하고 한 트랜잭션만 수용해서는 안됨)
+#### Coupon
+
+재고에 다수가 접근 가능하고 한 트랜잭션만 수용해서는 안됨
 
 1. 실시간 쿠폰 발급 (Coupon의 stock -1)
    **사용자 경험을 위해 timeout은 최대 10초까지 지정한다**
 
-Product (재고에 다수가 접근 가능하고 한 트랜잭션만 수용해서는 안됨)
+```kotlin
+    @Test
+fun `쿠폰 발급시 모두 발급되어 수만큼 재고가 차감 처리된다`() {
+}
+```
+
+#### Product
+
+재고에 다수가 접근 가능하고 한 트랜잭션만 수용해서는 안됨
 
 1. 상품 재고 차감 (Product의 stock -1)
 2. 상품 재고 충전 (Product의 stock +1)
+
+```kotlin
+   @Test
+fun `재고 차감 시 동시에 시도해도 모두 처리된다`() {
+}
+
+@Test
+fun `재고 증가 시 동시에 시도해도 모두 처리된다`() {
+//    주문 취소처리와 겹칠 경우
+}
+
+@Test
+fun `재고 증가와 차감이 동시에 발생해도 모두 처리된다`() {
+}
+```
+
+## 해결
+
+### 비관락
+
+1. 반드시 모두 처리해야하는 것은 Lock(PESSIMISTIC_LOCK)으로 락 점유로 인한 예외가 발생하지 않도록 한다.
+   ex) product의 재고
+
+```kotlin
+    override fun findByIdsForReleaseOrRestock(productIds: List<Long>): List<Product> {
+    return productJpaRepository.findByIdIn(productIds)
+}
+
+@Lock(LockModeType.PESSIMISTIC_WRITE)
+fun findByIdIn(ids: List<Long>): List<Product>
+```
+
+### 낙관락
+
+1. 한 트랜잭션만 허용하고 나머지는 예외를 발생시켜야 하는 경우, @Version + @Retryable + @Recover로 낙관락을 적용한다.
+2. 접근지점이 자기자신밖에 없는 경우에도 낙관락으로 성공을 위해 Retry를 처리시킬 수도 있지만, 지금 요구사항에서는 Retry로 성공시켜야하는 사항은 없다.
+3. 따라서 maxAttempts를 1로 지정하여 Retryable 어노테이션을 사용한다.
+
+```kotlin
+    @Version
+var version: Long = 0
+
+@Transactional
+@Retryable(
+    retryFor = [ConcurrencyFailureException::class, SQLIntegrityConstraintViolationException::class],
+    maxAttempts = 1
+)
+fun use(command: PointCommand.Use): UserPoint {
+    val (amount, userId, authentication) = command
+    val point = pointRepository.findByUserId(userId = userId)
+    point.use(amount = amount, authentication)
+    return pointRepository.save(point)
+}
+
+@Recover
+fun recover(exception: Exception): UserPoint = throw PointException.PleaseTryAgain()
+```
+
+## 대안
+
+1. 디비 분산환경에서 파일시스템을 통한 NamedLock을 활용할 수 있다.
+2. 레디스의 분산락을 통해 디비가 쪼개져있더라도 레디스의 중앙관리로 spin 락을 활용할 수 있다.
 
 ## 동시성이란?
 
@@ -106,8 +200,8 @@ JPA에서 지원하는 낙관락 기능을 사용하기 위해선 `@Version`을 
 정수라면 +1씩 자동으로 update 쿼리를 쓸 때 추가로 증가 시킨다.  
 `update {테이블 명} set version = {조회당시 값+1} where version={조회당시 값}`  
 이렇게 진행했을 때 만약 동시에 조회한 트랜잭션이 있다면 들고있는 리소스의 version은 모두 동일할 것이다.  
-이후 가장 먼저 update쿼리를 치는 스레드만 where 절을 충족시킬 수 있다.
-나머지 스레드는 updated rows가 0이 반환되고 @Version이 달려있어 `ConcurrencyFailureException`을 발생시킨다.
+이후 가장 먼저 update쿼리를 치는 스레드만 where 절을 충족시킬 수 있다.  
+나머지 스레드는 updated rows가 0이 반환되고 @Version이 달려있어 `ConcurrencyFailureException`을 발생시킨다.  
 따라서 동시에 리소스에 접근하더라도 최종 갱신은 가장 처음 시도한 트랜잭션만 동작하기 때문에 갱신손실이 발생하지 않는다.
 
 ### 비관락
