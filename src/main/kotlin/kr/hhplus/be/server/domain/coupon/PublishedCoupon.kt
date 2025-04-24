@@ -29,6 +29,9 @@ class PublishedCoupon protected constructor(
     @UpdateTimestamp
     lateinit var updatedAt: LocalDateTime
 
+    @Version
+    var version: Long = 0
+
     @get:Transient
     val used: Boolean get() = usedAt != null
 
@@ -48,7 +51,6 @@ class PublishedCoupon protected constructor(
             discountType = coupon.discountType,
             discountAmount = coupon.discountAmount
         )
-
     }
 }
 

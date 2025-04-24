@@ -19,7 +19,7 @@ class CouponRepositoryImpl(
         return couponJpaRepository.findPublishedByUserId(userId)
     }
 
-    override fun findPublishedByIds(ids: List<Long>): List<PublishedCoupon> {
+    override fun findPublishedByIdsForSelect(ids: List<Long>): List<PublishedCoupon> {
         return couponJpaRepository.findPublishedByIds(ids)
     }
 
