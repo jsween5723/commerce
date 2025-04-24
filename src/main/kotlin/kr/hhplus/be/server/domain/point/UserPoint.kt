@@ -1,6 +1,9 @@
 package kr.hhplus.be.server.domain.point
 
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.Version
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.auth.UserId
 import org.hibernate.annotations.CreationTimestamp
@@ -10,21 +13,18 @@ import java.time.LocalDateTime
 
 @Entity(name = "user_points")
 class UserPoint(
-    @Column(unique = true)
-    @Embedded()
-    val userId: UserId,
+    userId: Long,
     @Column(nullable = false) var point: BigDecimal = BigDecimal.ZERO,
 ) {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L
+    val userId: Long = userId
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     lateinit var createdAt: LocalDateTime
 
     @UpdateTimestamp
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     lateinit var updatedAt: LocalDateTime
 
     @Version
@@ -39,14 +39,14 @@ class UserPoint(
     }
 
     fun charge(amount: BigDecimal, authentication: Authentication) {
-        authentication.authorize(userId)
+        authentication.authorize(UserId(userId))
         if (amount < BigDecimal.ZERO) throw PointException.MinusAmountCantApply()
         if (point + amount > MAX) throw PointException.OverMaxPoint()
         point = point.plus(amount)
     }
 
     fun use(amount: BigDecimal, authentication: Authentication) {
-        authentication.authorize(userId)
+        authentication.authorize(UserId(userId))
         if (amount < BigDecimal.ZERO) throw PointException.MinusAmountCantApply()
         if (point < amount) throw PointException.AmountOverPoint()
         point = point.minus(amount)

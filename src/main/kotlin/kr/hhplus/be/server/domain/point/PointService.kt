@@ -1,12 +1,12 @@
 package kr.hhplus.be.server.domain.point
 
-import jakarta.persistence.OptimisticLockException
 import kr.hhplus.be.server.domain.auth.UserId
-import org.springframework.dao.OptimisticLockingFailureException
+import org.springframework.dao.ConcurrencyFailureException
 import org.springframework.retry.annotation.Recover
 import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.sql.SQLIntegrityConstraintViolationException
 
 @Service
 class PointService(
@@ -16,32 +16,28 @@ class PointService(
 
     @Transactional
     @Retryable(
-        retryFor = [OptimisticLockingFailureException::class, OptimisticLockException::class],
-        maxAttempts = 1,
-        recover = "pleaseTryAgain"
+        retryFor = [ConcurrencyFailureException::class, SQLIntegrityConstraintViolationException::class],
+        maxAttempts = 1
     )
     fun charge(command: PointCommand.Charge): UserPoint {
         val (amount, userId, authentication) = command
         val point = pointRepository.findByUserId(userId = userId)
         point.charge(amount = amount, authentication)
-        return point
+        return pointRepository.save(point)
     }
 
     @Recover
-    fun pleaseTryAgain(command: PointCommand.Charge): UserPoint {
-        throw PointException.PleaseTryAgain()
-    }
+    fun recover(exception: Exception): UserPoint = throw PointException.PleaseTryAgain()
 
     @Transactional
     @Retryable(
-        retryFor = [OptimisticLockingFailureException::class, OptimisticLockException::class],
-        maxAttempts = 1,
-        recover = "pleaseTryAgain"
+        retryFor = [ConcurrencyFailureException::class, SQLIntegrityConstraintViolationException::class],
+        maxAttempts = 1
     )
     fun use(command: PointCommand.Use): UserPoint {
         val (amount, userId, authentication) = command
         val point = pointRepository.findByUserId(userId = userId)
         point.use(amount = amount, authentication)
-        return point
+        return pointRepository.save(point)
     }
 }

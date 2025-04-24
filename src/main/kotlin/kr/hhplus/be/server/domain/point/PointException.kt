@@ -22,6 +22,7 @@ sealed class PointException private constructor(
         PointException(PointErrorCode.UNDER_ZERO_POINT, IllegalArgumentException())
 
     class PleaseTryAgain : PointException(PointErrorCode.PLEASE_TRY_AGAIN, IllegalStateException())
+    class InvalidUserId : PointException(PointErrorCode.INVALID_USER_ID, IllegalArgumentException())
 }
 
 private enum class PointErrorCode(override val message: String) : ErrorCode {

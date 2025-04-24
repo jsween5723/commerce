@@ -13,7 +13,7 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException::class)
     fun handle(exception: CustomException): ResponseEntity<Response<Void>> {
-        val status = when (exception.cause) {
+        val status = when (exception.throwable) {
             is AccountNotFoundException -> HttpStatus.UNAUTHORIZED
             is CertificateException -> HttpStatus.FORBIDDEN
             is IllegalArgumentException -> HttpStatus.BAD_REQUEST
