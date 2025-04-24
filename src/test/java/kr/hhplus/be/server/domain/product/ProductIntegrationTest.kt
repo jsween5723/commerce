@@ -54,11 +54,11 @@ class ProductIntegrationTest : IntegrationTestSupport() {
         val productId = 1L
         insertTemplate(listOf(ProductFixture(stockNumber = previousStock)))
         val restockCommand =
-            ProductCommand.Restock(targets = listOf(ProductCommand.ProductIdAndQuantity(productId, releaseQuantity)))
+            ProductCommand.Restock(targets = listOf(ProductCommand.ProductIdAndQuantity(productId, restockQuantity)))
         val releaseCommand =
-            ProductCommand.Release(targets = listOf(ProductCommand.ProductIdAndQuantity(productId, restockQuantity)))
+            ProductCommand.Release(targets = listOf(ProductCommand.ProductIdAndQuantity(productId, releaseQuantity)))
         concurrentlyRun(arrayOf({ productService.restock(restockCommand) }, { productService.release(releaseCommand) }))
         val result = productRepository.findById(1)
-        assertThat(result.get().stockNumber).isEqualTo(previousStock + (restockQuantity) - releaseQuantity)
+        assertThat(result.get().stockNumber).isEqualTo(previousStock + restockQuantity - releaseQuantity)
     }
 }
