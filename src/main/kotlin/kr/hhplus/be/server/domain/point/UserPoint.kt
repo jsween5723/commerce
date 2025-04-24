@@ -11,6 +11,7 @@ import java.time.LocalDateTime
 @Entity(name = "user_points")
 class UserPoint(
     @Column(unique = true)
+    @Embedded()
     val userId: UserId,
     @Column(nullable = false) var point: BigDecimal = BigDecimal.ZERO,
 ) {

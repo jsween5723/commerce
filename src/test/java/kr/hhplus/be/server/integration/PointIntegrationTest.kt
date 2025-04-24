@@ -11,13 +11,13 @@ import java.util.concurrent.CompletableFuture
 
 class PointIntegrationTest : IntegrationTestSupport() {
     @Test
-    fun `충전을 동시에 2번 실행시 따닥방지`() {
+    fun `충전을 동시에 2번 실행시 1번만 적용`() {
         val userId = idGenerator.userId()
-        val useAmount = BigDecimal(200.00)
+        val useAmount = BigDecimal("200.00")
         //when
         val futures = concurrentlyRun(arrayOf({ 포인트를_충전한다(userId, useAmount) }), count = 2)
         CompletableFuture.allOf(*futures.toTypedArray()).get()
-        val point = 포인트를_조회한다(userId).data?.point
-        assertThat(point).isEqualTo(useAmount.multiply(2.toBigDecimal()))
+        val point = 포인트를_조회한다(userId).data!!.point
+        assertThat(point.toPlainString()).isEqualTo(useAmount.toPlainString())
     }
 }

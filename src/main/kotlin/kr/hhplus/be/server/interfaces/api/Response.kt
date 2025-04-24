@@ -18,4 +18,4 @@ data class Response<T>(val success: Boolean, val data: T?, val error: ErrorDTO?)
     }
 }
 
-class ErrorDTO(val code: String, val message: String)
+class ErrorDTO(val code: String = "", val message: String = "")
