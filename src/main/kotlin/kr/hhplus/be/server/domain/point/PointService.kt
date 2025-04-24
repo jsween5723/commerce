@@ -6,7 +6,6 @@ import org.springframework.retry.annotation.Recover
 import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.sql.SQLIntegrityConstraintViolationException
 
 @Service
 class PointService(
@@ -16,7 +15,7 @@ class PointService(
 
     @Transactional
     @Retryable(
-        retryFor = [ConcurrencyFailureException::class, SQLIntegrityConstraintViolationException::class],
+        retryFor = [ConcurrencyFailureException::class],
         maxAttempts = 1
     )
     fun charge(command: PointCommand.Charge): UserPoint {
@@ -31,7 +30,7 @@ class PointService(
 
     @Transactional
     @Retryable(
-        retryFor = [ConcurrencyFailureException::class, SQLIntegrityConstraintViolationException::class],
+        retryFor = [ConcurrencyFailureException::class],
         maxAttempts = 1
     )
     fun use(command: PointCommand.Use): UserPoint {

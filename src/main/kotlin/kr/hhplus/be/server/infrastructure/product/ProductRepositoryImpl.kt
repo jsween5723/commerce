@@ -33,7 +33,7 @@ class ProductRepositoryImpl(
         return productJpaRepository.countByIdIn(productIds) == productIds.size.toLong()
     }
 
-    override fun findByIds(productIds: List<Long>): List<Product> {
+    override fun findByIdsForReleaseOrRestock(productIds: List<Long>): List<Product> {
         return productJpaRepository.findByIdIn(productIds)
     }
 

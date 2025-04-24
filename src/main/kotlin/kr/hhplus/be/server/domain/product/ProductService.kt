@@ -13,7 +13,7 @@ class ProductService(private val productRepository: ProductRepository) {
     fun release(command: ProductCommand.Release): List<Product.ReleaseInfo> {
         val (targets) = command
         val targetProductIds = targets.map { it.productId }
-        val products = productRepository.findByIds(targetProductIds).associateBy { it.id }
+        val products = productRepository.findByIdsForReleaseOrRestock(targetProductIds).associateBy { it.id }
         return targets.map {
             products[it.productId]?.release(it.quantity) ?: throw ProductException.InvalidProductId()
         }
@@ -23,7 +23,7 @@ class ProductService(private val productRepository: ProductRepository) {
     fun restock(command: ProductCommand.Restock) {
         val (targets) = command
         val targetProductIds = targets.map { it.productId }
-        val products = productRepository.findByIds(targetProductIds).associateBy { it.id }
+        val products = productRepository.findByIdsForReleaseOrRestock(targetProductIds).associateBy { it.id }
         targets.forEach {
             products[it.productId]?.restock(it.quantity) ?: throw ProductException.InvalidProductId()
         }
