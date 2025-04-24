@@ -1,9 +1,7 @@
-package kr.hhplus.be.server.integration
+package kr.hhplus.be.server.domain.point
 
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.auth.UserId
-import kr.hhplus.be.server.domain.point.PointCommand
-import kr.hhplus.be.server.domain.point.PointService
 import kr.hhplus.be.server.interfaces.api.point.포인트를_조회한다
 import kr.hhplus.be.server.interfaces.api.point.포인트를_충전한다
 import kr.hhplus.be.server.support.IntegrationTestSupport
