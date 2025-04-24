@@ -13,7 +13,7 @@ class CouponService(private val couponRepository: CouponRepository) {
     @Transactional
     fun publish(command: CouponCommand.Publish): PublishedCoupon {
         val (authentication, couponId) = command
-        val coupon = couponRepository.findById(couponId) ?: throw CouponException.CouponNotFound()
+        val coupon = couponRepository.findByIdForPublish(couponId) ?: throw CouponException.CouponNotFound()
         return couponRepository.save(coupon.publish(authentication.id, LocalDateTime.now()))
     }
 
