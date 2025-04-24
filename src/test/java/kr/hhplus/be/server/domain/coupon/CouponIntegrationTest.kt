@@ -19,7 +19,7 @@ class CouponIntegrationTest : IntegrationTestSupport() {
 
 
     @Test
-    fun `쿠폰 발급시 모두 알맞게 처리된다`() {
+    fun `쿠폰 발급시 모두 발급되어 수만큼 재고가 차감 처리된다`() {
 //   given
         val previousStock = 30L
         val couponId = 1L
