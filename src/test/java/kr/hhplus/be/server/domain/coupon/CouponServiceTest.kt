@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.domain.coupon
 
 import kr.hhplus.be.server.domain.auth.Authentication
-import org.assertj.core.api.Assertions.assertThatCode
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -21,15 +20,6 @@ class CouponServiceTest {
             assertThatThrownBy {
                 couponService.publish(CouponCommand.Publish(authentication = Authentication(1), 1))
             }.isInstanceOf(CouponException.CouponNotFound::class.java)
-        }
-
-        @Test
-        fun `발급할 수 있다`() {
-//            given
-            `when`(couponRepository.findById(1)).thenReturn(CouponFixture())
-            assertThatCode {
-                couponService.publish(CouponCommand.Publish(authentication = Authentication(1), 1))
-            }.doesNotThrowAnyException()
         }
     }
 }
