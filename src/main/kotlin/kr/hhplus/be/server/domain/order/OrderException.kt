@@ -20,6 +20,7 @@ sealed class OrderException(errorCode: OrderErrorCode, throwable: Exception) :
     class PayOnlyPending : OrderException(OrderErrorCode.PAY_ONLY_PENDING, IllegalArgumentException())
     class CancelOnlyNotReleased : OrderException(OrderErrorCode.CANCEL_ONLY_NOT_RELEASED, IllegalArgumentException())
     class FromIsAfterTo : OrderException(OrderErrorCode.FROM_IS_AFTER_TO, IllegalArgumentException())
+    class ExpiredCoupons : OrderException(OrderErrorCode.EXPIRED_COUPONS, IllegalArgumentException())
 }
 
 
@@ -35,5 +36,6 @@ enum class OrderErrorCode(override val message: String) : ErrorCode {
     ALREADY_CANCELLED("이미 취소된 주문입니다."),
     PAY_ONLY_PENDING("결제는 준비중 상태에서만 가능합니다."),
     ALREADY_PAID("이미 결제완료된 주문입니다."),
-    FROM_IS_AFTER_TO("from이 to보다 늦은 시간입니다.")
+    FROM_IS_AFTER_TO("from이 to보다 늦은 시간입니다."),
+    EXPIRED_COUPONS("만료된 쿠폰입니다.")
 }

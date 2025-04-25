@@ -22,7 +22,7 @@ class CreateOrder(
 
     private fun validateCoupons(couponVOS: List<CouponVO>) {
         couponVOS.forEach {
-            if (now().isAfter(it.expireAt)) throw IllegalStateException("${it.expireAt}에 만료된 쿠폰입니다.")
+            if (now().isAfter(it.expireAt)) throw OrderException.ExpiredCoupons()
         }
     }
 
