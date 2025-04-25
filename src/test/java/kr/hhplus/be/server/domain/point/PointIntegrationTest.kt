@@ -23,8 +23,7 @@ class PointIntegrationTest : IntegrationTestSupport() {
         val useAmount = BigDecimal("200.00")
         //when
         val futures = concurrentlyRun(
-            arrayOf(
-                { 포인트를_충전한다(userId, useAmount) }, { 포인트를_충전한다(userId, useAmount) })
+            { 포인트를_충전한다(userId, useAmount) }, { 포인트를_충전한다(userId, useAmount) }
         )
         val point = 포인트를_조회한다(userId).data!!.point
         assertThat(point.toPlainString()).isEqualTo(useAmount.toPlainString())
@@ -36,7 +35,7 @@ class PointIntegrationTest : IntegrationTestSupport() {
         val useAmount = BigDecimal("200.00")
 //        insertTemplate(listOf(UserPointFixture(point = useAmount)))
         //when
-        concurrentlyRun(arrayOf({
+        concurrentlyRun({
             pointService.use(
                 PointCommand.Use(
                     amount = useAmount,
@@ -52,7 +51,7 @@ class PointIntegrationTest : IntegrationTestSupport() {
                     authentication = Authentication(userId = userId, isSuper = false)
                 )
             )
-        }))
+        })
         val point = 포인트를_조회한다(userId).data!!.point
         assertThat(point.toPlainString()).isEqualTo(BigDecimal.ZERO.toPlainString())
     }

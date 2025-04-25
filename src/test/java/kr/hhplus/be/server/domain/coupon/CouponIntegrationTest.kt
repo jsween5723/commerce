@@ -56,33 +56,31 @@ class CouponIntegrationTest : IntegrationTestSupport() {
         val publishedCouponId = 사용자에게_쿠폰을_발급한다(userId = userId, couponId = 1).data!!.id
         val exceptions = mutableListOf<RuntimeException>()
         concurrentlyRun(
-            arrayOf(
-                {
-                    try {
-                        couponService.selectPublishedCoupons(
-                            CouponCommand.Select(
-                                Authentication(userId = userId, isSuper = false),
-                                listOf(publishedCouponId),
-                            )
+            {
+                try {
+                    couponService.selectPublishedCoupons(
+                        CouponCommand.Select(
+                            Authentication(userId = userId, isSuper = false),
+                            listOf(publishedCouponId),
                         )
-                    } catch (e: RuntimeException) {
-                        exceptions.add(e)
-                    }
+                    )
+                } catch (e: RuntimeException) {
+                    exceptions.add(e)
+                }
 
-                },
-                {
-                    try {
-                        couponService.selectPublishedCoupons(
-                            CouponCommand.Select(
-                                Authentication(userId = userId, isSuper = false),
-                                listOf(publishedCouponId)
-                            )
+            },
+            {
+                try {
+                    couponService.selectPublishedCoupons(
+                        CouponCommand.Select(
+                            Authentication(userId = userId, isSuper = false),
+                            listOf(publishedCouponId)
                         )
-                    } catch (e: RuntimeException) {
-                        exceptions.add(e)
-                    }
-                },
-            )
+                    )
+                } catch (e: RuntimeException) {
+                    exceptions.add(e)
+                }
+            },
         )
         val publishedCoupon = publishedCouponRepository.findById(publishedCouponId)
         assertThat(exceptions.size).isEqualTo(1)
@@ -100,7 +98,7 @@ class CouponIntegrationTest : IntegrationTestSupport() {
             couponId = couponId,
             authentication = Authentication(userId = userId, isSuper = false)
         )
-        concurrentlyRun(IntRange(1, publishNumber).map {
+        concurrentlyRun(*IntRange(1, publishNumber).map {
             { couponService.publish(command) }
         }.toTypedArray())
         val coupon = couponRepository.findById(couponId)

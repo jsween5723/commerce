@@ -70,19 +70,22 @@ class IntegrationTestSupport {
 }
 
 fun concurrentlyRun(
-    action: Array<() -> Any>
+    vararg action: () -> Any
 ) {
-    val latch = CountDownLatch(action.size)
+    val doneSignal = CountDownLatch(action.size)
     val pool = Executors.newFixedThreadPool(action.size)
+    val startSignal = CountDownLatch(1)
     action.map { ac ->
-        pool.submit {
+        pool.execute {
+            startSignal.await()
             try {
                 ac()
             } finally {
-                latch.countDown()
+                doneSignal.countDown()
             }
         }
     }
-    latch.await()
+    startSignal.countDown()
+    doneSignal.await()
     pool.shutdown()
 }
