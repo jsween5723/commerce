@@ -26,7 +26,7 @@ class ProductIntegrationTest : IntegrationTestSupport() {
         insertTemplate(listOf(ProductFixture(stockNumber = previousStock)))
         val releaseCommand =
             ProductCommand.Release(targets = listOf(ProductCommand.ProductIdAndQuantity(productId, quantity)))
-        concurrentlyRun(arrayOf({ productService.release(releaseCommand) }, { productService.release(releaseCommand) }))
+        concurrentlyRun({ productService.release(releaseCommand) }, { productService.release(releaseCommand) })
         val result = productRepository.findById(1)
         assertThat(result.get().stockNumber).isEqualTo(previousStock - (quantity * 2))
     }
@@ -40,7 +40,7 @@ class ProductIntegrationTest : IntegrationTestSupport() {
         insertTemplate(listOf(ProductFixture(stockNumber = previousStock)))
         val command =
             ProductCommand.Restock(targets = listOf(ProductCommand.ProductIdAndQuantity(productId, quantity)))
-        concurrentlyRun(arrayOf({ productService.restock(command) }, { productService.restock(command) }))
+        concurrentlyRun({ productService.restock(command) }, { productService.restock(command) })
         val result = productRepository.findById(1)
         assertThat(result.get().stockNumber).isEqualTo(previousStock + (quantity * 2))
     }
@@ -57,7 +57,7 @@ class ProductIntegrationTest : IntegrationTestSupport() {
             ProductCommand.Restock(targets = listOf(ProductCommand.ProductIdAndQuantity(productId, restockQuantity)))
         val releaseCommand =
             ProductCommand.Release(targets = listOf(ProductCommand.ProductIdAndQuantity(productId, releaseQuantity)))
-        concurrentlyRun(arrayOf({ productService.restock(restockCommand) }, { productService.release(releaseCommand) }))
+        concurrentlyRun({ productService.restock(restockCommand) }, { productService.release(releaseCommand) })
         val result = productRepository.findById(1)
         assertThat(result.get().stockNumber).isEqualTo(previousStock + restockQuantity - releaseQuantity)
     }

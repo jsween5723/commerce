@@ -4,7 +4,7 @@ import jakarta.persistence.*
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.auth.UserId
 import kr.hhplus.be.server.domain.order.coupon.CouponVO
-import kr.hhplus.be.server.domain.order.coupon.UsedCoupon
+import kr.hhplus.be.server.domain.order.coupon.OrderCoupon
 import kr.hhplus.be.server.domain.order.coupon.UsedCoupons
 import kr.hhplus.be.server.domain.order.payment.Payment
 import kr.hhplus.be.server.domain.order.product.OrderItem
@@ -24,7 +24,7 @@ class Order(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
-    val usedCoupons = UsedCoupons(selectedCoupons.map { UsedCoupon.from(it, this) })
+    val orderCoupons = UsedCoupons(selectedCoupons.map { OrderCoupon.from(it, this) })
     val receipt: Receipt = Receipt(productVOS.map { OrderItem.from(it, this) })
 
     //    주문 생성시 결제는 같은 시점에 대기 상태로 생성돼야하므로
@@ -37,7 +37,7 @@ class Order(
     var status: Status = Status.PENDING
 
     @get:Transient
-    val totalPrice: BigDecimal get() = usedCoupons.discount(receipt.totalPrice)
+    val totalPrice: BigDecimal get() = orderCoupons.discount(receipt.totalPrice)
 
     @get:Transient
     val paymentStatus: Payment.Status get() = payment.status

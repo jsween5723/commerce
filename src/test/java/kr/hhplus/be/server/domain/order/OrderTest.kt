@@ -70,7 +70,7 @@ class OrderTest {
             val totalPrice = order.totalPrice
 //        then
             assertThat(totalPrice).isEqualTo(
-                order.usedCoupons.discount(releaseInfo.totalPrice + releaseInfo2.totalPrice)
+                order.orderCoupons.discount(releaseInfo.totalPrice + releaseInfo2.totalPrice)
             )
         }
     }

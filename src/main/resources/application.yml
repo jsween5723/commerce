@@ -18,6 +18,8 @@ spring:
     hibernate:
       ddl-auto: create-drop
     properties:
+      hbm2ddl:
+        auto: create-drop
       hibernate.timezone.default_storage: NORMALIZE_UTC
       hibernate.jdbc.time_zone: UTC
       hibernate:

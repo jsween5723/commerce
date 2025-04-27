@@ -7,9 +7,11 @@ import org.hibernate.annotations.UpdateTimestamp
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
-@Entity(name = "used_coupons")
-class UsedCoupon private constructor(
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "order_id", nullable = false) val order: Order,
+@Entity(name = "order_coupons")
+class OrderCoupon private constructor(
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    val order: Order,
     val coupon: CouponVO
 ) {
     @Id
@@ -25,7 +27,7 @@ class UsedCoupon private constructor(
     fun discount(target: BigDecimal): BigDecimal = coupon.discount(target)
 
     companion object {
-        fun from(couponVO: CouponVO, order: Order): UsedCoupon = UsedCoupon(
+        fun from(couponVO: CouponVO, order: Order): OrderCoupon = OrderCoupon(
             coupon = couponVO,
             order = order,
         )
