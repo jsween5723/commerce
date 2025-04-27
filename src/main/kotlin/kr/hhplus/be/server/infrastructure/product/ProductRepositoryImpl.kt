@@ -2,6 +2,7 @@ package kr.hhplus.be.server.infrastructure.product
 
 import jakarta.persistence.EntityManager
 import jakarta.persistence.EntityManagerFactory
+import jakarta.persistence.LockModeType
 import jakarta.persistence.criteria.JoinType
 import kr.hhplus.be.server.domain.OrderBy
 import kr.hhplus.be.server.domain.product.Product
@@ -10,6 +11,7 @@ import kr.hhplus.be.server.domain.product.ProductRepository
 import kr.hhplus.be.server.domain.product.RankedProduct
 import org.hibernate.SessionFactory
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Lock
 import org.springframework.data.jpa.repository.Query
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Repository
@@ -31,7 +33,7 @@ class ProductRepositoryImpl(
         return productJpaRepository.countByIdIn(productIds) == productIds.size.toLong()
     }
 
-    override fun findByIds(productIds: List<Long>): List<Product> {
+    override fun findByIdsForReleaseOrRestock(productIds: List<Long>): List<Product> {
         return productJpaRepository.findByIdIn(productIds)
     }
 
@@ -65,6 +67,8 @@ class ProductRepositoryImpl(
 
 interface ProductJpaRepository : JpaRepository<Product, Long> {
     fun countByIdIn(ids: List<Long>): Long
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     fun findByIdIn(ids: List<Long>): List<Product>
 
     @Query("select rp from ranked_products rp join fetch rp.product where rp.createdDate = :date  ")

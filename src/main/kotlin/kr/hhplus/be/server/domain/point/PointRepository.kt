@@ -4,4 +4,5 @@ import kr.hhplus.be.server.domain.auth.UserId
 
 interface PointRepository {
     fun findByUserId(userId: UserId): UserPoint
+    fun save(point: UserPoint): UserPoint
 }

@@ -20,6 +20,9 @@ sealed class PointException private constructor(
 
     class UnderZeroPoint :
         PointException(PointErrorCode.UNDER_ZERO_POINT, IllegalArgumentException())
+
+    class PleaseTryAgain : PointException(PointErrorCode.PLEASE_TRY_AGAIN, IllegalStateException())
+    class InvalidUserId : PointException(PointErrorCode.INVALID_USER_ID, IllegalArgumentException())
 }
 
 private enum class PointErrorCode(override val message: String) : ErrorCode {
@@ -29,5 +32,6 @@ private enum class PointErrorCode(override val message: String) : ErrorCode {
     MINUS_AMOUNT_CANT_APPLY(
         "음수로 증감시킬 수 없습니다."
     ),
+    PLEASE_TRY_AGAIN("잠시 후 다시 시도해주세요."),
     INVALID_USER_ID("유효하지 않은 대상입니다.");
 }

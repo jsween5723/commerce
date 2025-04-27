@@ -12,7 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Import
-import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executors
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -68,9 +69,20 @@ class IntegrationTestSupport {
     }
 }
 
-fun <T> concurrentlyRun(
-    action: Array<() -> T>,
-    count: Int = 1,
-): List<CompletableFuture<T>> {
-    return IntRange(1, count).map { action.map { CompletableFuture.supplyAsync(it) } }.flatten()
+fun concurrentlyRun(
+    action: Array<() -> Any>
+) {
+    val latch = CountDownLatch(action.size)
+    val pool = Executors.newFixedThreadPool(action.size)
+    action.map { ac ->
+        pool.submit {
+            try {
+                ac()
+            } finally {
+                latch.countDown()
+            }
+        }
+    }
+    latch.await()
+    pool.shutdown()
 }

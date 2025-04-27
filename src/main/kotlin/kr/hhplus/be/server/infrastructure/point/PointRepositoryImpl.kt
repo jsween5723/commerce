@@ -6,15 +6,23 @@ import kr.hhplus.be.server.domain.point.UserPoint
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import java.math.BigDecimal
+import java.util.*
 
 @Repository
 class PointRepositoryImpl(private val pointJpaRepository: PointJpaRepository) : PointRepository {
-
     override fun findByUserId(userId: UserId): UserPoint {
-        return pointJpaRepository.findByUserId(userId) ?: pointJpaRepository.save(UserPoint(userId, BigDecimal.ZERO))
+        return pointJpaRepository.findById(userId.userId).orElseGet {
+            pointJpaRepository.saveAndFlush(
+                UserPoint(userId.userId, BigDecimal.ZERO)
+            )
+        }
+    }
+
+    override fun save(point: UserPoint): UserPoint {
+        return pointJpaRepository.save(point)
     }
 }
 
 interface PointJpaRepository : JpaRepository<UserPoint, Long> {
-    fun findByUserId(userId: UserId): UserPoint?
+    override fun findById(userId: Long): Optional<UserPoint>
 }

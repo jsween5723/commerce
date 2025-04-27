@@ -8,11 +8,13 @@ import java.time.LocalDateTime
 
 @Entity(name = "products")
 class Product(
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) val id: Long = 0,
     @Column(nullable = false) val name: String,
     @Column(nullable = false) val price: BigDecimal,
     @Column(nullable = false) var stockNumber: Long
 ) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0
 
     init {
         validate()
