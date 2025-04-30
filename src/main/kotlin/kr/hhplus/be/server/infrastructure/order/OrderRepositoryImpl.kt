@@ -16,7 +16,7 @@ class OrderRepositoryImpl(private val orderJpaRepository: OrderJpaRepository) : 
     }
 
     override fun findByForStatistics(query: OrderQuery.ForStatistics): List<Order> {
-        val from = LocalDateTime.from(query.from)
+        val from = LocalDateTime.from(query.from.atStartOfDay())
         val to = LocalDateTime.from(query.to)
         return orderJpaRepository.findAllByStatusAndUpdatedAtBetween(
             status = query.status,
