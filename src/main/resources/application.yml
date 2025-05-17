@@ -30,6 +30,18 @@ spring:
   sql:
     init:
       mode: always
+  data:
+    redis:
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: 1s
+      timeout: 2s
+      username: redis
+      password: as661899
+
 springdoc:
   swagger-ui:
     path: /api
