@@ -32,8 +32,6 @@ spring:
       mode: always
   data:
     redis:
-      host: localhost   # Docker 호스트(로컬)
-      port: 6379
       lettuce:
         pool:
           max-active: 8
@@ -41,6 +39,8 @@ spring:
           min-idle: 0
           max-wait: 1s
       timeout: 2s
+      username: redis
+      password: as661899
 
 springdoc:
   swagger-ui:
