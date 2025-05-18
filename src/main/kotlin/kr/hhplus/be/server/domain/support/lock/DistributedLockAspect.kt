@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.domain.support.lock
 
+import kr.hhplus.be.server.domain.support.spel.SpelParser
 import kr.hhplus.be.server.domain.support.transaction.hasTransaction
 import kr.hhplus.be.server.domain.support.transaction.registerAfterTransactionCompletion
 import org.aspectj.lang.ProceedingJoinPoint
@@ -13,21 +14,23 @@ import org.springframework.stereotype.Component
 @Aspect
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-class DistributedLockAspect(private val lockFactory: LockFactory) {
+class DistributedLockAspect(private val lockFactory: LockFactory, private val spelParser: SpelParser) {
     @Around("@annotation(DistributedLock)")
     fun distributeLock(joinPoint: ProceedingJoinPoint): Any {
         val signature = joinPoint.signature as MethodSignature
         val annotation = signature.method.getAnnotation(DistributedLock::class.java)!!
+        val lockKey =
+            annotation.domain.createKey(spelParser.parse(signature.parameterNames, joinPoint.args, annotation.key))
         val lock = lockFactory.create(
-            key = annotation.key,
+            key = lockKey,
             maxTime = annotation.waitTime,
             unit = annotation.unit,
             type = annotation.type
         )
         if (!lock.tryLock(annotation.lease, annotation.unit))
-            throw IllegalStateException("락 획득 대기 시간 초과 : ${annotation.key}")
-        try {
-            return joinPoint.proceed()
+            throw IllegalStateException("락 획득 실패 : ${annotation.key}")
+        return try {
+            joinPoint.proceed()
         } finally {
             if (hasTransaction()) {
                 registerAfterTransactionCompletion {

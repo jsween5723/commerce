@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.domain.coupon
 
-import kr.hhplus.be.server.domain.support.lock.DistributedLock
 import org.springframework.dao.ConcurrencyFailureException
 import org.springframework.retry.annotation.Recover
 import org.springframework.retry.annotation.Retryable
@@ -14,7 +13,6 @@ class CouponService(private val couponRepository: CouponRepository) {
     fun findPublishedByUserId(userId: Long) = couponRepository.findPublishedByUserId(userId)
     fun findPublishedByIds(ids: List<Long>) = couponRepository.findPublishedByIdsForSelect(ids)
 
-    @DistributedLock(key = )
     @Transactional
     fun publish(command: CouponCommand.Publish): PublishedCoupon {
         val (authentication, couponId) = command

@@ -52,7 +52,7 @@ private class SpinLock(
     }
 
     override fun tryLock(): Boolean {
-        return tryLock(lease, TimeUnit.MILLISECONDS)
+        return tryLock(lease, unit)
     }
 
     override fun tryLock(lease: Long, unit: TimeUnit): Boolean {
