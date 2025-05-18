@@ -1,5 +1,8 @@
 package kr.hhplus.be.server.domain.support.lock
 
-enum class LockKey(val createKey: (target: String) -> String) {
-    COUPON({ "coupon:${it}" }), PRODUCT({ "product:${it}}" }), POINT({ "point:${it}" });
+enum class LockKey {
+    COUPON, PRODUCT, POINT, ORDER;
+    fun createKey(target: String): String {
+        return "${name.lowercase()}:$target"
+    }
 }
