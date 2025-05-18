@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.Lock
 
 interface LockRepository {
-    fun getLock(
+    fun tryAndGet(
         key: String,
         lease: Long = 3000L,
         maxTime: Long = 5000L,
