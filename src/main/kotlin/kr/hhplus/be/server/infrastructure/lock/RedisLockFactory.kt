@@ -59,7 +59,7 @@ private class SpinLock(
         val startTime = System.currentTimeMillis()
         while (redisTemplate.opsForValue().setIfAbsent(key, value, lease, unit) != true) {
             if (isTimeout(startTime, unit)) {
-                throw IllegalStateException("락 획득 대기 시간 초과 : $key")
+                return false
             }
             Thread.onSpinWait()
         }
