@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.interfaces.api.point
 
-import kr.hhplus.be.server.support.IntegrationTestSupport
+import kr.hhplus.be.server.IntegrationTestSupport
 import org.junit.jupiter.api.Test
 
 class PointControllerTest : IntegrationTestSupport() {

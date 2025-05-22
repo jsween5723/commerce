@@ -1,10 +1,10 @@
 package kr.hhplus.be.server.domain.coupon
 
+import kr.hhplus.be.server.IntegrationTestSupport
+import kr.hhplus.be.server.concurrentlyRun
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.interfaces.api.coupon.사용자에게_쿠폰을_발급한다
 import kr.hhplus.be.server.interfaces.api.coupon.사용자의_쿠폰_목록을_조회한다
-import kr.hhplus.be.server.support.IntegrationTestSupport
-import kr.hhplus.be.server.support.concurrentlyRun
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

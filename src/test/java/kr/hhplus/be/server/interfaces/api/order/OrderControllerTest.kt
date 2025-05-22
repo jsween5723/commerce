@@ -1,8 +1,8 @@
 package kr.hhplus.be.server.interfaces.api.order
 
+import kr.hhplus.be.server.IntegrationTestSupport
 import kr.hhplus.be.server.domain.point.UserPointFixture
 import kr.hhplus.be.server.domain.product.ProductFixture
-import kr.hhplus.be.server.support.IntegrationTestSupport
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 

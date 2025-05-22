@@ -1,11 +1,11 @@
 package kr.hhplus.be.server.domain.point
 
+import kr.hhplus.be.server.IntegrationTestSupport
+import kr.hhplus.be.server.concurrentlyRun
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.auth.UserId
 import kr.hhplus.be.server.interfaces.api.point.포인트를_조회한다
 import kr.hhplus.be.server.interfaces.api.point.포인트를_충전한다
-import kr.hhplus.be.server.support.IntegrationTestSupport
-import kr.hhplus.be.server.support.concurrentlyRun
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

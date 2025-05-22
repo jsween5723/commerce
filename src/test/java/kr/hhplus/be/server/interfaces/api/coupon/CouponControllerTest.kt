@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.interfaces.api.coupon
 
+import kr.hhplus.be.server.IntegrationTestSupport
 import kr.hhplus.be.server.domain.coupon.CouponFixture
-import kr.hhplus.be.server.support.IntegrationTestSupport
 import org.junit.jupiter.api.Test
 
 class CouponControllerTest : IntegrationTestSupport() {
