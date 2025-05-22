@@ -4,7 +4,6 @@ import io.restassured.RestAssured
 import io.restassured.common.mapper.TypeRef
 import kr.hhplus.be.server.domain.product.ProductQuery
 import kr.hhplus.be.server.interfaces.support.Response
-import kr.hhplus.be.server.interfaces.product.api.ProductResponse
 
 fun 상품목록을_조회한다(): Response<ProductResponse.GetProductList> {
     return RestAssured.given().log().all()

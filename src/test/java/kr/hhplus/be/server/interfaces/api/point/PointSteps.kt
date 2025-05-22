@@ -3,8 +3,6 @@ package kr.hhplus.be.server.interfaces.api.point
 import io.restassured.RestAssured
 import io.restassured.common.mapper.TypeRef
 import kr.hhplus.be.server.interfaces.support.Response
-import kr.hhplus.be.server.interfaces.point.api.PointRequest
-import kr.hhplus.be.server.interfaces.point.api.PointResponse
 import org.springframework.http.MediaType
 import java.math.BigDecimal
 
