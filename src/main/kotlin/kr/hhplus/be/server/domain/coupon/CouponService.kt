@@ -30,7 +30,7 @@ class CouponService(private val couponRepository: CouponRepository) {
     @Transactional
     @Retryable(
         retryFor = [ConcurrencyFailureException::class],
-        maxAttempts = 1,
+        maxAttempts = 0,
     )
     fun selectPublishedCoupons(command: CouponCommand.Select): List<PublishedCoupon> {
         val (authentication, couponIds) = command
