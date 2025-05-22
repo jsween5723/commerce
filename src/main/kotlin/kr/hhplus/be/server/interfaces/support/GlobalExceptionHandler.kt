@@ -22,4 +22,14 @@ class GlobalExceptionHandler {
         }
         return ResponseEntity.status(status).body(Response.error(exception))
     }
+
+    @ExceptionHandler(IllegalStateException::class)
+    fun handle(exception: IllegalStateException): ResponseEntity<Response<Void>> {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Response.error(exception))
+    }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handle(exception: IllegalArgumentException): ResponseEntity<Response<Void>> {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Response.error(exception))
+    }
 }
