@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.infrastructure.coupon
 
 import kr.hhplus.be.server.domain.event.CouponEvent
-import kr.hhplus.be.server.domain.event.CouponEventPublisher
+import kr.hhplus.be.server.domain.coupon.CouponEventPublisher
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 

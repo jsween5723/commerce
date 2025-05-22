@@ -2,7 +2,6 @@ package kr.hhplus.be.server.domain.order
 
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.event.OrderEvent
-import kr.hhplus.be.server.domain.event.OrderEventPublisher
 import kr.hhplus.be.server.domain.order.coupon.CouponVO
 import kr.hhplus.be.server.domain.order.product.ProductVO
 import org.springframework.stereotype.Service

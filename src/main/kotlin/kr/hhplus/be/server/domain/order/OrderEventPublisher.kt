@@ -1,4 +1,6 @@
-package kr.hhplus.be.server.domain.event
+package kr.hhplus.be.server.domain.order
+
+import kr.hhplus.be.server.domain.event.OrderEvent
 
 interface OrderEventPublisher {
     fun ranked(event: OrderEvent.Ranked)

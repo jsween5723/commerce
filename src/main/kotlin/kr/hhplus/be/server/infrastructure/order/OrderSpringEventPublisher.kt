@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.infrastructure.order
 
 import kr.hhplus.be.server.domain.event.OrderEvent
-import kr.hhplus.be.server.domain.event.OrderEventPublisher
+import kr.hhplus.be.server.domain.order.OrderEventPublisher
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 
@@ -22,7 +22,7 @@ class OrderSpringEventPublisher(private val publisher: ApplicationEventPublisher
     override fun created(event: OrderEvent.Created) {
         publisher.publishEvent(event)
     }
-    
+
     override fun payStart(event: OrderEvent.PayStart) {
         publisher.publishEvent(event)
     }

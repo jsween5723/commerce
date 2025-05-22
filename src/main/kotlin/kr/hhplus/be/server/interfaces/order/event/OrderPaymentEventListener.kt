@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.interfaces.order.event
 
 import kr.hhplus.be.server.domain.event.OrderEvent
-import kr.hhplus.be.server.domain.event.OrderEventPublisher
+import kr.hhplus.be.server.domain.order.OrderEventPublisher
 import kr.hhplus.be.server.domain.event.PaymentEvent
 import kr.hhplus.be.server.domain.order.OrderService
 import org.springframework.stereotype.Component

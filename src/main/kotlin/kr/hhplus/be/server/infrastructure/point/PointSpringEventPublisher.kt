@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.infrastructure.point
 
 import kr.hhplus.be.server.domain.event.PointEvent
-import kr.hhplus.be.server.domain.event.PointEventPublisher
+import kr.hhplus.be.server.domain.point.PointEventPublisher
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 

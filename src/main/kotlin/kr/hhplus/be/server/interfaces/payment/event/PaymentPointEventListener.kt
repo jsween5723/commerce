@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.interfaces.payment.event
 
 import kr.hhplus.be.server.domain.event.PaymentEvent
-import kr.hhplus.be.server.domain.event.PaymentEventPublisher
+import kr.hhplus.be.server.domain.payment.PaymentEventPublisher
 import kr.hhplus.be.server.domain.event.PointEvent
 import kr.hhplus.be.server.domain.payment.PaymentService
 import org.springframework.stereotype.Component

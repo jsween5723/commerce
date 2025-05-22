@@ -2,7 +2,7 @@ package kr.hhplus.be.server.interfaces.order.event
 
 import kr.hhplus.be.server.domain.event.CouponEvent
 import kr.hhplus.be.server.domain.event.OrderEvent
-import kr.hhplus.be.server.domain.event.OrderEventPublisher
+import kr.hhplus.be.server.domain.order.OrderEventPublisher
 import kr.hhplus.be.server.domain.order.Order
 import kr.hhplus.be.server.domain.order.OrderService
 import kr.hhplus.be.server.domain.order.coupon.CouponVO

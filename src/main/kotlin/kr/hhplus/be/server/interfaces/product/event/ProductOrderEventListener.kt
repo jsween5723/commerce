@@ -2,7 +2,7 @@ package kr.hhplus.be.server.interfaces.product.event
 
 import kr.hhplus.be.server.domain.event.OrderEvent
 import kr.hhplus.be.server.domain.event.ProductEvent
-import kr.hhplus.be.server.domain.event.ProductEventPublisher
+import kr.hhplus.be.server.domain.product.ProductEventPublisher
 import kr.hhplus.be.server.domain.product.ProductCommand
 import kr.hhplus.be.server.domain.product.ProductService
 import kr.hhplus.be.server.domain.product.RankedProduct

@@ -1,4 +1,6 @@
-package kr.hhplus.be.server.domain.event
+package kr.hhplus.be.server.domain.payment
+
+import kr.hhplus.be.server.domain.event.PaymentEvent
 
 interface PaymentEventPublisher {
     fun orderPaymentPaid(event: PaymentEvent.OrderPaymentCompleted)

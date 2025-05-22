@@ -3,7 +3,7 @@ package kr.hhplus.be.server.interfaces.coupon.event
 import kr.hhplus.be.server.domain.coupon.CouponCommand
 import kr.hhplus.be.server.domain.coupon.CouponService
 import kr.hhplus.be.server.domain.event.CouponEvent
-import kr.hhplus.be.server.domain.event.CouponEventPublisher
+import kr.hhplus.be.server.domain.coupon.CouponEventPublisher
 import kr.hhplus.be.server.domain.event.OrderEvent
 import kr.hhplus.be.server.domain.order.coupon.DiscountPolicy
 import org.springframework.transaction.event.TransactionPhase

@@ -2,7 +2,7 @@ package kr.hhplus.be.server.interfaces.point.event
 
 import kr.hhplus.be.server.domain.event.OrderEvent
 import kr.hhplus.be.server.domain.event.PointEvent
-import kr.hhplus.be.server.domain.event.PointEventPublisher
+import kr.hhplus.be.server.domain.point.PointEventPublisher
 import kr.hhplus.be.server.domain.point.PointCommand
 import kr.hhplus.be.server.domain.point.PointService
 import org.springframework.scheduling.annotation.Async
