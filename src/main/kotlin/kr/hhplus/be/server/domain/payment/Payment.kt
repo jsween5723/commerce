@@ -3,15 +3,13 @@ package kr.hhplus.be.server.domain.payment
 import jakarta.persistence.*
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.auth.UserId
-import kr.hhplus.be.server.domain.order.Order
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @Entity(name = "payments")
-class Payment private constructor(
-    @Column(nullable = false) val orderId: Long,
+class Payment(
     @Column(nullable = false) val amount: BigDecimal, val userId: UserId
 ) {
     @Id
@@ -41,10 +39,6 @@ class Payment private constructor(
         if (status != Status.PENDING) throw PaymentException.PayOnlyPendingStatus()
         status = Status.PAID
         return PaymentInfo.Pay(amount)
-    }
-
-    companion object {
-        fun from(order: Order) = Payment(amount = order.totalPrice, orderId = order.id, userId = order.userId)
     }
 
     enum class Status {

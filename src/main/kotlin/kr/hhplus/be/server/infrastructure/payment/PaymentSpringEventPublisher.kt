@@ -11,4 +11,8 @@ class PaymentSpringEventPublisher(private val applicationEventPublisher: Applica
     override fun orderPaymentPaid(event: PaymentEvent.OrderPaymentCompleted) {
         applicationEventPublisher.publishEvent(event)
     }
+
+    override fun orderPaymentCreated(event: PaymentEvent.OrderPaymentCreated) {
+        applicationEventPublisher.publishEvent(event)
+    }
 }

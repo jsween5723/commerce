@@ -18,4 +18,9 @@ class OrderPaymentEventListener(
         val order = orderService.complete(orderId = event.orderId, authentication = event.authentication)
         orderEventPublisher.complete(OrderEvent.Complete(order = order))
     }
+
+    @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
+    fun handle(event: PaymentEvent.OrderPaymentCreated) {
+        orderService.applyPayment(event.orderId, event.paymentId)
+    }
 }

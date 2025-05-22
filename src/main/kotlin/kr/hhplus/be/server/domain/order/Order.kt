@@ -9,7 +9,6 @@ import kr.hhplus.be.server.domain.order.coupon.UsedCoupons
 import kr.hhplus.be.server.domain.order.product.OrderItem
 import kr.hhplus.be.server.domain.order.product.ProductVO
 import kr.hhplus.be.server.domain.order.product.Receipt
-import kr.hhplus.be.server.domain.payment.Payment
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.UpdateTimestamp
 import java.math.BigDecimal
@@ -25,11 +24,7 @@ class Order(
     val orderCoupons = UsedCoupons()
     val receipt: Receipt = Receipt()
 
-    //    주문 생성시 결제는 같은 시점에 대기 상태로 생성돼야하므로
-//    cascade persist를 지정한다.
-    @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST])
-    @JoinColumn(name = "payment_id")
-    var payment: Payment = Payment.from(this)
+    var paymentId: Long? = null
 
     @Enumerated(EnumType.STRING)
     var status: Status = Status.CREATE_PENDING
@@ -56,6 +51,10 @@ class Order(
         orderCoupons.addAll(coupons.map { OrderCoupon.from(it, this) })
         couponProcess = true
         if (productProcess == true) status = Status.CREATED
+    }
+
+    fun applyPayment(paymentId: Long) {
+        this.paymentId = paymentId
     }
 
     fun complete(authentication: Authentication) {

@@ -11,6 +11,10 @@ class PaymentRepositoryImpl(private val jpaRepository: PaymentJpaRepository) : P
     override fun findById(id: Long): Payment? {
         return jpaRepository.findByIdOrNull(id)
     }
+
+    override fun create(payment: Payment): Payment {
+        return jpaRepository.save(payment)
+    }
 }
 
 interface PaymentJpaRepository : JpaRepository<Payment, Long>

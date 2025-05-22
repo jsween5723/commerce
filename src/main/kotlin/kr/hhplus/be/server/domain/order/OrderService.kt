@@ -51,6 +51,13 @@ class OrderService(private val orderRepository: OrderRepository, private val ord
     }
 
     @Transactional
+    fun applyPayment(orderId: Long, paymentId: Long): Order {
+        val order = findById(orderId)
+        order.applyPayment(paymentId)
+        return order
+    }
+
+    @Transactional
     fun pay(orderId: Long, authentication: Authentication): Order {
         val order = findById(orderId)
         if (order.status != Order.Status.CREATED) throw IllegalStateException("정상적이지 않은 주문입니다.")
