@@ -3,7 +3,6 @@ package kr.hhplus.be.server.application.product
 import kr.hhplus.be.server.domain.order.Order
 import kr.hhplus.be.server.domain.order.OrderQuery
 import kr.hhplus.be.server.domain.order.OrderService
-import kr.hhplus.be.server.domain.product.ProductQuery
 import kr.hhplus.be.server.domain.product.ProductService
 import kr.hhplus.be.server.domain.product.RankedProduct
 import org.springframework.stereotype.Component
@@ -12,11 +11,6 @@ import java.time.LocalDate
 
 @Component
 class ProductFacade(private val productService: ProductService, private val orderService: OrderService) {
-    fun findRankedProducts(query: ProductQuery.Ranked): ProductResult.GetRankedList =
-        ProductResult.GetRankedList(productService.findRankedBy(query))
-
-    fun findAllProducts(): ProductResult.GetProductList = ProductResult.GetProductList(productService.findAll())
-
     @Transactional
     fun createRankedProductByDate(to: LocalDate, day: Long) {
         val from = to.minusDays(day)
