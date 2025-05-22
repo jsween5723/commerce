@@ -17,7 +17,7 @@ class OrderController(private val orderService: OrderService) : OrderSpec {
     ): Response<CreateOrderResponse> {
         val created = orderService.create(
             OrderCommand.Create(
-                orderItems = request.orderItems.map { it.toCriteria() },
+                orderItems = request.orderItems.map { Pair(it.productId, it.amount) },
                 publishedCouponIds = request.registeredCouponIds,
                 authentication = authentication
             )
@@ -33,6 +33,6 @@ class OrderController(private val orderService: OrderService) : OrderSpec {
         val paid = orderService.pay(
             id, authentication
         )
-        return Response.success(OrderResponse.PayOrderResponse(paid.))
+        return Response.success(OrderResponse.PayOrderResponse(paid.id))
     }
 }
