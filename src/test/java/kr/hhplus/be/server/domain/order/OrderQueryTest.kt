@@ -16,7 +16,7 @@ class OrderQueryTest {
             val from = LocalDate.now().minusDays(3)
 //            when
             assertThatCode {
-                OrderQuery.ForStatistics(status = Order.Status.PAID, from = from, to = to)
+                OrderQuery.ForStatistics(status = Order.Status.COMPLETED, from = from, to = to)
             }.doesNotThrowAnyException()
         }
 
@@ -27,7 +27,7 @@ class OrderQueryTest {
             val to = LocalDate.now().minusDays(3)
 //            when
             assertThatThrownBy {
-                OrderQuery.ForStatistics(status = Order.Status.PAID, from = from, to = to)
+                OrderQuery.ForStatistics(status = Order.Status.COMPLETED, from = from, to = to)
             }.isInstanceOf(OrderException.FromIsAfterTo::class.java)
         }
     }
