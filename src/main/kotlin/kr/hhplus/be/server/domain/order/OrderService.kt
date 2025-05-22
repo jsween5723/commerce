@@ -4,6 +4,7 @@ import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.event.OrderEvent
 import kr.hhplus.be.server.domain.order.coupon.CouponVO
 import kr.hhplus.be.server.domain.order.product.ProductVO
+import kr.hhplus.be.server.domain.support.annotation.EventStarter
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDate
@@ -18,6 +19,7 @@ class OrderService(private val orderRepository: OrderRepository, private val ord
     fun findForCancel(query: OrderQuery.ForCancelSchedule) = orderRepository.findForCancel(query)
 
     @Transactional
+    @EventStarter(OrderEvent.CreateStart::class)
     fun create(command: OrderCommand.Create): Order {
         val (selectedProducts, selectedCoupons, authentication) = command
         val createOrder = CreateOrder(
@@ -33,6 +35,35 @@ class OrderService(private val orderRepository: OrderRepository, private val ord
             )
         )
         return order
+    }
+
+    @Transactional
+    @EventStarter(OrderEvent.PayStart::class)
+    fun pay(orderId: Long, authentication: Authentication): Order {
+        val order = findById(orderId)
+        if (order.status != Order.Status.CREATED) throw IllegalStateException("정상적이지 않은 주문입니다.")
+        orderEventPublisher.payStart(
+            OrderEvent.PayStart(
+                orderId = orderId, amount = order.totalPrice,
+                authentication = authentication
+            )
+        )
+        return order
+    }
+
+    @Transactional
+    @EventStarter(OrderEvent.CancelStart::class)
+    fun cancel(command: OrderCommand.Cancel) {
+        val (orderId, authentication) = command
+        val order = findById(orderId)
+        order.cancel(authentication)
+        orderEventPublisher.cancel(
+            event = OrderEvent.CancelStart(
+                orderId = order.id,
+                products = order.receipt.items.map { Pair(it.productId, it.quantity) },
+                publishedCouponIds = order.orderCoupons.items.map { it.id }
+            )
+        )
     }
 
     @Transactional
@@ -56,38 +87,12 @@ class OrderService(private val orderRepository: OrderRepository, private val ord
         return order
     }
 
-    @Transactional
-    fun pay(orderId: Long, authentication: Authentication): Order {
-        val order = findById(orderId)
-        if (order.status != Order.Status.CREATED) throw IllegalStateException("정상적이지 않은 주문입니다.")
-        orderEventPublisher.payStart(
-            OrderEvent.PayStart(
-                orderId = orderId, amount = order.totalPrice,
-                authentication = authentication
-            )
-        )
-        return order
-    }
 
     @Transactional
     fun complete(orderId: Long, authentication: Authentication): Order {
         val order = findById(orderId)
         order.complete(authentication)
         return order
-    }
-
-    @Transactional
-    fun cancel(command: OrderCommand.Cancel) {
-        val (orderId, authentication) = command
-        val order = findById(orderId)
-        order.cancel(authentication)
-        orderEventPublisher.cancel(
-            event = OrderEvent.Cancel(
-                orderId = order.id,
-                products = order.receipt.items.map { Pair(it.productId, it.quantity) },
-                publishedCouponIds = order.orderCoupons.items.map { it.id }
-            )
-        )
     }
 
 

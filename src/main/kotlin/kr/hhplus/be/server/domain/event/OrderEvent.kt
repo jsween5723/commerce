@@ -36,7 +36,7 @@ class OrderEvent {
         val authentication: Authentication
     )
 
-    data class Cancel(
+    data class CancelStart(
         val orderId: Long,
         val products: List<Pair<Long, Long>>,
         val publishedCouponIds: List<Long>

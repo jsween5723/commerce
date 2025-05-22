@@ -15,7 +15,7 @@ class OrderSpringEventPublisher(private val publisher: ApplicationEventPublisher
         publisher.publishEvent(event)
     }
 
-    override fun cancel(event: OrderEvent.Cancel) {
+    override fun cancel(event: OrderEvent.CancelStart) {
         publisher.publishEvent(event)
     }
 
