@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.domain.order.payment
+package kr.hhplus.be.server.domain.payment
 
 import kr.hhplus.be.server.domain.CustomException
 import kr.hhplus.be.server.domain.ErrorCode

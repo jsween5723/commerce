@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.domain.order.payment
+package kr.hhplus.be.server.domain.payment
 
 import jakarta.persistence.*
 import kr.hhplus.be.server.domain.auth.Authentication
@@ -11,6 +11,7 @@ import java.time.LocalDateTime
 
 @Entity(name = "payments")
 class Payment private constructor(
+    @Column(nullable = false) val orderId: Long,
     @Column(nullable = false) val amount: BigDecimal, val userId: UserId
 ) {
     @Id
@@ -35,7 +36,7 @@ class Payment private constructor(
         return PaymentInfo.Cancel(amount)
     }
 
-    fun pay(authentication: Authentication): PaymentInfo.Pay {
+    fun complete(authentication: Authentication): PaymentInfo.Pay {
         authentication.authorize(userId)
         if (status != Status.PENDING) throw PaymentException.PayOnlyPendingStatus()
         status = Status.PAID
@@ -43,7 +44,7 @@ class Payment private constructor(
     }
 
     companion object {
-        fun from(order: Order) = Payment(amount = order.totalPrice, userId = order.userId)
+        fun from(order: Order) = Payment(amount = order.totalPrice, orderId = order.id, userId = order.userId)
     }
 
     enum class Status {
