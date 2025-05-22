@@ -8,5 +8,5 @@ annotation class DistributedLock(
     val waitTime: Long = 5000L,
     val lease: Long = 3000L,
     val unit: TimeUnit = TimeUnit.MILLISECONDS,
-    val type: LockType,
+    val type: LockType = LockType.REDIS_SPIN,
 )
