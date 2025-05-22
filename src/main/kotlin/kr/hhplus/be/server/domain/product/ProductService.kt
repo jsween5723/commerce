@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional
 class ProductService(private val productRepository: ProductRepository) {
     fun findAll(): List<Product> = productRepository.findAll()
     fun findRankedBy(query: ProductQuery.Ranked) = productRepository.findRankedBy(query)
-    fun insertManyRankedProducts(products: List<RankedProduct>) = productRepository.insertManyRankedProducts(products)
 
     @Transactional
     fun release(command: ProductCommand.Release): List<Product.ReleaseInfo> {
@@ -27,5 +26,10 @@ class ProductService(private val productRepository: ProductRepository) {
         targets.forEach {
             products[it.productId]?.restock(it.quantity) ?: throw ProductException.InvalidProductId()
         }
+    }
+
+    @Transactional
+    fun rank(rankedProduct: RankedProduct) {
+        productRepository.insertRankedProduct(rankedProduct)
     }
 }

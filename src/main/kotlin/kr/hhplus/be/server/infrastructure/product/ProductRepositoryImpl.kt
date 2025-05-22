@@ -9,7 +9,6 @@ import kr.hhplus.be.server.domain.product.Product
 import kr.hhplus.be.server.domain.product.ProductQuery
 import kr.hhplus.be.server.domain.product.ProductRepository
 import kr.hhplus.be.server.domain.product.RankedProduct
-import org.hibernate.SessionFactory
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Lock
 import org.springframework.data.jpa.repository.Query
@@ -50,18 +49,8 @@ class ProductRepositoryImpl(
         return entityManager.createQuery(createdQuery.orderBy(orders).where(predicate)).resultList
     }
 
-    override fun insertManyRankedProducts(products: List<RankedProduct>) {
-        entityManagerFactory.unwrap(SessionFactory::class.java).withStatelessOptions().openStatelessSession().use {
-            val tx = it.beginTransaction()
-            try {
-                rankedProductRepository.saveAll(products)
-                tx.commit()
-            } catch (e: Exception) {
-                tx.rollback()
-            } finally {
-
-            }
-        }
+    override fun insertRankedProduct(product: RankedProduct) {
+        rankedProductRepository.save(product)
     }
 }
 

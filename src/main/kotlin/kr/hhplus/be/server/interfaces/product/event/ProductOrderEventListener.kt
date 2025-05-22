@@ -5,6 +5,8 @@ import kr.hhplus.be.server.domain.event.ProductEvent
 import kr.hhplus.be.server.domain.event.ProductEventPublisher
 import kr.hhplus.be.server.domain.product.ProductCommand
 import kr.hhplus.be.server.domain.product.ProductService
+import kr.hhplus.be.server.domain.product.RankedProduct
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 import org.springframework.transaction.event.TransactionPhase
 import org.springframework.transaction.event.TransactionalEventListener
@@ -30,5 +32,18 @@ class ProductOrderEventListener(
                 quantity = it.quantity
             )
         }, authentication = event.authentication))
+    }
+
+    @Async
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    fun handle(event: OrderEvent.Ranked) {
+        productService.rank(
+            RankedProduct(
+                event.productId,
+                totalSellingCount = event.totalSellingCount,
+                totalIncome = event.totalIncome,
+                createdDate = event.createdDate
+            )
+        )
     }
 }

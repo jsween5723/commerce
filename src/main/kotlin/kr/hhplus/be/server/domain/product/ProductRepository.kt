@@ -9,5 +9,5 @@ interface ProductRepository {
     fun containsIds(productIds: List<Long>): Boolean
     fun findByIdsForReleaseOrRestock(productIds: List<Long>): List<Product>
     fun findRankedBy(query: ProductQuery.Ranked): List<RankedProduct>
-    fun insertManyRankedProducts(products: List<RankedProduct>)
+    fun insertRankedProduct(product: RankedProduct)
 }
