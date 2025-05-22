@@ -11,8 +11,16 @@ import java.util.*
 class Receipt(
     @OneToMany(
         mappedBy = "order", cascade = [(CascadeType.ALL)], orphanRemoval = true
-    ) val items: List<OrderItem> = LinkedList()
+    ) val items: MutableList<OrderItem> = LinkedList()
 ) {
     @get: Transient
     val totalPrice: BigDecimal get() = items.sumOf { it.totalPrice }
+
+    fun addAll(items: List<OrderItem>) {
+        this.items.addAll(items)
+    }
+
+    fun add(item: OrderItem) {
+        this.items.add(item)
+    }
 }
