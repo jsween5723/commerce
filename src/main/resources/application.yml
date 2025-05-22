@@ -30,6 +30,9 @@ spring:
   sql:
     init:
       mode: always
+  data:
+    redis:
+      timeout: 10s
 springdoc:
   swagger-ui:
     path: /api

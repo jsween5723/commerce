@@ -1,8 +1,9 @@
-package kr.hhplus.be.server.support
+package kr.hhplus.be.server
 
 import jakarta.annotation.PreDestroy
+import kr.hhplus.be.server.support.IdGenerator
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.test.context.bean.override.convention.TestBean
 import org.testcontainers.containers.MySQLContainer
 import org.testcontainers.utility.DockerImageName
 
@@ -13,8 +14,8 @@ class TestcontainersConfiguration {
         if (mySqlContainer.isRunning) mySqlContainer.stop()
     }
 
-    @TestBean
-    val idGenerator: IdGenerator = IdGenerator()
+    @get:Bean
+    val idGenerator = IdGenerator()
 
     companion object {
         val mySqlContainer: MySQLContainer<*> = MySQLContainer(DockerImageName.parse("mysql:8.0"))

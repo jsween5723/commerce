@@ -1,34 +1,42 @@
-package kr.hhplus.be.server.support
+package kr.hhplus.be.server
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.restassured.RestAssured
 import io.restassured.config.ObjectMapperConfig.objectMapperConfig
 import jakarta.persistence.EntityManagerFactory
+import kr.hhplus.be.server.support.DatabaseCleanup
+import kr.hhplus.be.server.support.IdGenerator
 import org.hibernate.SessionFactory
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.Import
+import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.test.context.ActiveProfiles
+import org.testcontainers.junit.jupiter.Testcontainers
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 
 
+@Testcontainers
+@ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ComponentScan(basePackages = ["kr.hhplus.be.server"])
-@Import(TestcontainersConfiguration::class)
+@ComponentScan
 class IntegrationTestSupport {
 
     @LocalServerPort
-    var port = 0
+    var port: Int = 28080
 
     @Autowired
     private lateinit var databaseCleanup: DatabaseCleanup
 
     @Autowired
     lateinit var entityManagerFactory: EntityManagerFactory
+
+    @Autowired
+    lateinit var redisTemplate: RedisTemplate<String, String>
 
     @Autowired
     lateinit var idGenerator: IdGenerator

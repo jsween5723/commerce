@@ -65,7 +65,9 @@ dependencies {
     implementation("org.springframework:spring-aop:7.0.0-M4")
     // DB
     runtimeOnly("com.mysql:mysql-connector-j")
-
+// https://mvnrepository.com/artifact/org.redisson/redisson-spring-boot-starter
+    implementation("org.redisson:redisson-spring-boot-starter:3.46.0")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
     // Test
     // https://mvnrepository.com/artifact/io.rest-assured/rest-assured
     testImplementation("io.rest-assured:rest-assured:5.5.1")
