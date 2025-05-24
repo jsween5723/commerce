@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.interfaces.api.product
 
-import kr.hhplus.be.server.application.product.ProductResult
 import kr.hhplus.be.server.domain.product.Product
 import kr.hhplus.be.server.domain.product.RankedProduct
 import java.math.BigDecimal
@@ -9,8 +8,8 @@ import java.time.LocalDate
 class ProductResponse {
     data class GetProductList(val products: List<ProductDTO>) {
         companion object {
-            fun from(result: ProductResult.GetProductList) =
-                GetProductList(result.products.map { ProductDTO.from(it) })
+            fun from(result: List<Product>) =
+                GetProductList(result.map { ProductDTO.from(it) })
         }
 
         data class ProductDTO(
@@ -32,8 +31,8 @@ class ProductResponse {
 
     data class GetRankedProductList(val products: List<RankedProductDTO>) {
         companion object {
-            fun from(result: ProductResult.GetRankedList) =
-                GetRankedProductList(result.rankedProducts.map { RankedProductDTO.from(it) })
+            fun from(result: List<RankedProduct>) =
+                GetRankedProductList(result.map { RankedProductDTO.from(it) })
         }
 
         data class RankedProductDTO(

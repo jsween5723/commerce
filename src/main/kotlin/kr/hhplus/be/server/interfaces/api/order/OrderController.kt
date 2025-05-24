@@ -1,28 +1,28 @@
 package kr.hhplus.be.server.interfaces.api.order
 
-import kr.hhplus.be.server.application.order.OrderCriteria
-import kr.hhplus.be.server.application.order.OrderFacade
 import kr.hhplus.be.server.domain.auth.Authentication
-import kr.hhplus.be.server.interfaces.api.Response
+import kr.hhplus.be.server.domain.order.OrderCommand
+import kr.hhplus.be.server.domain.order.OrderService
 import kr.hhplus.be.server.interfaces.api.order.OrderResponse.CreateOrderResponse
+import kr.hhplus.be.server.interfaces.support.Response
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/v1/orders")
-class OrderController(private val orderFacade: OrderFacade) : OrderSpec {
+class OrderController(private val orderService: OrderService) : OrderSpec {
     @PostMapping
     override fun create(
         authentication: Authentication,
         @RequestBody request: OrderRequest.CreateOrder
     ): Response<CreateOrderResponse> {
-        val created = orderFacade.create(
-            OrderCriteria.Create(
-                orderItems = request.orderItems.map { it.toCriteria() },
+        val created = orderService.create(
+            OrderCommand.Create(
+                orderItems = request.orderItems.map { Pair(it.productId, it.amount) },
                 publishedCouponIds = request.registeredCouponIds,
                 authentication = authentication
             )
         )
-        return Response.success(CreateOrderResponse(created.orderId))
+        return Response.success(CreateOrderResponse(created.id))
     }
 
     @PostMapping("{id}/pay")
@@ -30,12 +30,9 @@ class OrderController(private val orderFacade: OrderFacade) : OrderSpec {
         authentication: Authentication,
         @PathVariable id: Long
     ): Response<OrderResponse.PayOrderResponse> {
-        val paid = orderFacade.pay(
-            criteria = OrderCriteria.Pay(
-                orderId = id,
-                authentication = authentication
-            )
+        val paid = orderService.pay(
+            id, authentication
         )
-        return Response.success(OrderResponse.PayOrderResponse(paid.paymentId))
+        return Response.success(OrderResponse.PayOrderResponse(paid.id))
     }
 }

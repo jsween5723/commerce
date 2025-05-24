@@ -3,7 +3,7 @@ package kr.hhplus.be.server.interfaces.api.product
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import kr.hhplus.be.server.domain.product.ProductQuery
-import kr.hhplus.be.server.interfaces.api.Response
+import kr.hhplus.be.server.interfaces.support.Response
 
 
 @Tag(name = "상품", description = "상품 관련 API")

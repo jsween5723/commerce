@@ -2,27 +2,21 @@ package kr.hhplus.be.server.domain.order.payment
 
 import kr.hhplus.be.server.domain.auth.AuthException
 import kr.hhplus.be.server.domain.auth.Authentication
+import kr.hhplus.be.server.domain.auth.UserId
 import kr.hhplus.be.server.domain.order.CreateOrder
 import kr.hhplus.be.server.domain.order.product.ProductSnapshotFixture
-import org.assertj.core.api.Assertions.*
+import kr.hhplus.be.server.domain.payment.Payment
+import kr.hhplus.be.server.domain.payment.PaymentException
+import kr.hhplus.be.server.domain.payment.PaymentInfo
+import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.math.BigDecimal.ZERO
 
 class PaymentTest {
-    @Nested
-    inner class `생성할 수 있다` {
-        @Test
-        fun `Order를 통해 생성할 수 있다`() {
-//            given
-            val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
-            val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
-//            when
-            assertThatCode { Payment.from(order) }.doesNotThrowAnyException()
-        }
-    }
+
 
     @Nested
     inner class `cancel을 통해 취소처리를 할 수 있다` {
@@ -31,10 +25,11 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
-            val payment = order.payment
+            val order = CreateOrder(Authentication(1L)).toOrder()
+            order.addItems(listOf(releaseInfo, releaseInfo2))
+            val payment = Payment(amount = order.totalPrice, userId = UserId(1L))
             val expected = PaymentInfo.Cancel(payment.amount)
-            payment.pay(Authentication(1L))
+            payment.complete(Authentication(1L))
 //            when
             val info = payment.cancel(Authentication(1L))
 //then
@@ -46,8 +41,9 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
-            val payment = order.payment
+            val order = CreateOrder(Authentication(1L)).toOrder()
+            order.addItems(listOf(releaseInfo, releaseInfo2))
+            val payment = Payment(amount = order.totalPrice, userId = UserId(1L))
             val expected = PaymentInfo.Cancel(ZERO)
 //            when
             val info = payment.cancel(Authentication(1L))
@@ -60,8 +56,9 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
-            val payment = order.payment
+            val order = CreateOrder(Authentication(1L)).toOrder()
+            order.addItems(listOf(releaseInfo, releaseInfo2))
+            val payment = Payment(amount = order.totalPrice, userId = UserId(1L))
 //            when
             assertThatThrownBy {
                 payment.cancel(Authentication(2L))
@@ -73,8 +70,9 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
-            val payment = order.payment
+            val order = CreateOrder(Authentication(1L)).toOrder()
+            order.addItems(listOf(releaseInfo, releaseInfo2))
+            val payment = Payment(amount = order.totalPrice, userId = UserId(1L))
             payment.cancel(Authentication(1L))
 //            when
             assertThatThrownBy {
@@ -90,11 +88,12 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
-            val payment = order.payment
+            val order = CreateOrder(Authentication(1L)).toOrder()
+            order.addItems(listOf(releaseInfo, releaseInfo2))
+            val payment = Payment(amount = order.totalPrice, userId = UserId(1L))
             val expected = PaymentInfo.Pay(payment.amount)
 //            when
-            val info = payment.pay(Authentication(1L))
+            val info = payment.complete(Authentication(1L))
 //            then
             assertThat(info).isEqualTo(expected)
         }
@@ -104,11 +103,12 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
-            val payment = order.payment
+            val order = CreateOrder(Authentication(1L)).toOrder()
+            order.addItems(listOf(releaseInfo, releaseInfo2))
+            val payment = Payment(amount = order.totalPrice, userId = UserId(1L))
 //            when
             assertThatThrownBy {
-                payment.pay(Authentication(2L))
+                payment.complete(Authentication(2L))
             }.isInstanceOf(AuthException.ForbiddenException::class.java)
         }
 
@@ -117,12 +117,13 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
-            val payment = order.payment
-            payment.pay(Authentication(1L))
+            val order = CreateOrder(Authentication(1L)).toOrder()
+            order.addItems(listOf(releaseInfo, releaseInfo2))
+            val payment = Payment(amount = order.totalPrice, userId = UserId(1L))
+            payment.complete(Authentication(1L))
 //            when
             assertThatThrownBy {
-                payment.pay(Authentication(1L))
+                payment.complete(Authentication(1L))
             }.isInstanceOf(PaymentException.PayOnlyPendingStatus::class.java)
         }
 
@@ -131,12 +132,13 @@ class PaymentTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200))
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500))
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
-            val payment = order.payment
+            val order = CreateOrder(Authentication(1L)).toOrder()
+            order.addItems(listOf(releaseInfo, releaseInfo2))
+            val payment = Payment(amount = order.totalPrice, userId = UserId(1L))
             payment.cancel(Authentication(1L))
 //            when
             assertThatThrownBy {
-                payment.pay(Authentication(1L))
+                payment.complete(Authentication(1L))
             }.isInstanceOf(PaymentException.PayOnlyPendingStatus::class.java)
         }
     }

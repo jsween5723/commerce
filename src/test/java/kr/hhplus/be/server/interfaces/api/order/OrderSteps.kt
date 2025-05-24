@@ -2,7 +2,7 @@ package kr.hhplus.be.server.interfaces.api.order
 
 import io.restassured.RestAssured
 import io.restassured.common.mapper.TypeRef
-import kr.hhplus.be.server.interfaces.api.Response
+import kr.hhplus.be.server.interfaces.support.Response
 import org.springframework.http.MediaType
 
 fun 주문한다(

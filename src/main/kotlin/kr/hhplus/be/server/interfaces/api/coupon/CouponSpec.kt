@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import kr.hhplus.be.server.domain.auth.Authentication
-import kr.hhplus.be.server.interfaces.api.Response
+import kr.hhplus.be.server.interfaces.support.Response
 import org.springframework.http.MediaType
 
 @Tag(name = "쿠폰", description = "선착순 쿠폰 관련 API")

@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import kr.hhplus.be.server.domain.auth.Authentication
-import kr.hhplus.be.server.interfaces.api.Response
+import kr.hhplus.be.server.interfaces.support.Response
 import org.springframework.http.MediaType
 
 @Tag(name = "주문 / 결제", description = "주문과 주문에 대한 결제를 수행하는 데 관련된 API입니다.")

@@ -3,7 +3,6 @@ package kr.hhplus.be.server.domain.order
 import kr.hhplus.be.server.domain.auth.AuthException
 import kr.hhplus.be.server.domain.auth.Authentication
 import kr.hhplus.be.server.domain.order.coupon.CouponSnapshotFixture
-import kr.hhplus.be.server.domain.order.payment.Payment
 import kr.hhplus.be.server.domain.order.product.ProductSnapshotFixture
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Nested
@@ -18,22 +17,10 @@ class OrderTest {
 //            given
             val releaseInfo = ProductSnapshotFixture()
             assertThatCode {
-                CreateOrder(listOf(releaseInfo), Authentication(1L))
+                CreateOrder(Authentication(1L))
             }
 //                then
                 .doesNotThrowAnyException()
-        }
-
-        @Test
-        fun `생성했을 때 paymentStatus는 PENDING이다`() {
-            //given
-            val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200), quantity = 2)
-            val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500), quantity = 2)
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
-
-            //then
-            assertThat(order.paymentStatus).isEqualTo(Payment.Status.PENDING)
-
         }
     }
 
@@ -42,8 +29,8 @@ class OrderTest {
         //given
         val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200), quantity = 2)
         val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500), quantity = 2)
-        val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
-
+        val order = CreateOrder(Authentication(1L)).toOrder()
+        order.addItems(listOf(releaseInfo, releaseInfo2))
 //        when
         val totalPrice = order.totalPrice
 //        then
@@ -62,9 +49,10 @@ class OrderTest {
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500), quantity = 2)
             val publishedCoupon = CouponSnapshotFixture()
             val order = CreateOrder(
-                listOf(releaseInfo, releaseInfo2), Authentication(1L), listOf(publishedCoupon)
+                Authentication(1L)
             ).toOrder()
-
+            order.addItems(listOf(releaseInfo, releaseInfo2))
+            order.addCoupons(listOf(publishedCoupon))
 
 //        when
             val totalPrice = order.totalPrice
@@ -83,41 +71,20 @@ class OrderTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200), quantity = 2)
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500), quantity = 2)
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
+            val order = CreateOrder(Authentication(1L)).toOrder()
+            order.addItems(listOf(releaseInfo, releaseInfo2))
 //            when
             assertThatCode { order.cancel(Authentication(1L)) }
         }
 
-        @Test
-        fun `PAID상태였다면 환급시킬 포인트 금액과 true를 반환한다`() {
-            //            given
-            val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200), quantity = 2)
-            val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500), quantity = 2)
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
-            order.pay(Authentication(1L))
-//            when
-            val info = order.cancel(Authentication(1L))
-            assertThat(info.pointAmount).isEqualTo(order.payment.amount)
-        }
-
-        @Test
-        fun `PENDING상태였다면 0과 false를 반환한다`() {
-            //            given
-            val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200), quantity = 2)
-            val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500), quantity = 2)
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
-            order.pay(Authentication(1L))
-//            when
-            val info = order.cancel(Authentication(1L))
-            assertThat(info.pointAmount).isEqualTo(order.payment.amount)
-        }
 
         @Test
         fun `주문을 생성한 인가정보가 아니면 AuthException을 발생시킨다`() {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200), quantity = 2)
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500), quantity = 2)
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
+            val order = CreateOrder(Authentication(1L)).toOrder()
+            order.addItems(listOf(releaseInfo, releaseInfo2))
 //            when
             assertThatThrownBy { order.cancel(Authentication(2)) }.isInstanceOf(AuthException.ForbiddenException::class.java)
         }
@@ -130,20 +97,10 @@ class OrderTest {
 //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200), quantity = 2)
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500), quantity = 2)
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
+            val order = CreateOrder(Authentication(1L)).toOrder()
+            order.addItems(listOf(releaseInfo, releaseInfo2))
 //            when
-            assertThatCode { order.pay(Authentication(1L)) }
-        }
-
-        @Test
-        fun `성공한 후 차감시킬 포인트 금액을 반환한다`() {
-            //            given
-            val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200), quantity = 2)
-            val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500), quantity = 2)
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
-//            when
-            val info = order.pay(Authentication(1L))
-            assertThat(info.pointAmount).isEqualTo(order.payment.amount)
+            assertThatCode { order.complete(Authentication(1L)) }
         }
 
         @Test
@@ -151,9 +108,10 @@ class OrderTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200), quantity = 2)
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500), quantity = 2)
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
+            val order = CreateOrder(Authentication(1L)).toOrder()
+            order.addItems(listOf(releaseInfo, releaseInfo2))
 //            when
-            assertThatThrownBy { order.pay(Authentication(2)) }.isInstanceOf(AuthException.ForbiddenException::class.java)
+            assertThatThrownBy { order.complete(Authentication(2)) }.isInstanceOf(AuthException.ForbiddenException::class.java)
         }
 
         @Test
@@ -161,10 +119,11 @@ class OrderTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200), quantity = 2)
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500), quantity = 2)
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
+            val order = CreateOrder(Authentication(1L)).toOrder()
+            order.addItems(listOf(releaseInfo, releaseInfo2))
             order.cancel(Authentication(1L))
 //            when
-            assertThatThrownBy { order.pay(Authentication(1L)) }.isInstanceOf(OrderException.PayOnlyPending::class.java)
+            assertThatThrownBy { order.complete(Authentication(1L)) }.isInstanceOf(OrderException.PayOnlyPending::class.java)
         }
 
         @Test
@@ -172,10 +131,12 @@ class OrderTest {
             //            given
             val releaseInfo = ProductSnapshotFixture(price = BigDecimal.valueOf(200), quantity = 2)
             val releaseInfo2 = ProductSnapshotFixture(price = BigDecimal.valueOf(500), quantity = 2)
-            val order = CreateOrder(listOf(releaseInfo, releaseInfo2), Authentication(1L)).toOrder()
-            order.pay(Authentication(1L))
+            val order = CreateOrder(Authentication(1L)).toOrder()
+            order.addItems(listOf(releaseInfo, releaseInfo2))
+            order.addCoupons(listOf())
+            order.complete(Authentication(1L))
 //            when
-            assertThatThrownBy { order.pay(Authentication(1L)) }.isInstanceOf(OrderException.AleadyPaid::class.java)
+            assertThatThrownBy { order.complete(Authentication(1L)) }.isInstanceOf(OrderException.AleadyPaid::class.java)
         }
     }
 }

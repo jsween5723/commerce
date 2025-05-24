@@ -6,7 +6,6 @@ import kr.hhplus.be.server.domain.auth.UserId
 import kr.hhplus.be.server.domain.order.coupon.CouponVO
 import kr.hhplus.be.server.domain.order.coupon.OrderCoupon
 import kr.hhplus.be.server.domain.order.coupon.UsedCoupons
-import kr.hhplus.be.server.domain.order.payment.Payment
 import kr.hhplus.be.server.domain.order.product.OrderItem
 import kr.hhplus.be.server.domain.order.product.ProductVO
 import kr.hhplus.be.server.domain.order.product.Receipt
@@ -17,30 +16,24 @@ import java.time.LocalDateTime
 
 @Entity(name = "orders")
 class Order(
-    productVOS: List<ProductVO>,
     val userId: UserId,
-    selectedCoupons: List<CouponVO>
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L
-    val orderCoupons = UsedCoupons(selectedCoupons.map { OrderCoupon.from(it, this) })
-    val receipt: Receipt = Receipt(productVOS.map { OrderItem.from(it, this) })
+    val orderCoupons = UsedCoupons()
+    val receipt: Receipt = Receipt()
 
-    //    주문 생성시 결제는 같은 시점에 대기 상태로 생성돼야하므로
-//    cascade persist를 지정한다.
-    @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST])
-    @JoinColumn(name = "payment_id")
-    var payment: Payment = Payment.from(this)
+    var paymentId: Long? = null
 
     @Enumerated(EnumType.STRING)
-    var status: Status = Status.PENDING
+    var status: Status = Status.CREATE_PENDING
 
     @get:Transient
     val totalPrice: BigDecimal get() = orderCoupons.discount(receipt.totalPrice)
 
-    @get:Transient
-    val paymentStatus: Payment.Status get() = payment.status
+    private var couponProcess: Boolean? = null
+    private var productProcess: Boolean? = null
 
     @CreationTimestamp
     lateinit var createdAt: LocalDateTime
@@ -48,26 +41,38 @@ class Order(
     @UpdateTimestamp
     lateinit var updatedAt: LocalDateTime
 
-    fun pay(authentication: Authentication): OrderInfo.Pay {
-        authentication.authorize(userId)
-        if (status == Status.PAID) throw OrderException.AleadyPaid()
-        if (status != Status.PENDING) throw OrderException.PayOnlyPending()
-        val payInfo = payment.pay(authentication)
-        status = Status.PAID
-        return OrderInfo.Pay(payInfo.pointAmount)
+    fun addItems(items: List<ProductVO>) {
+        receipt.addAll(items.map { OrderItem.from(it, this) })
+        productProcess = true
+        if (couponProcess == true) status = Status.CREATED
     }
 
-    fun cancel(authentication: Authentication): OrderInfo.Cancel {
+    fun addCoupons(coupons: List<CouponVO>) {
+        orderCoupons.addAll(coupons.map { OrderCoupon.from(it, this) })
+        couponProcess = true
+        if (productProcess == true) status = Status.CREATED
+    }
+
+    fun applyPayment(paymentId: Long) {
+        this.paymentId = paymentId
+    }
+
+    fun complete(authentication: Authentication) {
+        authentication.authorize(userId)
+        if (status == Status.COMPLETED) throw OrderException.AleadyPaid()
+        if (status != Status.CREATED) throw OrderException.PayOnlyPending()
+        status = Status.COMPLETED
+    }
+
+    fun cancel(authentication: Authentication) {
         authentication.authorize(userId)
         if (status == Status.CANCELLED) throw OrderException.AleadyCancelled()
-        if (status == Status.RELEASED) throw OrderException.CancelOnlyNotReleased()
-        val cancelInfo = payment.cancel(authentication)
+        if (status == Status.COMPLETED) throw OrderException.CancelOnlyNotReleased()
         status = Status.CANCELLED
-        return OrderInfo.Cancel(cancelInfo.pointAmount)
     }
 
     enum class Status {
-        PENDING, PAID, RELEASED, CANCELLED
+        CREATE_PENDING, CREATED, COMPLETED, CANCELLED
     }
 }
 

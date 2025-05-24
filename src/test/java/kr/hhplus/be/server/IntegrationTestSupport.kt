@@ -82,10 +82,10 @@ fun concurrentlyRun(
 ) {
     val doneSignal = CountDownLatch(action.size)
     val pool = Executors.newFixedThreadPool(action.size)
-    val startSignal = CountDownLatch(1)
+//    val startSignal = CountDownLatch(1)
     action.map { ac ->
         pool.execute {
-            startSignal.await()
+//            startSignal.await()
             try {
                 ac()
             } finally {
@@ -93,7 +93,7 @@ fun concurrentlyRun(
             }
         }
     }
-    startSignal.countDown()
+//    startSignal.countDown()
     doneSignal.await()
     pool.shutdown()
 }
