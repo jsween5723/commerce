@@ -33,6 +33,34 @@ spring:
   data:
     redis:
       timeout: 10s
+  kafka:
+    bootstrap-servers: localhost:9094
+    properties:
+      request.timeout.ms: 20000
+      retry.backoff.ms: 500
+      auto:
+        create.topics.enable: false
+        register.schemas: false
+        offset.reset: latest
+        # 컨슈머가 붙었을 때, 내가 원하는 곳부터 땡겨온다.
+        # 처음 붙었을 때. ( 다시 붙었을 대. ) 어디부터? 를 결정해야함
+        # latest : 최신 ( 앞의 못읽었던 메세지는 안 읽는다 )
+        # earliest : 카프카에 적재되어있는 제일 오래된 메세지부터 ( 읽었던 메세지를 또 읽을 수도 있음 )
+      use.latest.version: true
+      basic.auth.credentials.source: USER_INFO
+    producer:
+      client-id: hanghae-producer
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      retries: 5
+    consumer:
+      group-id: hanghae-consumer
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+      properties:
+        enable-auto-commit: false
+    listener:
+      ack-mode: manual # 수동으로 커밋하겠다.
 springdoc:
   swagger-ui:
     path: /api
